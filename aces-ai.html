@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A.C.E.S. AI Interface</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --gold: #d4af37;
+        --black: #000000;
+        --dark-surface: #101010;
+        --white: #f0f0f0;
+        --grey: #555;
+        --success: #2ecc71;
+        --gold-glow: 0 0 10px rgba(212, 175, 55, 0.5);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: var(--black);
+        color: var(--white);
+        font-family: "Rajdhani", sans-serif;
+        overflow: hidden;
+      }
+      #bgCanvas,
+      .scanlines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+      }
+      .scanlines {
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 0) 50%,
+          rgba(0, 0, 0, 0.1) 50%,
+          rgba(0, 0, 0, 0.1)
+        );
+        background-size: 100% 4px;
+        opacity: 0.7;
+      }
+      .ai-container {
+        display: grid;
+        grid-template-columns: 280px 1fr 280px;
+        height: 100vh;
+        gap: 20px;
+        padding: 20px;
+        background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000000 90%);
+      }
+      .panel {
+        background: rgba(15, 15, 15, 0.85);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 4px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .panel-title {
+        font-family: "Orbitron", sans-serif;
+        color: var(--gold);
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        padding-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .chat-interface {
+        display: flex;
+        flex-direction: column;
+      }
+      .chat-history {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 10px;
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 14px;
+      }
+      .chat-input-area {
+        display: flex;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        border-top: 1px solid rgba(212, 175, 55, 0.3);
+      }
+      .prompt-char {
+        color: var(--success);
+        margin-right: 10px;
+        font-weight: bold;
+      }
+      #userInput {
+        background: transparent;
+        border: none;
+        color: var(--white);
+        font-family: "Consolas", monospace;
+        flex-grow: 1;
+        outline: none;
+        font-size: 14px;
+      }
+      .message {
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
+      .message .sender {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+      }
+      .message.user .sender {
+        color: var(--success);
+      }
+      .message.ai .sender {
+        color: var(--gold);
+      }
+      .message .content {
+        padding-left: 15px;
+        border-left: 2px solid var(--grey);
+        white-space: pre-wrap; /* Allow newlines to be rendered */
+        word-break: break-word; /* Break long words/lines */
+      }
+      .ai-typing .content::after {
+        content: "▋";
+        animation: blink 1s infinite;
+        display: inline-block;
+        margin-left: 5px;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      .status-item {
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+      }
+      .status-item .label {
+        color: var(--grey);
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+      }
+      .status-item .value {
+        font-family: "Orbitron", sans-serif;
+        color: var(--white);
+        font-weight: bold;
+      }
+      .status-item .value.glowing {
+        color: var(--success);
+        text-shadow: 0 0 8px var(--success);
+      }
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 5px;
+      }
+      .progress-bar-inner {
+        height: 100%;
+        background: var(--gold);
+        width: 0%;
+        transition: width 0.5s ease-in-out;
+        box-shadow: var(--gold-glow);
+      }
+      .process-list {
+        list-style: none;
+        font-family: monospace;
+        font-size: 0.8rem;
+        color: #ccc;
+      }
+      .process-list li {
+        margin-bottom: 8px;
+        white-space: nowrap;
+      }
+      .process-list .pid {
+        color: var(--gold);
+      }
+      .process-list .status {
+        color: var(--success);
+      }
+      .logo-header {
+        text-align: center;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+      }
+      .logo-header h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        color: var(--gold);
+        margin: 0;
+        letter-spacing: 4px;
+        text-shadow: var(--gold-glow);
+      }
+      .logo-header p {
+        color: var(--grey);
+        font-size: 0.7rem;
+        letter-spacing: 6px;
+        margin-top: 5px;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bgCanvas"></canvas>
+    <div class="scanlines"></div>
+
+    <div class="ai-container">
+      <!-- Left Panel -->
+      <aside class="panel">
+        <div class="panel-title">
+          <i class="fas fa-microchip"></i> Core Status
+        </div>
+        <div class="status-item">
+          <span class="label">System Status</span>
+          <span class="value glowing">ONLINE</span>
+        </div>
+        <div class="status-item">
+          <span class="label">Cognitive Load</span>
+          <span class="value" id="cognitive-load">15.7%</span>
+          <div class="progress-bar">
+            <div class="progress-bar-inner" id="cognitive-load-bar"></div>
+          </div>
+        </div>
+        <div class="status-item">
+          <span class="label">Heuristic Matrix</span>
+          <span class="value">STABLE</span>
+        </div>
+        <div class="status-item">
+          <span class="label">Data Streams</span>
+          <span class="value" id="data-streams">1,283</span>
+        </div>
+        <div class="status-item">
+          <span class="label">Last Sync</span>
+          <span class="value" id="last-sync">...</span>
+        </div>
+      </aside>
+
+      <!-- Center Panel -->
+      <main class="panel chat-interface">
+        <div class="logo-header">
+          <h1>A.C.E.S. AI</h1>
+          <p>Automated Cognitive Engagement System</p>
+        </div>
+        <div class="chat-history" id="chatHistory">
+          <!-- Messages will be appended here -->
+        </div>
+        <div class="chat-input-area">
+          <span class="prompt-char">USER></span>
+          <input
+            type="text"
+            id="userInput"
+            placeholder="Enter command or query..."
+            autocomplete="off"
+          />
+        </div>
+      </main>
+
+      <!-- Right Panel -->
+      <aside class="panel">
+        <div class="panel-title">
+          <i class="fas fa-cogs"></i> Active Processes
+        </div>
+        <ul class="process-list" id="process-list">
+          <!-- Processes will be loaded here -->
+        </ul>
+      </aside>
+    </div>
+
+    <script>
+      // --- Matrix Rain Background ---
+      const canvas = document.getElementById("bgCanvas");
+      const ctx = canvas.getContext("2d");
+      let width, height, columns, drops;
+      const fontSize = 14;
+      const chars = "0123456789ABCDEFﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ";
+
+      function resizeCanvas() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        columns = Math.floor(width / fontSize);
+        drops = new Array(columns).fill(1);
+      }
+      window.addEventListener("resize", resizeCanvas);
+
+      function drawMatrix() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, width, height);
+        const accent = getComputedStyle(document.documentElement)
+          .getPropertyValue("--gold")
+          .trim();
+        ctx.fillStyle = accent;
+        ctx.font = fontSize + "px monospace";
+        for (let i = 0; i < drops.length; i++) {
+          const text = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+          if (drops[i] * fontSize > height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+        requestAnimationFrame(drawMatrix);
+      }
+      resizeCanvas();
+      drawMatrix();
+
+      // --- UI & Chat Logic ---
+      const chatHistory = document.getElementById("chatHistory");
+      const userInput = document.getElementById("userInput");
+
+      const addMessage = (sender, content, isTyping = false) => {
+        const msgDiv = document.createElement("div");
+        msgDiv.className = `message ${sender}`;
+        if (isTyping) msgDiv.classList.add("ai-typing");
+
+        const senderDiv = document.createElement("div");
+        senderDiv.className = "sender";
+        senderDiv.textContent = sender === "user" ? "USER" : "A.C.E.S.";
+
+        const contentDiv = document.createElement("div");
+        contentDiv.className = "content";
+        contentDiv.textContent = content;
+
+        msgDiv.appendChild(senderDiv);
+        msgDiv.appendChild(contentDiv);
+        chatHistory.appendChild(msgDiv);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+        return msgDiv;
+      };
+
+      const getStaticAIResponse = (query) => {
+        const lowerQuery = query.toLowerCase();
+        if (lowerQuery.includes("status") || lowerQuery.includes("report")) {
+          return "All systems are operating within nominal parameters. Cognitive load is stable. No anomalies detected.";
+        }
+        if (lowerQuery.includes("hello") || lowerQuery.includes("hi")) {
+          return "Greetings. I am A.C.E.S., the Automated Cognitive Engagement System. How may I assist you?";
+        }
+        if (lowerQuery.includes("who are you")) {
+          return "I am the Automated Cognitive Engagement System, codenamed A.C.E.S. I manage and analyze data streams for this network.";
+        }
+        if (lowerQuery.includes("policy")) {
+          return "Accessing policy documentation... The usage policy outlines rules for platform integrity, security, and user conduct. Key offenses are categorized into three tiers based on severity. You can view the full document at /policy.html.";
+        }
+        return "Your query is being processed. Please provide more specific parameters for a detailed response.";
+      };
+
+      const handleAIQuery = async (query) => {
+        const lowerQuery = query.toLowerCase();
+        const typingIndicator = addMessage("ai", "", true);
+
+        // Simulate thinking before responding
+        await new Promise((resolve) =>
+          setTimeout(resolve, 800 + Math.random() * 800),
+        );
+
+        let response;
+
+        if (
+          lowerQuery.includes("list users") ||
+          lowerQuery.includes("show all users") ||
+          lowerQuery.includes("user registry")
+        ) {
+          typingIndicator.querySelector(".content").textContent =
+            "Accessing user registry...";
+          try {
+            const res = await fetch("/api/admin/users");
+            if (!res.ok)
+              throw new Error(`Registry access denied. Status: ${res.status}`);
+            const users = await res.json();
+
+            if (users.length === 0) {
+              response = "No users found in the registry.";
+            } else {
+              let userList = `SUCCESS: Found ${users.length} registered operatives.\n\n`;
+              users.forEach((user) => {
+                userList += `> ${user.fullName} <${user.email}>\n  ROLE: ${user.role}\n  STATUS: ${user.isBanned ? "BANNED" : "Active"}\n\n`;
+              });
+              response = userList;
+            }
+          } catch (error) {
+            console.error("AI failed to fetch users:", error);
+            response = `Error: Could not connect to the user registry. ${error.message}. Please check system logs.`;
+          }
+        } else {
+          response = getStaticAIResponse(query);
+        }
+
+        typingIndicator.classList.remove("ai-typing");
+        typingIndicator.querySelector(".content").textContent = response;
+      };
+
+      userInput.addEventListener("keypress", async (e) => {
+        if (e.key === "Enter" && userInput.value.trim() !== "") {
+          const query = userInput.value.trim();
+          addMessage("user", query);
+          userInput.value = "";
+          await handleAIQuery(query);
+        }
+      });
+
+      // --- Dynamic Status Panels ---
+      const cognitiveLoad = document.getElementById("cognitive-load");
+      const cognitiveLoadBar = document.getElementById("cognitive-load-bar");
+      const dataStreams = document.getElementById("data-streams");
+      const lastSync = document.getElementById("last-sync");
+      const processList = document.getElementById("process-list");
+
+      const mockProcesses = [
+        "DataStream_Monitor",
+        "Heuristic_Analysis",
+        "User_Auth_Service",
+        "Threat_Detection_Subroutine",
+        "Kernel_Integrity_Check",
+        "Log_Aggregator",
+      ];
+
+      setInterval(() => {
+        // Update cognitive load
+        const load = (Math.random() * 20 + 10).toFixed(1);
+        cognitiveLoad.textContent = `${load}%`;
+        cognitiveLoadBar.style.width = `${load}%`;
+
+        // Update data streams
+        dataStreams.textContent = (
+          1200 + Math.floor(Math.random() * 200)
+        ).toLocaleString();
+
+        // Update last sync time
+        lastSync.textContent = new Date().toLocaleTimeString();
+
+        // Update process list
+        processList.innerHTML = "";
+        mockProcesses
+          .slice(0, Math.floor(Math.random() * 3) + 4)
+          .forEach((p, i) => {
+            const li = document.createElement("li");
+            const pid = (3700 + i * 17).toString(16).toUpperCase();
+            li.innerHTML = `[<span class="pid">0x${pid}</span>] <span class="status">RUNNING</span> ${p}`;
+            processList.appendChild(li);
+          });
+      }, 2500);
+
+      // Initial message
+      setTimeout(() => {
+        addMessage("ai", "A.C.E.S. core online. Awaiting your command.");
+      }, 1000);
+    </script>
+  </body>
+</html>

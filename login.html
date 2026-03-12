@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Aces's Lair</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/aces-lair.css" />
+    <style>
+      body {
+        background-color: var(--al-dark-surface);
+        color: var(--al-text);
+        font-family: "Rajdhani", sans-serif;
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+      }
+      /* Scanline effect */
+      .scanlines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 0) 50%,
+          rgba(0, 0, 0, 0.1) 50%,
+          rgba(0, 0, 0, 0.1)
+        );
+        background-size: 100% 4px;
+        z-index: 9999;
+        pointer-events: none;
+        opacity: 0.6;
+      }
+      .split-layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        height: 100%;
+      }
+      @media (min-width: 768px) {
+        .split-layout {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .brand-section {
+        background: linear-gradient(135deg, #0a192f 0%, #020a1a 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+        border-right: 1px solid rgba(0, 255, 255, 0.1);
+      }
+      .brand-section::before {
+        content: "";
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(0, 255, 255, 0.03) 0%,
+          transparent 50%
+        );
+        animation: rotate 20s linear infinite;
+      }
+      @keyframes rotate {
+        0% {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        100% {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+      .brand-content {
+        position: relative;
+        z-index: 1;
+        max-width: 400px;
+        text-align: center;
+      }
+      .form-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background-color: var(--al-dark-surface);
+        position: relative;
+      }
+      .auth-card {
+        width: 100%;
+        max-width: 400px;
+        z-index: 1;
+      }
+      .back-link {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        color: var(--al-text);
+        text-decoration: none;
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.9rem;
+        opacity: 0.7;
+        transition: opacity 0.3s;
+        z-index: 10;
+      }
+      .back-link:hover {
+        opacity: 1;
+        color: var(--al-cyan);
+      }
+      .security-badge {
+        border: 1px solid var(--al-cyan);
+        color: var(--al-cyan);
+        padding: 0.5rem 1rem;
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.8rem;
+        margin-bottom: 2rem;
+        display: inline-block;
+        background: rgba(0, 255, 255, 0.05);
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scanlines"></div>
+    <div class="split-layout">
+      <!-- Left Side: Branding -->
+      <div class="brand-section">
+        <div class="brand-content">
+          <div class="security-badge">
+            <i class="fas fa-shield-alt"></i> SECURE ACCESS TERMINAL
+          </div>
+          <h1
+            class="font-orbitron text-cyan"
+            style="
+              font-size: 3.5rem;
+              line-height: 1;
+              margin-bottom: 1rem;
+              text-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            "
+          >
+            IDENTITY<br />VERIFICATION
+          </h1>
+          <p
+            class="text-light"
+            style="
+              font-size: 1.2rem;
+              letter-spacing: 3px;
+              text-transform: uppercase;
+              opacity: 0.8;
+            "
+          >
+            Restricted Area. Authorized Personnel Only.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Side: Form -->
+      <div class="form-section">
+        <a href="/" class="back-link">&times; ABORT</a>
+        <div class="auth-card">
+          <h2 class="font-orbitron text-white mb-2" style="font-size: 2rem">
+            AUTHENTICATE
+          </h2>
+          <p class="text-light opacity-60 mb-5">
+            Enter credentials to access the mainframe.
+          </p>
+
+          <div id="success-message" class="al-alert al-alert-success mb-4" style="display: none;"></div>
+          <div id="error-message" class="al-alert al-alert-danger mb-4" style="display: none;"></div>
+
+        <form action="/login" method="POST" autocomplete="off">
+          <div class="text-left mb-3">
+            <label
+              for="email"
+              class="block mb-2 font-orbitron text-cyan text-sm"
+              >IDENTITY TOKEN (EMAIL)</label
+            >
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="al-input"
+              placeholder="user@domain.com"
+              autocomplete="email"
+              required
+            />
+          </div>
+          <div class="text-left mb-4">
+            <label
+              for="password"
+              class="block mb-2 font-orbitron text-cyan text-sm"
+              >ACCESS KEY</label
+            >
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="al-input"
+              placeholder="Enter password"
+              autocomplete="current-password"
+              required
+            />
+            <div style="text-align: right; margin-top: 0.5rem;">
+              <a href="/forgot-password.html" class="text-cyan hover:underline" style="text-decoration: none; font-size: 0.8rem;">FORGOT ACCESS KEY?</a>
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="al-btn al-btn-primary"
+            style="width: 100%; margin-top: 1rem"
+          >
+            INITIATE SESSION
+          </button>
+        </form>
+        <p class="mt-4 text-center text-sm text-light opacity-80">
+          No clearance?
+          <a
+            href="/signup.html"
+            class="text-cyan hover:underline font-bold"
+            style="text-decoration: none"
+            >REQUEST ACCESS</a
+          >
+        </p>
+      </div>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const success = urlParams.get('success');
+        const error = urlParams.get('error');
+
+        if (success) {
+          const successDiv = document.getElementById('success-message');
+          successDiv.textContent = decodeURIComponent(success);
+          successDiv.style.display = 'block';
+        }
+
+        if (error) {
+          const errorDiv = document.getElementById('error-message');
+          const decodedError = decodeURIComponent(error);
+          // Check for specific error messages from the server
+          if (decodedError.toLowerCase().includes("suspended")) {
+            errorDiv.textContent = "Access Denied: " + decodedError;
+          } else {
+            errorDiv.textContent = "Authentication Failed: " + decodedError;
+          }
+          errorDiv.style.display = 'block';
+        }
+      });
+    </script>
+  </body>
+</html>

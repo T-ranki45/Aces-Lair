@@ -1,0 +1,1880 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aces's Lair</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --gold: #d4af37;
+        --black: #000000;
+        --dark-surface: #101010;
+        --white: #f0f0f0;
+        --grey: #555;
+        --danger: #e74c3c;
+        --success: #2ecc71;
+        --gold-glow: 0 0 10px rgba(212, 175, 55, 0.5);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background-color: var(--black);
+        color: var(--white);
+        font-family: "Rajdhani", sans-serif;
+        margin: 0;
+        overflow: hidden;
+      }
+      /* CUSTOM SCROLLBAR */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.3);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(212, 175, 55, 0.3);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--gold);
+      }
+
+      /* LAYOUT */
+      .lair-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        height: 100vh;
+        position: relative;
+        z-index: 1;
+        background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000000 80%);
+      }
+
+      /* SIDEBAR */
+      .lair-sidebar {
+        background: rgba(5, 5, 5, 0.95);
+        border-right: 1px solid var(--gold);
+        display: flex;
+        flex-direction: column;
+        padding: 30px 20px;
+        backdrop-filter: blur(20px);
+        box-shadow: 10px 0 50px rgba(0, 0, 0, 0.8);
+        z-index: 10;
+      }
+      /* CRT Scanline Effect */
+      .scanlines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 0) 50%,
+          rgba(0, 0, 0, 0.1) 50%,
+          rgba(0, 0, 0, 0.1)
+        );
+        background-size: 100% 4px;
+        z-index: 9999;
+        pointer-events: none;
+        opacity: 0.7;
+      }
+      .brand-area {
+        margin-bottom: 50px;
+        text-align: center;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        padding-bottom: 20px;
+      }
+      .brand-area h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 2rem;
+        color: var(--gold);
+        margin: 0;
+        letter-spacing: 4px;
+        text-shadow: var(--gold-glow);
+      }
+      .brand-area p {
+        color: var(--grey);
+        font-size: 0.7rem;
+        letter-spacing: 6px;
+        margin-top: 5px;
+        text-transform: uppercase;
+      }
+      .glitch-hover:hover {
+        color: var(--danger);
+        cursor: default;
+        text-shadow:
+          2px 0 var(--gold),
+          -2px 0 var(--danger);
+      }
+      .nav-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .nav-item {
+        padding: 15px 20px;
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        border-radius: 0 30px 30px 0;
+        transition: 0.3s;
+        cursor: pointer;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border-right: 3px solid transparent;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+      }
+      .nav-item:hover,
+      .nav-item.active {
+        background: linear-gradient(
+          90deg,
+          rgba(212, 175, 55, 0.15),
+          transparent
+        );
+        border-right-color: var(--gold);
+        color: var(--gold);
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+        padding-left: 25px;
+        transform: translateX(5px);
+      }
+      .nav-item i {
+        width: 25px;
+        text-align: center;
+      }
+
+      /* MAIN CONTENT */
+      .lair-main {
+        padding: 40px;
+        overflow-y: auto;
+        background: transparent;
+      }
+
+      .section-title {
+        font-family: "Orbitron", sans-serif;
+        color: var(--gold);
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        padding-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .panel {
+        background: rgba(15, 15, 15, 0.85);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 4px;
+        padding: 30px;
+        margin-bottom: 50px;
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.8),
+          inset 0 0 20px rgba(0, 0, 0, 0.5);
+        position: relative;
+        overflow: hidden;
+        animation: panelFadeIn 0.6s ease-out forwards;
+        opacity: 0;
+      }
+      @keyframes panelFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .panel::before,
+      .panel::after {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--gold);
+        transition: 0.3s;
+        pointer-events: none;
+      }
+      .panel::before {
+        top: 0;
+        left: 0;
+        border-bottom: none;
+        border-right: none;
+      }
+      .panel::after {
+        bottom: 0;
+        right: 0;
+        border-top: none;
+        border-left: none;
+      }
+      .panel:hover::before,
+      .panel:hover::after {
+        width: 100%;
+        height: 100%;
+        opacity: 0.1;
+      }
+
+      .user-matrix {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+      }
+      .user-card {
+        background: linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.03) 0%,
+          rgba(0, 0, 0, 0.4) 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        transition: 0.3s;
+        position: relative;
+      }
+      .user-card:hover {
+        border-color: var(--gold);
+        background: rgba(212, 175, 55, 0.05);
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+      }
+      .user-card.banned {
+        border-color: var(--danger);
+        background: rgba(231, 76, 60, 0.1);
+        opacity: 0.6;
+      }
+      .user-card.banned:hover {
+        opacity: 0.8;
+        transform: translateY(0);
+      }
+      .user-info {
+        flex-grow: 1;
+      }
+      .user-info h4 {
+        margin: 0 0 8px 0;
+        color: var(--white);
+        font-size: 1.2rem;
+        font-family: "Orbitron", sans-serif;
+      }
+      .user-card.banned .user-info h4 {
+        text-decoration: line-through;
+      }
+      .user-info p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+      }
+      .user-info .pin {
+        font-family: monospace;
+        color: var(--gold);
+        background: rgba(212, 175, 55, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+
+      /* LOG TERMINAL */
+      .log-terminal {
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        height: 400px;
+        overflow-y: auto;
+        padding: 20px;
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 13px;
+        color: #0f0;
+        border-radius: 4px;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+        margin-bottom: 10px;
+      }
+      .log-entry {
+        margin-bottom: 5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .log-entry.error {
+        color: var(--danger);
+      }
+      .log-time {
+        color: var(--gold);
+        margin-right: 10px;
+      }
+
+      /* SITE MAP GRID */
+      .portal-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+      }
+      .portal-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 35px 25px;
+        border-radius: 4px;
+        text-align: center;
+        text-decoration: none;
+        color: var(--white);
+        transition: 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        cursor: pointer;
+      }
+      .portal-card:hover {
+        border-color: var(--gold);
+        background: rgba(212, 175, 55, 0.05);
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .portal-card i {
+        font-size: 2.5rem;
+        color: var(--gold);
+        margin-bottom: 8px;
+      }
+      .portal-card span {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1rem;
+        letter-spacing: 1px;
+      }
+
+      /* SYSTEM DIALOGS */
+      .sys-dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(5px);
+        z-index: 10000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .sys-dialog-overlay.active {
+        opacity: 1;
+      }
+
+      .sys-dialog-card {
+        background: var(--dark-surface);
+        border: 2px solid var(--gold);
+        width: 90%;
+        max-width: 400px;
+        padding: 30px;
+        border-radius: 4px;
+        text-align: center;
+        transform: scale(0.9);
+        box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+      }
+
+      @keyframes sysPop {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        40% {
+          transform: scale(1.05);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .sys-dialog-overlay.active .sys-dialog-card {
+        animation: sysPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      .sys-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+        color: var(--gold);
+      }
+      .sys-title {
+        font-family: "Orbitron", sans-serif;
+        color: var(--white);
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+      .sys-msg {
+        color: var(--grey);
+        font-size: 14px;
+        margin-bottom: 25px;
+        line-height: 1.5;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .sys-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+      .sys-btn {
+        padding: 12px 25px;
+        border-radius: 4px;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 14px;
+        outline: none;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: "Rajdhani", sans-serif;
+      }
+      .sys-btn.cancel {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--grey);
+        border: 1px solid var(--grey);
+      }
+      .sys-btn.cancel:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+      .sys-btn.confirm {
+        background: var(--gold);
+        color: var(--black);
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+      }
+      .sys-btn.confirm:hover {
+        background: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      }
+      .sys-btn.danger {
+        background: var(--danger);
+        color: white;
+        box-shadow: 0 0 15px rgba(231, 76, 60, 0.3);
+      }
+      .sys-btn.danger:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+      }
+
+      #bgCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      /* TERMINAL INPUT */
+      .terminal-input-area {
+        display: flex;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .prompt-char {
+        color: var(--success);
+        margin-right: 10px;
+        font-family: monospace;
+        font-weight: bold;
+      }
+      #cmdInput {
+        background: transparent;
+        border: none;
+        color: var(--white);
+        font-family: "Consolas", monospace;
+        flex-grow: 1;
+        outline: none;
+        font-size: 14px;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+      }
+      @keyframes pulse-green {
+        0% {
+          text-shadow: 0 0 5px #2ecc71;
+        }
+        50% {
+          text-shadow: 0 0 20px #2ecc71;
+        }
+        100% {
+          text-shadow: 0 0 5px #2ecc71;
+        }
+      }
+      /* SECURITY OVERLAY */
+      #securityOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: "Orbitron", sans-serif;
+      }
+
+      /* ONLINE ADMINS PANEL */
+      .online-admins {
+        margin-bottom: 20px;
+        padding: 10px;
+        background: rgba(46, 204, 113, 0.1);
+        border: 1px solid var(--success);
+        border-radius: 4px;
+        color: var(--success);
+        font-family: monospace;
+      }
+
+      .sec-input {
+        background: rgba(0, 0, 0, 0.5);
+        border: 2px solid var(--gold);
+        color: var(--gold);
+        padding: 15px;
+        font-size: 1.5rem;
+        text-align: center;
+        margin-top: 30px;
+        outline: none;
+        width: 300px;
+        border-radius: 5px;
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        font-family: "Orbitron", sans-serif;
+        letter-spacing: 3px;
+      }
+      .sec-btn {
+        margin-top: 25px;
+        background: var(--gold);
+        color: #000;
+        border: none;
+        padding: 12px 40px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        font-weight: 900;
+        clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+        transition: 0.3s;
+      }
+      .sec-btn:hover {
+        background: #fff;
+        box-shadow: 0 0 30px var(--gold);
+      }
+      /* BIOMETRIC SCANNER */
+      .fingerprint-scanner {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        color: rgba(212, 175, 55, 0.3);
+        font-size: 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+        overflow: hidden;
+      }
+      .scan-beam {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gold);
+        box-shadow: 0 0 15px var(--gold);
+        animation: scanMove 2s linear infinite;
+      }
+      @keyframes scanMove {
+        0% {
+          top: 0;
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          top: 100%;
+          opacity: 0;
+        }
+      }
+      .bio-text {
+        color: var(--gold);
+        font-family: "Orbitron", sans-serif;
+        letter-spacing: 3px;
+        animation: blink 1s infinite;
+      }
+      .comms-user .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 8px;
+        background: var(--grey); /* Offline by default */
+        flex-shrink: 0;
+      }
+      .comms-user .status-dot.online {
+        background: var(--success);
+        box-shadow: 0 0 5px var(--success);
+      }
+
+      /* CONSOLE IDENTITY MODAL */
+      #identityModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 20000;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .id-card {
+        background: var(--dark-surface);
+        border: 2px solid var(--gold);
+        padding: 40px;
+        text-align: center;
+        width: 400px;
+      }
+      .id-input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        background: black;
+        border: 1px solid var(--grey);
+        color: var(--gold);
+        font-family: "Orbitron";
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      /* HUB LAYOUT */
+      .hub-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 50;
+        background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000000 80%);
+      }
+      .hub-layout .portal-grid {
+        justify-content: center;
+        width: 100%;
+        max-width: 900px;
+        padding: 20px;
+      }
+
+      /* COMMS WINDOW */
+      .comms-window {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 600px;
+        height: 400px;
+        background: var(--dark-surface);
+        border: 1px solid var(--gold);
+        border-radius: 4px;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        z-index: 10001;
+        display: none; /* Hidden by default */
+        flex-direction: column;
+        resize: both;
+        overflow: auto;
+      }
+      .comms-header {
+        background: var(--gold);
+        color: var(--black);
+        padding: 8px 12px;
+        font-family: "Orbitron", sans-serif;
+        font-weight: bold;
+        cursor: move;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .comms-close-btn {
+        background: none;
+        border: none;
+        color: var(--black);
+        font-size: 1.5rem;
+        cursor: pointer;
+        line-height: 1;
+      }
+      .comms-body {
+        flex-grow: 1;
+        display: flex;
+        overflow: hidden;
+      }
+      .comms-sidebar {
+        width: 180px;
+        background: rgba(0, 0, 0, 0.2);
+        border-right: 1px solid rgba(212, 175, 55, 0.2);
+        overflow-y: auto;
+        padding: 10px;
+      }
+      .comms-user {
+        padding: 8px;
+        cursor: pointer;
+        border-radius: 3px;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: flex;
+        align-items: center;
+      }
+      .comms-user:hover {
+        background: rgba(212, 175, 55, 0.1);
+      }
+      .comms-user.active {
+        background: var(--gold);
+        color: var(--black);
+        font-weight: bold;
+      }
+      .comms-user .notification-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--danger);
+        border-radius: 50%;
+        margin-right: 8px;
+        box-shadow: 0 0 5px var(--danger);
+        display: none; /* Hidden by default */
+      }
+      .comms-main {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .comms-chat-header {
+        padding: 8px 12px;
+        background: rgba(0, 0, 0, 0.3);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        font-weight: bold;
+      }
+      .comms-messages {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+      .message-bubble {
+        margin-bottom: 10px;
+        max-width: 80%;
+        word-wrap: break-word;
+      }
+      .message-bubble .sender-info {
+        font-size: 0.7rem;
+        color: var(--grey);
+        margin-bottom: 3px;
+      }
+      .message-bubble .sender-info .timestamp {
+        float: right;
+        opacity: 0.7;
+      }
+      .message-bubble .message-content {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 8px 12px;
+        border-radius: 8px;
+      }
+      .message-bubble.sent {
+        margin-left: auto;
+        text-align: right;
+      }
+      .message-bubble.sent .message-content {
+        background: rgba(212, 175, 55, 0.2);
+        color: var(--white);
+      }
+      .comms-input-area {
+        display: flex;
+        border-top: 1px solid rgba(212, 175, 55, 0.2);
+      }
+      #comms-input {
+        flex-grow: 1;
+        background: transparent;
+        border: none;
+        padding: 12px;
+        color: var(--white);
+        outline: none;
+      }
+      #comms-send-btn {
+        background: var(--gold);
+        color: var(--black);
+        border: none;
+        padding: 0 20px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bgCanvas"></canvas>
+    <div class="scanlines"></div>
+
+    <div id="securityOverlay">
+      <!-- BIOMETRIC SECTION -->
+      <div
+        id="bioSection"
+        style="display: flex; flex-direction: column; align-items: center"
+      >
+        <div class="fingerprint-scanner">
+          <i class="fas fa-fingerprint"></i>
+          <div class="scan-beam"></div>
+        </div>
+        <p class="bio-text">INITIALIZING BIOMETRIC HANDSHAKE...</p>
+      </div>
+      <!-- PASSWORD SECTION -->
+      <div
+        id="authSection"
+        style="display: none; flex-direction: column; align-items: center"
+      >
+        <i
+          class="fas fa-shield-alt"
+          style="
+            font-size: 5rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px var(--gold);
+          "
+        ></i>
+        <h1 style="color: var(--white); letter-spacing: 5px; margin: 0">
+          RESTRICTED ACCESS
+        </h1>
+        <p
+          style="
+            color: var(--grey);
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+          "
+        >
+          SECURE TERMINAL // AUTHENTICATION REQUIRED
+        </p>
+        <input
+          type="password"
+          id="secPass"
+          class="sec-input"
+          placeholder="ENTER PASSCODE"
+        />
+        <button class="sec-btn" onclick="verifyAccess()">AUTHENTICATE</button>
+        <p
+          id="secMsg"
+          style="
+            color: var(--danger);
+            margin-top: 20px;
+            min-height: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+          "
+        ></p>
+      </div>
+    </div>
+
+    <!-- SECONDARY IDENTITY LOGIN -->
+    <div id="identityModal">
+      <div class="id-card">
+        <h2 class="sys-title" style="color: var(--gold)">CONSOLE IDENTITY</h2>
+        <p class="sys-msg">Identify yourself, Admin.</p>
+        <input
+          type="text"
+          id="idUser"
+          class="id-input"
+          placeholder="CODENAME"
+        />
+        <input
+          type="password"
+          id="idPin"
+          class="id-input"
+          placeholder="SECURE PIN"
+        />
+        <button
+          class="sys-btn confirm"
+          style="width: 100%; margin-top: 10px"
+          onclick="loginIdentity()"
+        >
+          ESTABLISH UPLINK
+        </button>
+        <div
+          style="
+            margin-top: 10px;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+          "
+        >
+          <p style="font-size: 0.8rem; color: #555">NEW CONSOLE USER?</p>
+          <input
+            type="text"
+            id="newIdUser"
+            class="id-input"
+            placeholder="NEW CODENAME"
+            style="font-size: 0.8rem; padding: 5px"
+          />
+          <input
+            type="password"
+            id="newIdPin"
+            class="id-input"
+            placeholder="NEW PIN"
+            style="font-size: 0.8rem; padding: 5px"
+          />
+          <button
+            class="sys-btn"
+            style="
+              width: 100%;
+              font-size: 0.8rem;
+              border: 1px solid var(--gold);
+              background: transparent;
+              color: var(--gold);
+            "
+            onclick="createIdentity()"
+          >
+            CREATE IDENTITY
+          </button>
+        </div>
+        <p id="idMsg" style="color: var(--danger); margin-top: 10px"></p>
+      </div>
+    </div>
+
+    <!-- HUB VIEW -->
+    <div id="hubView" class="hub-layout" style="display: none">
+      <div class="brand-area">
+        <h1 class="glitch-hover" style="font-size: 3rem">COMMAND CENTER</h1>
+        <p>SELECT TARGET SYSTEM</p>
+        <div id="activeAdminsPanel" class="online-admins">
+          ACTIVE UPLINKS: <span id="onlineCount">0</span>
+          <div
+            id="onlineList"
+            style="font-size: 0.8rem; margin-top: 5px; opacity: 0.8"
+          >
+            Scanning...
+          </div>
+        </div>
+      </div>
+      <div class="portal-grid">
+        <div
+          class="portal-card"
+          onclick="connectToServer('USER_REGISTRY')"
+          style="cursor: pointer; border-color: var(--gold)"
+        >
+          <i class="fas fa-address-book"></i>
+          <span>USER REGISTRY</span>
+        </div>
+        <div
+          class="portal-card"
+          onclick="connectToServer('aces-ai.html')"
+          style="cursor: pointer"
+        >
+          <i class="fas fa-brain"></i>
+          <span>A.C.E.S. AI CORE</span>
+        </div>
+        <div
+          class="portal-card"
+          onclick="connectToServer('EIS')"
+          style="cursor: pointer; opacity: 0.7"
+        >
+          <i class="fas fa-server"></i>
+          <span>EIS SCHOOL SERVER</span>
+        </div>
+        <div
+          class="portal-card"
+          onclick="connectToServer('https://google.com')"
+          style="cursor: pointer; opacity: 0.7"
+        >
+          <i class="fas fa-globe"></i>
+          <span>PUBLIC INTERNET</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lair-layout" style="display: none">
+      <!-- SIDEBAR -->
+      <aside class="lair-sidebar">
+        <div class="brand-area">
+          <h1>ACES'S LAIR</h1>
+          <p>DEV CONSOLE v99</p>
+        </div>
+        <nav class="nav-menu">
+          <a
+            href="#dashboard"
+            class="nav-item"
+            onclick="scrollToSection('dashboard')"
+            ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+          >
+          <a
+            href="#terminal"
+            class="nav-item"
+            onclick="scrollToSection('terminal')"
+            ><i class="fas fa-terminal"></i> Terminal</a
+          >
+          <a
+            href="#users"
+            class="nav-item active"
+            onclick="scrollToSection('users')"
+            ><i class="fas fa-users-cog"></i> Access Matrix</a
+          >
+          <a
+            href="#"
+            class="nav-item"
+            onclick="
+              toggleComms(true);
+              return false;
+            "
+            ><i class="fas fa-comments"></i> Comms</a
+          >
+          <div style="flex-grow: 1"></div>
+          <a
+            href="#"
+            onclick="disconnectServer()"
+            class="nav-item"
+            style="color: var(--danger); border-right-color: transparent"
+          >
+            <i class="fas fa-sign-out-alt"></i> Disconnect
+          </a>
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="lair-main">
+        <!-- DASHBOARD / CONTROL -->
+        <section id="dashboard" class="panel">
+          <div class="section-title">
+            SYSTEM CONTROL <i class="fas fa-microchip"></i>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <div
+              id="statusDisplay"
+              style="
+                font-family: &quot;Orbitron&quot;;
+                color: var(--gold);
+                font-size: 1.5rem;
+              "
+            >
+              STATUS: <span style="color: #2ecc71">ONLINE</span>
+            </div>
+            <button class="sys-btn danger">INITIATE LOCKDOWN</button>
+          </div>
+          <div
+            style="margin-top: 20px; font-family: monospace; color: var(--grey)"
+          >
+            <p>> KERNEL VERSION: 4.9.12-ACES</p>
+            <p>> UPTIME: 429496 HOURS</p>
+            <p>> MEMORY: 64TB / 128TB</p>
+          </div>
+        </section>
+
+        <!-- TERMINAL -->
+        <section id="terminal" class="panel">
+          <div class="section-title">
+            LIVE SERVER TERMINAL <i class="fas fa-terminal"></i>
+          </div>
+          <div id="serverLogs" class="log-terminal">
+            <div class="log-entry">
+              <span class="log-time">[SYSTEM]</span> Establishing secure
+              uplink...
+            </div>
+            <div class="log-entry">
+              <span class="log-time">[SYSTEM]</span> Connection established.
+            </div>
+          </div>
+          <div class="terminal-input-area">
+            <span class="prompt-char">root@aces-lair:~#</span>
+            <input
+              type="text"
+              id="cmdInput"
+              placeholder="Enter system command..."
+              autocomplete="off"
+            />
+          </div>
+        </section>
+
+        <!-- MATRICES -->
+        <section id="users" class="panel">
+          <div class="section-title">
+            MASTER ACCESS MATRIX - USERS <i class="fas fa-users"></i>
+          </div>
+          <div class="user-matrix" id="userMatrix">
+            <!-- User cards will be loaded here -->
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- COMMS WINDOW -->
+    <div id="comms-window" class="comms-window">
+      <div class="comms-header" id="comms-header">
+        <span><i class="fas fa-comments"></i> PRIVATE COMMS</span>
+        <button class="comms-close-btn" onclick="toggleComms(false)">
+          &times;
+        </button>
+      </div>
+      <div class="comms-body">
+        <div class="comms-sidebar" id="comms-user-list">
+          <!-- Online users will be injected here -->
+        </div>
+        <div class="comms-main">
+          <div class="comms-chat-header" id="comms-chat-header">
+            Select a user to begin chat
+          </div>
+          <div class="comms-messages" id="comms-messages"></div>
+          <div class="comms-input-area">
+            <input
+              type="text"
+              id="comms-input"
+              placeholder="Type a message..."
+            />
+            <button id="comms-send-btn">SEND</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SYSTEM DIALOG -->
+    <div id="systemDialog" class="sys-dialog-overlay">
+      <div class="sys-dialog-card">
+        <div class="sys-icon" id="sysIcon">
+          <i class="fas fa-skull"></i>
+        </div>
+        <h3 class="sys-title" id="sysTitle">SYSTEM ALERT</h3>
+        <p class="sys-msg" id="sysMsg">...</p>
+        <div class="sys-actions" id="sysActions"></div>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      // Simplified script, all external "EIS" logic removed.
+      let socket;
+      let currentUser = null;
+      let allConsoleAdmins = [];
+      let onlineConsoleAdmins = [];
+
+      // New global variables for chat
+      const commsWindow = document.getElementById("comms-window");
+      const commsUserList = document.getElementById("comms-user-list");
+      const commsMessages = document.getElementById("comms-messages");
+      const commsInput = document.getElementById("comms-input");
+      const commsSendBtn = document.getElementById("comms-send-btn");
+      const commsChatHeader = document.getElementById("comms-chat-header");
+      let conversations = {}; // { 'username': [messages] }
+      let activeChatUser = null;
+
+      // --- CONFIGURATION ---
+      // Replace this with the actual URL of your school website
+      // This MUST be the public URL of your deployed EIS-WEBSITE project on Render.
+      // FOR LOCAL TESTING: Use the public URL from ngrok.
+      const SCHOOL_WEBSITE_URL = ""; // Relative path for local server
+
+      // --- ADVANCED SECURITY ---
+      // This is the SHA-256 hash for "admin"
+      const ACCESS_HASH =
+        "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
+
+      async function sha256(source) {
+        const sourceBytes = new TextEncoder().encode(source);
+        const digest = await crypto.subtle.digest("SHA-256", sourceBytes);
+        const resultBytes = [...new Uint8Array(digest)];
+        return resultBytes.map((x) => x.toString(16).padStart(2, "0")).join("");
+      }
+
+      async function verifyAccess() {
+        const input = document.getElementById("secPass").value.trim();
+        let hash;
+        try {
+          hash = await sha256(input);
+        } catch (e) {
+          document.getElementById("secMsg").innerText =
+            "ERROR: SECURE CONTEXT (HTTPS/LOCALHOST) REQUIRED";
+          return;
+        }
+
+        if (hash === ACCESS_HASH) {
+          document.getElementById("securityOverlay").style.transition =
+            "opacity 0.5s";
+          document.getElementById("securityOverlay").style.opacity = "0";
+          setTimeout(() => {
+            document.getElementById("securityOverlay").style.display = "none";
+            document.getElementById("identityModal").style.display = "flex"; // Show identity login
+          }, 500);
+        } else {
+          const msg = document.getElementById("secMsg");
+          msg.innerText = "ACCESS DENIED // INVALID CREDENTIALS";
+          document.getElementById("secPass").value = "";
+          document.getElementById("secPass").focus();
+        }
+      }
+
+      document
+        .getElementById("secPass")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") verifyAccess();
+        });
+
+      // --- IDENTITY LOGIC ---
+      async function loginIdentity() {
+        const user = document.getElementById("idUser").value;
+        const pin = document.getElementById("idPin").value;
+        const msg = document.getElementById("idMsg");
+
+        const res = await fetch("/api/console/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: user, pin: pin }),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          currentUser = data.username;
+          // Process historical messages
+          processInitialMessages(data.messages);
+          document.getElementById("identityModal").style.display = "none";
+          showHub();
+          initSocket();
+        } else {
+          msg.innerText = data.error;
+        }
+      }
+
+      function processInitialMessages(messages) {
+        conversations = {};
+        if (!messages || !Array.isArray(messages)) return;
+
+        messages.forEach((msg) => {
+          const otherUser =
+            msg.sender === currentUser ? msg.recipient : msg.sender;
+          if (!conversations[otherUser]) {
+            conversations[otherUser] = [];
+          }
+          conversations[otherUser].push(msg);
+        });
+      }
+
+      async function createIdentity() {
+        const user = document.getElementById("newIdUser").value;
+        const pin = document.getElementById("newIdPin").value;
+        const msg = document.getElementById("idMsg");
+
+        if (!user || !pin) {
+          msg.innerText = "Enter Codename & Pin";
+          return;
+        }
+
+        const res = await fetch("/api/console/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: user, pin: pin }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          msg.style.color = "var(--success)";
+          msg.innerText = "Identity Created. Please Login.";
+        } else {
+          msg.style.color = "var(--danger)";
+          msg.innerText = data.error;
+        }
+      }
+
+      // --- HUB LOGIC ---
+      function showHub() {
+        document.getElementById("hubView").style.display = "flex";
+        document.querySelector(".lair-layout").style.display = "none";
+      }
+
+      function connectToServer(target) {
+        if (target === "USER_REGISTRY") {
+          document.getElementById("hubView").style.display = "none";
+          document.querySelector(".lair-layout").style.display = "grid";
+          initSystem();
+          // Default to users view
+          scrollToSection("users");
+        } else if (target === "EIS") {
+          System.alert("CONNECTION FAILED", "External EIS Uplink Offline.");
+        } else {
+          if (target.startsWith("http")) {
+            window.open(target, "_blank");
+          } else if (target.endsWith(".html")) {
+            window.open(target, "_blank");
+          }
+        }
+      }
+
+      function disconnectServer() {
+        document.querySelector(".lair-layout").style.display = "none";
+        document.getElementById("hubView").style.display = "flex";
+      }
+
+      function initSocket() {
+        socket = io();
+        socket.emit("console-identify", currentUser);
+
+        socket.on("admin-list-update", (admins) => {
+          document.getElementById("onlineCount").innerText = admins.length;
+          document.getElementById("onlineList").innerText = admins.join(" // ");
+          onlineConsoleAdmins = admins;
+          // Also update the chat user list if it's open
+          if (commsWindow.style.display === "flex") {
+            updateCommsUserList();
+          }
+        });
+
+        socket.on("console-private-message", (data) => {
+          const { sender, recipient } = data;
+          const otherUser = sender === currentUser ? recipient : sender;
+
+          // Play sound for incoming messages
+          if (sender !== currentUser) {
+            playMessageSound();
+          }
+
+          if (!conversations[otherUser]) {
+            conversations[otherUser] = [];
+          }
+          conversations[otherUser].push(data);
+
+          if (otherUser === activeChatUser) {
+            renderMessage(data);
+          } else {
+            // Just update the list to show the dot
+            updateCommsUserList();
+          }
+        });
+      }
+
+      function scrollToSection(id) {
+        document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+      }
+
+      function playBiometricSound() {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          const ctx = new AudioContext();
+
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.type = "square";
+          const now = ctx.currentTime;
+
+          // Digital scanning sound effect
+          osc.frequency.setValueAtTime(100, now);
+          osc.frequency.linearRampToValueAtTime(2000, now + 3);
+
+          gain.gain.setValueAtTime(0.03, now);
+          gain.gain.linearRampToValueAtTime(0, now + 3);
+
+          osc.start();
+          osc.stop(now + 3);
+        } catch (e) {}
+      }
+
+      function playMessageSound() {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          const ctx = new AudioContext();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = "triangle";
+          const now = ctx.currentTime;
+          osc.frequency.setValueAtTime(1200, now);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+          osc.start();
+          osc.stop(now + 0.2);
+          setTimeout(() => ctx.close(), 300);
+        } catch (e) {
+          console.error("Audio error:", e);
+        }
+      }
+
+      // --- CUSTOM SYSTEM DIALOGS ---
+      const System = {
+        overlay: document.getElementById("systemDialog"),
+        title: document.getElementById("sysTitle"),
+        msg: document.getElementById("sysMsg"),
+        actions: document.getElementById("sysActions"),
+        icon: document.getElementById("sysIcon"),
+
+        playSound() {
+          try {
+            const AudioContext =
+              window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(600, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(
+              900,
+              ctx.currentTime + 0.1,
+            );
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.1);
+            setTimeout(() => ctx.close(), 200);
+          } catch (e) {}
+        },
+
+        show(type, title, message, callback) {
+          this.playSound();
+          this.title.innerText = title;
+          this.msg.innerText = message;
+          this.actions.innerHTML = "";
+
+          // Cancel Button (for confirm)
+          if (type === "confirm" || type === "confirm-danger") {
+            const cancelBtn = document.createElement("button");
+            cancelBtn.className = "sys-btn cancel";
+            cancelBtn.innerText = "ABORT";
+            cancelBtn.onclick = () => {
+              this.close();
+              if (callback) callback(false);
+            };
+            this.actions.appendChild(cancelBtn);
+          }
+
+          // Confirm Button
+          const confirmBtn = document.createElement("button");
+          confirmBtn.className = `sys-btn ${type === "confirm-danger" ? "danger" : "confirm"}`;
+          confirmBtn.innerText = type === "alert" ? "ACKNOWLEDGE" : "EXECUTE";
+          confirmBtn.onclick = () => {
+            this.close();
+            if (callback) callback(true);
+          };
+          this.actions.appendChild(confirmBtn);
+
+          this.icon.innerHTML =
+            type === "confirm-danger"
+              ? '<i class="fas fa-exclamation-triangle"></i>'
+              : type === "alert"
+                ? '<i class="fas fa-info-circle"></i>'
+                : '<i class="fas fa-skull"></i>';
+
+          this.overlay.style.display = "flex";
+          setTimeout(() => this.overlay.classList.add("active"), 10);
+        },
+
+        close() {
+          this.overlay.classList.remove("active");
+          setTimeout(() => (this.overlay.style.display = "none"), 300);
+        },
+
+        alert: (t, m) => System.show("alert", t, m),
+        confirm: (t, m, cb) => System.show("confirm", t, m, cb),
+        confirmDanger: (t, m, cb) => System.show("confirm-danger", t, m, cb),
+      };
+
+      async function loadUsers() {
+        try {
+          const res = await fetch(`${SCHOOL_WEBSITE_URL}/api/admin/users`);
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+          const users = await res.json();
+
+          const matrix = document.getElementById("userMatrix");
+
+          if (!Array.isArray(users) || users.length === 0) {
+            matrix.innerHTML =
+              '<p style="color:var(--grey)">No registered users found in the database.</p>';
+            return;
+          }
+
+          matrix.innerHTML = users
+            .map((user) => {
+              const bannedClass = user.isBanned ? "banned" : "";
+              const statusTag = user.isBanned
+                ? '<p style="color: var(--danger); font-weight: bold; margin-top: 10px;">STATUS: BANNED</p>'
+                : "";
+              return `<div class="user-card ${bannedClass}">
+                        <div class="user-info">
+                            <h4>${user.fullName}</h4>
+                            <p>Role: ${user.role}</p>
+                            <p>Email: <span class="pin" style="text-transform: lowercase;">${user.email}</span></p>
+                            ${statusTag}
+                        </div>
+                    </div>`;
+            })
+            .join("");
+        } catch (err) {
+          console.error("Error loading users:", err);
+          document.getElementById("userMatrix").innerHTML =
+            '<p style="color:var(--danger)">Failed to load user matrix.</p>';
+        }
+      }
+
+      function initSystem() {
+        loadUsers();
+        logToTerminal("Accessing Local User Registry...", "info");
+      }
+
+      // --- TERMINAL LOGIC ---
+      const terminal = document.getElementById("serverLogs");
+      const cmdInput = document.getElementById("cmdInput");
+
+      cmdInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          const command = cmdInput.value.trim();
+          if (command) {
+            logToTerminal(`> ${command}`);
+            processCommand(command);
+          }
+          cmdInput.value = "";
+        }
+      });
+
+      function logToTerminal(msg, type = "default") {
+        const entry = document.createElement("div");
+        entry.className = `log-entry ${type}`;
+        entry.innerHTML = `<span class="log-time">[LOCAL]</span> ${msg}`;
+        if (terminal) {
+          terminal.appendChild(entry);
+          terminal.scrollTop = terminal.scrollHeight;
+        }
+      }
+
+      async function processCommand(command) {
+        const parts = command.match(/(?:[^\s"]+|"[^"]*")+/g) || [];
+        const baseCmd = parts[0];
+
+        switch (baseCmd) {
+          case "Aces-admin-command":
+            const usernameWithQuotes = parts[1];
+            const flag = parts[2];
+            if (flag === "-banned" && usernameWithQuotes) {
+              const username = usernameWithQuotes.replace(/"/g, ""); // remove quotes
+              await banUser(username);
+            } else if (flag === "-unban" && usernameWithQuotes) {
+              const username = usernameWithQuotes.replace(/"/g, ""); // remove quotes
+              await unbanUser(username);
+            } else {
+              logToTerminal(
+                'Invalid syntax. Usage: Aces-admin-command "username" [-banned | -unban]',
+                "error",
+              );
+            }
+            break;
+          case "clear":
+            terminal.innerHTML = "";
+            break;
+          case "help":
+            logToTerminal("Available commands:");
+            logToTerminal('- Aces-admin-command "username" -banned');
+            logToTerminal('- Aces-admin-command "username" -unban');
+            logToTerminal("- clear");
+            logToTerminal("- help");
+            break;
+          default:
+            logToTerminal(`Command not found: ${baseCmd}`, "error");
+        }
+      }
+
+      async function banUser(username) {
+        logToTerminal(`Initiating ban protocol for user: ${username}...`);
+        try {
+          const res = await fetch("/api/admin/users/ban", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: username }),
+          });
+          const result = await res.json();
+          if (res.ok && result.success) {
+            logToTerminal(`SUCCESS: ${result.message}`);
+            loadUsers(); // Refresh the user list to show the change
+          } else {
+            logToTerminal(
+              `ERROR: ${result.error || "Failed to ban user."}`,
+              "error",
+            );
+          }
+        } catch (err) {
+          logToTerminal(
+            `SYSTEM ERROR: Could not connect to ban service. ${err.message}`,
+            "error",
+          );
+        }
+      }
+
+      async function unbanUser(username) {
+        logToTerminal(`Initiating unban protocol for user: ${username}...`);
+        try {
+          const res = await fetch("/api/admin/users/unban", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: username }),
+          });
+          const result = await res.json();
+          if (res.ok && result.success) {
+            logToTerminal(`SUCCESS: ${result.message}`);
+            loadUsers(); // Refresh the user list to show the change
+          } else {
+            logToTerminal(
+              `ERROR: ${result.error || "Failed to unban user."}`,
+              "error",
+            );
+          }
+        } catch (err) {
+          logToTerminal(
+            `SYSTEM ERROR: Could not connect to unban service. ${err.message}`,
+            "error",
+          );
+        }
+      }
+
+      // --- COMMS LOGIC ---
+      async function toggleComms(show) {
+        if (show) {
+          commsWindow.style.display = "flex";
+          // Fetch all admins first
+          try {
+            const res = await fetch("/api/console/admins");
+            const fetchedAdmins = await res.json();
+            // Ensure we have an array before assigning
+            allConsoleAdmins = Array.isArray(fetchedAdmins)
+              ? fetchedAdmins
+              : [];
+            updateCommsUserList();
+          } catch (e) {
+            console.error("Could not fetch admin list", e);
+            commsUserList.innerHTML = `<div style="padding: 10px; color: var(--danger);">Error loading admin list.</div>`;
+          }
+        } else {
+          commsWindow.style.display = "none";
+        }
+      }
+
+      function updateCommsUserList() {
+        commsUserList.innerHTML = "";
+        const otherAdmins = allConsoleAdmins.filter(
+          (admin) => admin && admin !== currentUser,
+        );
+
+        if (otherAdmins.length === 0) {
+          commsUserList.innerHTML = `<div style="padding: 10px; color: var(--grey); font-size: 0.9rem; font-style: italic;">No other admins registered.</div>`;
+          return;
+        }
+
+        otherAdmins.forEach((admin) => {
+          const userEl = document.createElement("div");
+          userEl.className = "comms-user";
+          userEl.dataset.user = admin;
+
+          const isOnline = onlineConsoleAdmins.includes(admin);
+          const hasUnread = conversations[admin]?.some(
+            (m) => !m.read && m.recipient === currentUser,
+          );
+
+          userEl.innerHTML = `
+              <span class="status-dot ${isOnline ? "online" : ""}"></span>
+              <span class="notification-dot" style="display: ${hasUnread ? "inline-block" : "none"}"></span>
+              ${admin}
+            `;
+          userEl.onclick = () => switchChat(admin);
+          commsUserList.appendChild(userEl);
+        });
+      }
+
+      function switchChat(username) {
+        activeChatUser = username;
+        commsChatHeader.innerText = `Chat with: ${username}`;
+
+        // Mark messages as read
+        const hasUnread = conversations[username]?.some(
+          (m) => !m.read && m.recipient === currentUser,
+        );
+        if (hasUnread) {
+          socket.emit("mark-as-read", { senderUsername: username });
+          // Optimistically mark as read on client
+          conversations[username].forEach((m) => {
+            if (m.recipient === currentUser) m.read = true;
+          });
+        }
+
+        document
+          .querySelectorAll(".comms-user")
+          .forEach((el) => el.classList.remove("active"));
+        const userEl = document.querySelector(
+          `.comms-user[data-user="${username}"]`,
+        );
+        if (userEl) {
+          userEl.classList.add("active");
+          userEl.querySelector(".notification-dot").style.display = "none";
+        }
+
+        commsMessages.innerHTML = "";
+        if (conversations[username]) {
+          conversations[username].forEach(renderMessage);
+        }
+
+        commsInput.disabled = false;
+        commsInput.focus();
+      }
+
+      function renderMessage(data) {
+        const { sender, message, timestamp } = data;
+        const bubble = document.createElement("div");
+        bubble.className = "message-bubble";
+        if (sender === currentUser) bubble.classList.add("sent");
+
+        const time = new Date(timestamp).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        bubble.innerHTML = `
+          <div class="sender-info">
+              <strong>${sender}</strong>
+              <span class="timestamp">${time}</span>
+          </div>
+          <div class="message-content">${message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+        `;
+        commsMessages.appendChild(bubble);
+        commsMessages.scrollTop = commsMessages.scrollHeight;
+      }
+
+      function sendMessage() {
+        const message = commsInput.value.trim();
+        if (message && activeChatUser) {
+          socket.emit("console-private-message", {
+            recipient: activeChatUser,
+            message: message,
+          });
+          commsInput.value = "";
+        }
+      }
+
+      commsSendBtn.addEventListener("click", sendMessage);
+      commsInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendMessage();
+      });
+
+      commsInput.disabled = true;
+
+      // --- MATRIX RAIN BACKGROUND ---
+      const canvas = document.getElementById("bgCanvas");
+      const ctx = canvas.getContext("2d");
+
+      let width, height;
+      let columns;
+      let drops = [];
+      const fontSize = 14;
+      const chars = "0123456789ABCDEFﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ"; // Matrix katakana + hex
+
+      function resizeCanvas() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        columns = Math.floor(width / fontSize);
+        drops = new Array(columns).fill(1);
+      }
+      window.addEventListener("resize", resizeCanvas);
+
+      function drawMatrix() {
+        // Fade effect
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, width, height);
+
+        const accent = getComputedStyle(document.documentElement)
+          .getPropertyValue("--gold")
+          .trim();
+        ctx.fillStyle = accent;
+        ctx.font = fontSize + "px monospace";
+
+        for (let i = 0; i < drops.length; i++) {
+          const text = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+          if (drops[i] * fontSize > height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+        requestAnimationFrame(drawMatrix);
+      }
+
+      resizeCanvas();
+      drawMatrix();
+
+      // Make window draggable
+      function makeDraggable(element, header) {
+        let pos1 = 0,
+          pos2 = 0,
+          pos3 = 0,
+          pos4 = 0;
+        header.onmousedown = dragMouseDown;
+
+        function dragMouseDown(e) {
+          e.preventDefault();
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          document.onmouseup = closeDragElement;
+          document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+          e.preventDefault();
+          pos1 = pos3 - e.clientX;
+          pos2 = pos4 - e.clientY;
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          element.style.top = element.offsetTop - pos2 + "px";
+          element.style.left = element.offsetLeft - pos1 + "px";
+        }
+
+        function closeDragElement() {
+          document.onmouseup = null;
+          document.onmousemove = null;
+        }
+      }
+      makeDraggable(commsWindow, document.getElementById("comms-header"));
+
+      // BIOMETRIC SEQUENCE
+      playBiometricSound();
+      setTimeout(() => {
+        document.getElementById("bioSection").style.display = "none";
+        document.getElementById("authSection").style.display = "flex";
+        document.getElementById("secPass").focus();
+      }, 3000);
+    </script>
+  </body>
+</html>

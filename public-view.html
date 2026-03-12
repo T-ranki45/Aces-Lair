@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aces's Lair - Innovation Hub</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #00ffff; /* Cyan */
+        --secondary-color: #2c3e50;
+        --background-color: #020a1a; /* Dark Navy Blue */
+        --surface-color: #0a192f;
+        --text-color: #cdd6f6;
+        --header-text: #ffffff;
+        --glow-color: rgba(0, 255, 255, 0.5);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Rajdhani", sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      #tech-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 0;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Header & Navigation */
+      .main-header {
+        background-color: rgba(10, 25, 47, 0.85);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        padding: 1rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .main-header .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .logo {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--header-text);
+        text-decoration: none;
+        text-shadow: 0 0 10px var(--glow-color);
+      }
+
+      .main-nav ul {
+        list-style: none;
+        display: flex;
+        gap: 2.5rem;
+      }
+
+      .main-nav a {
+        text-decoration: none;
+        color: var(--text-color);
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition:
+          color 0.3s ease,
+          text-shadow 0.3s ease;
+      }
+
+      .main-nav a:hover {
+        color: var(--primary-color);
+        text-shadow: 0 0 8px var(--glow-color);
+      }
+
+      /* Hero Section */
+      .hero {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        height: 80vh;
+        min-height: 500px;
+        padding: 4rem 0;
+      }
+
+      .hero h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        margin-bottom: 1rem;
+        color: var(--header-text);
+        text-shadow: 0 0 15px var(--glow-color);
+      }
+
+      .hero .typing-cursor {
+        display: inline-block;
+        width: 3px;
+        height: 1em;
+        background-color: var(--primary-color);
+        animation: blink 0.7s infinite;
+        vertical-align: middle;
+      }
+
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto 2rem auto;
+        opacity: 0.8;
+      }
+
+      .cta-button {
+        background-color: transparent;
+        color: var(--primary-color);
+        padding: 0.8rem 2.5rem;
+        border: 2px solid var(--primary-color);
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition:
+          background-color 0.3s ease,
+          box-shadow 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .cta-button:hover {
+        background-color: rgba(0, 255, 255, 0.1);
+        box-shadow: 0 0 20px var(--glow-color);
+      }
+
+      /* Content Sections */
+      .content-section {
+        padding: 5rem 0;
+      }
+
+      .content-section h2 {
+        text-align: center;
+        font-family: "Orbitron", sans-serif;
+        font-size: 2.8rem;
+        margin-bottom: 4rem;
+        color: var(--header-text);
+        text-shadow: 0 0 10px var(--glow-color);
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .feature-card {
+        background-color: var(--surface-color);
+        padding: 2.5rem;
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.05);
+        transition:
+          transform 0.3s ease,
+          border-color 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--primary-color);
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.5),
+          inset 0 0 20px rgba(0, 255, 255, 0.1);
+      }
+
+      .feature-card h3 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        margin-top: 0;
+        margin-bottom: 1rem;
+      }
+
+      /* Footer */
+      .main-footer {
+        background-color: var(--surface-color);
+        color: var(--text-color);
+        padding: 2rem 0;
+        text-align: center;
+        border-top: 1px solid rgba(0, 255, 255, 0.2);
+        margin-top: 4rem;
+      }
+
+      .main-footer p {
+        margin: 0;
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="tech-canvas"></canvas>
+
+    <header class="main-header">
+      <div class="container">
+        <a href="#" class="logo">ACES'S LAIR</a>
+        <nav class="main-nav">
+          <ul id="main-nav-list">
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Projects</a></li>
+            <li><a href="/aces-ai.html">Aces AI</a></li>
+            <!-- Auth links injected by script -->
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h1 id="hero-title"></h1>
+          <p>
+            Engineering the future, one line of code at a time. We build robust,
+            scalable, and intelligent systems for the new digital frontier.
+          </p>
+          <a href="#features" class="cta-button">Explore Projects</a>
+        </div>
+      </section>
+
+      <section id="about" class="content-section">
+        <div class="container">
+          <h2>Mission Protocol</h2>
+          <p
+            style="
+              text-align: center;
+              max-width: 800px;
+              margin: 0 auto;
+              font-size: 1.1rem;
+            "
+          >
+            Aces's Lair is a digital syndicate dedicated to pushing the
+            boundaries of technology. Our core mission is to develop innovative
+            software solutions, from complex backend infrastructures to
+            intuitive user interfaces. We believe in the power of code to
+            create, disrupt, and redefine what's possible.
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="features"
+        class="content-section"
+        style="background-color: var(--background-color)"
+      >
+        <div class="container">
+          <h2>Core Systems</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <h3>Cybernetic Security</h3>
+              <p>
+                Advanced, multi-layered security protocols to protect digital
+                assets against evolving threats. We build fortresses, not
+                fences.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3>Neural Network AI</h3>
+              <p>
+                Leveraging machine learning and neural networks to create
+                intelligent systems that learn, adapt, and predict.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3>Decentralized Architecture</h3>
+              <p>
+                Building on decentralized and distributed networks for maximum
+                resilience, transparency, and scalability.
+              </p>
+            </div>
+            <div class="feature-card" id="coding-assistant-card">
+              <h3>Component Library</h3>
+              <p>
+                Browse a library of pre-built components and utility classes to
+                accelerate your projects.
+              </p>
+              <a
+                href="/library"
+                class="cta-button"
+                style="margin-top: 1rem; display: inline-block"
+              >
+                Open Library
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="main-footer">
+      <div class="container">
+        <div
+          style="
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+          "
+        >
+          <a
+            href="/policy.html"
+            style="
+              color: var(--text-color);
+              text-decoration: none;
+              transition: color 0.3s ease;
+            "
+            onmouseover="this.style.color = 'var(--primary-color)'"
+            onmouseout="this.style.color = 'var(--text-color)'"
+            >Usage Policy</a
+          >
+          <a
+            href="#"
+            style="
+              color: var(--text-color);
+              text-decoration: none;
+              transition: color 0.3s ease;
+            "
+            onmouseover="this.style.color = 'var(--primary-color)'"
+            onmouseout="this.style.color = 'var(--text-color)'"
+            >Contact</a
+          >
+        </div>
+        <p>
+          &copy; 2026 Aces's Lair // All Rights Reserved // System Status:
+          ONLINE
+        </p>
+      </div>
+    </footer>
+    <script>
+      // --- Animated Background ---
+      const canvas = document.getElementById("tech-canvas");
+      const ctx = canvas.getContext("2d");
+
+      let width, height, particles;
+      const particleCount = 50;
+      const connectDistance = 200;
+
+      function init() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        particles = [];
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+      }
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.vx = (Math.random() - 0.5) * 0.5;
+          this.vy = (Math.random() - 0.5) * 0.5;
+          this.radius = Math.random() * 1.5 + 1;
+        }
+
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+
+          if (this.x < 0 || this.x > width) this.vx *= -1;
+          if (this.y < 0 || this.y > height) this.vy *= -1;
+        }
+
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(0, 255, 255, 0.8)";
+          ctx.fill();
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        particles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+
+        connectParticles();
+
+        requestAnimationFrame(animate);
+      }
+
+      function connectParticles() {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < connectDistance) {
+              const opacity = 1 - dist / connectDistance;
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(0, 255, 255, ${opacity})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      window.addEventListener("resize", init);
+      init();
+      animate();
+
+      // --- Typing Effect ---
+      const heroTitle = document.getElementById("hero-title");
+      const text = "Transforming Ideas into Reality";
+      let index = 0;
+
+      function type() {
+        if (index < text.length) {
+          heroTitle.innerHTML =
+            text.substring(0, index + 1) +
+            '<span class="typing-cursor"></span>';
+          index++;
+          setTimeout(type, 100);
+        } else {
+          // Keep cursor blinking
+          heroTitle.innerHTML = text + '<span class="typing-cursor"></span>';
+        }
+      }
+
+      // --- Dynamic Navigation & Page Load Logic ---
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Start typing effect
+        type();
+
+        // Handle dynamic navigation
+        const navList = document.getElementById("main-nav-list");
+
+        try {
+          const res = await fetch("/api/session-status");
+          const data = await res.json();
+
+          if (data.loggedIn) {
+            // User is logged in
+            navList.innerHTML += `
+              <li><a href="/workspace.html">Workspace</a></li>
+              <li><a href="/logout" class="cta-button" style="padding: 0.5rem 1rem; border-width: 1px;">Logout</a></li>
+            `;
+          } else {
+            // User is logged out
+            navList.innerHTML += `
+              <li><a href="/login.html">Login</a></li>
+              <li><a href="/signup.html" class="cta-button" style="padding: 0.5rem 1rem; border-width: 1px;">Sign Up</a></li>
+            `;
+          }
+        } catch (error) {
+          console.error("Error fetching session status:", error);
+          // Fallback for when server is down
+          navList.innerHTML += `
+            <li><a href="/login.html">Login</a></li>
+            <li><a href="/signup.html" class="cta-button" style="padding: 0.5rem 1rem; border-width: 1px;">Sign Up</a></li>
+          `;
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,825 @@
+/*
+  ================================================================
+  Aces's Lair Custom Language (ALCL) v1.1
+  A utility-first CSS framework for rapid UI development.
+  ================================================================
+
+  Welcome to ALCL! This is a lightweight, beginner-friendly framework
+  inspired by modern utility-first libraries like Tailwind CSS.
+
+  How to use:
+  1. Add the <link> tag to your HTML file.
+  2. Use the utility classes directly on your HTML elements.
+     Example: <div class="p-4 bg-navy rounded">...</div>
+
+*/
+
+/*
+  --------------------------------
+  1. Core & Base Styles
+  --------------------------------
+  This section defines the color palette and base variables for the framework.
+*/
+:root {
+  /* Color Palette */
+  --al-cyan: #00ffff;
+  --al-red: #e74c3c;
+  --al-green: #2ecc71;
+  --al-magenta: #ff00ff;
+  --al-navy: #0a192f;
+  --al-dark-surface: #020a1a;
+  --al-text: #cdd6f6;
+  --al-text-dark: #333;
+}
+
+/*
+  --------------------------------
+  2. Sizing & Spacing Utilities
+  --------------------------------
+  Use these for margins (m-), padding (p-), and specific directions
+  (e.g., mt- for margin-top, px- for x-axis padding).
+  The number corresponds to a rem scale (1 = 0.25rem, 2 = 0.5rem, etc.).
+*/
+.m-1 {
+  margin: 0.25rem;
+}
+.m-2 {
+  margin: 0.5rem;
+}
+.m-3 {
+  margin: 1rem;
+}
+.m-4 {
+  margin: 1.5rem;
+}
+.m-5 {
+  margin: 2rem;
+}
+.m-6 {
+  margin: 3rem;
+}
+
+.p-1 {
+  padding: 0.25rem;
+}
+.p-2 {
+  padding: 0.5rem;
+}
+.p-3 {
+  padding: 1rem;
+}
+.p-4 {
+  padding: 1.5rem;
+}
+.p-5 {
+  padding: 2rem;
+}
+.p-6 {
+  padding: 3rem;
+}
+
+/* Directional Spacing */
+.mt-3 {
+  margin-top: 1rem;
+}
+.mb-3 {
+  margin-bottom: 1rem;
+}
+.py-4 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+.px-4 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/*
+  --------------------------------
+  3. Typography & Color
+  --------------------------------
+  Classes for text color, background color, font family, and alignment.
+*/
+/* Text Color */
+.text-cyan {
+  color: var(--al-cyan);
+}
+.text-red {
+  color: var(--al-red);
+}
+.text-green {
+  color: var(--al-green);
+}
+.text-light {
+  color: var(--al-text);
+}
+.text-dark {
+  color: var(--al-text-dark);
+}
+
+/* Background Color */
+.bg-navy {
+  background-color: var(--al-navy);
+}
+.bg-dark {
+  background-color: var(--al-dark-surface);
+}
+.bg-cyan {
+  background-color: var(--al-cyan);
+}
+.bg-transparent {
+  background-color: transparent;
+}
+
+/* Font Family */
+.font-orbitron {
+  font-family: "Orbitron", sans-serif;
+}
+.font-rajdhani {
+  font-family: "Rajdhani", sans-serif;
+}
+
+/* Text Alignment */
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+
+/*
+  --------------------------------
+  4. Layout & Flexbox
+  --------------------------------
+  Control layout with display properties and flexbox utilities.
+*/
+.block {
+  display: block;
+}
+.inline-block {
+  display: inline-block;
+}
+.flex {
+  display: flex;
+}
+.grid {
+  display: grid;
+}
+.hidden {
+  display: none;
+}
+
+/* Flexbox */
+.items-center {
+  align-items: center;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.flex-col {
+  flex-direction: column;
+}
+
+/*
+  --------------------------------
+  5. Borders & Effects
+  --------------------------------
+  Classes for borders, border-radius, shadows, and transitions.
+*/
+/* Borders */
+.border {
+  border-width: 1px;
+  border-style: solid;
+}
+.border-2 {
+  border-width: 2px;
+  border-style: solid;
+}
+.border-cyan {
+  border-color: var(--al-cyan);
+}
+.border-red {
+  border-color: var(--al-red);
+}
+
+/* Border Radius */
+.rounded {
+  border-radius: 4px;
+}
+.rounded-lg {
+  border-radius: 8px;
+}
+.rounded-full {
+  border-radius: 9999px;
+}
+
+/* Transitions & Effects */
+.transition-all {
+  transition: all 0.3s ease;
+}
+.shadow-glow-cyan {
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+.hover\:bg-cyan-t-10:hover {
+  background-color: rgba(0, 255, 255, 0.1);
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/*
+  --------------------------------
+  6. Pre-built Components
+  --------------------------------
+  Complex components built using the utility classes above.
+  This shows how you can compose utilities to create reusable elements.
+*/
+.al-btn {
+  /* Using ALCL utilities: */
+  /* .inline-block .py-3 .px-4 .font-orbitron .uppercase .tracking-wider .cursor-pointer .transition-all .border-2 .bg-transparent */
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  text-decoration: none; /* For <a> tags used as buttons */
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent; /* Base border */
+}
+
+.al-btn:active {
+  transform: translateY(1px);
+}
+
+.al-btn-primary {
+  background-image: linear-gradient(to bottom, #14ffff 0%, #00d1d1 100%);
+  color: var(--al-text-dark);
+  border-color: #00a1a1;
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(0, 255, 255, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.al-btn-primary:hover {
+  background-image: linear-gradient(to bottom, #33ffff 0%, #00e6e6 100%);
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    0 0 25px var(--al-cyan),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+.al-btn-primary:active {
+  transform: translateY(0);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.5),
+    0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.al-btn-danger {
+  background-image: linear-gradient(to bottom, #f15b4c 0%, #d94334 100%);
+  color: white;
+  border-color: #c0392b;
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(231, 76, 60, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.al-btn-danger:hover {
+  background-image: linear-gradient(to bottom, #ff7961 0%, #f15b4c 100%);
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    0 0 25px rgba(231, 76, 60, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+.al-btn-danger:active {
+  transform: translateY(0);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.5),
+    0 0 10px rgba(231, 76, 60, 0.3);
+}
+
+.al-btn-success {
+  background-image: linear-gradient(to bottom, #58d68d 0%, #27ae60 100%);
+  color: white;
+  border-color: #229954;
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(46, 204, 113, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.al-btn-success:hover {
+  background-image: linear-gradient(to bottom, #82e0aa 0%, #58d68d 100%);
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    0 0 25px rgba(46, 204, 113, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+.al-btn-success:active {
+  transform: translateY(0);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.5),
+    0 0 10px rgba(46, 204, 113, 0.3);
+}
+
+.al-btn-primary-outline {
+  background-color: transparent;
+  border: 2px solid var(--al-cyan);
+  color: var(--al-cyan);
+  /* Adjust padding to account for border */
+  padding: calc(0.8rem - 1px) calc(2rem - 1px);
+}
+.al-btn-primary-outline:hover {
+  background-color: var(--al-cyan);
+  color: var(--al-text-dark);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.al-btn-gradient {
+  background-image: linear-gradient(
+    45deg,
+    var(--al-cyan) 0%,
+    var(--al-magenta) 100%
+  );
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: none;
+}
+.al-btn-gradient:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow:
+    0 0 20px var(--al-magenta),
+    0 0 30px var(--al-cyan);
+}
+
+.al-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  filter: grayscale(50%);
+}
+.al-btn:disabled:hover {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/*
+  --------------------------------
+  7. Layout Components (Container, Grid)
+  --------------------------------
+*/
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.gap-4 {
+  gap: 1rem;
+}
+.gap-8 {
+  gap: 2rem;
+}
+.col-span-1 {
+  grid-column: span 1 / span 1;
+}
+.col-span-2 {
+  grid-column: span 2 / span 2;
+}
+.col-span-3 {
+  grid-column: span 3 / span 3;
+}
+.col-span-4 {
+  grid-column: span 4 / span 4;
+}
+.col-span-full {
+  grid-column: 1 / -1;
+}
+
+/*
+  --------------------------------
+  8. UI Components (Cards, Forms, Nav)
+  --------------------------------
+*/
+.al-card {
+  background-color: var(--al-navy);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  padding: 1.5rem;
+  border-radius: 4px;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+.al-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--al-cyan);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.al-input {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  color: var(--al-text);
+  border-radius: 4px;
+  font-family: "Rajdhani", sans-serif;
+  outline: none;
+  transition: all 0.3s ease;
+}
+.al-input::placeholder {
+  color: var(--al-text);
+  opacity: 0.4;
+}
+.al-input:focus {
+  border-color: var(--al-cyan);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.al-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: rgba(10, 25, 47, 0.95);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.al-nav-link {
+  color: var(--al-text);
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.al-nav-link:hover {
+  color: var(--al-cyan);
+  text-shadow: 0 0 5px var(--al-cyan);
+}
+
+.al-footer {
+  background-color: var(--al-dark-surface);
+  color: var(--al-text);
+  padding: 3rem 1rem;
+  border-top: 1px solid rgba(0, 255, 255, 0.1);
+}
+.al-footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+.al-footer-link {
+  color: var(--al-text);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.al-footer-link:hover {
+  color: var(--al-cyan);
+}
+.al-footer-copyright {
+  text-align: center;
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+/* Alerts */
+.al-alert {
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  margin-bottom: 1rem;
+  font-family: "Rajdhani", sans-serif;
+}
+.al-alert-info {
+  background-color: rgba(0, 255, 255, 0.1);
+  border-color: var(--al-cyan);
+  color: var(--al-cyan);
+}
+.al-alert-danger {
+  background-color: rgba(231, 76, 60, 0.1);
+  border-color: var(--al-red);
+  color: var(--al-red);
+}
+.al-alert-success {
+  background-color: rgba(46, 204, 113, 0.1);
+  border-color: var(--al-green);
+  color: var(--al-green);
+}
+
+/* Badges */
+.al-badge {
+  display: inline-block;
+  padding: 0.25em 0.6em;
+  font-size: 0.75em;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  font-family: "Orbitron", sans-serif;
+}
+.al-badge-primary {
+  background-color: var(--al-cyan);
+  color: var(--al-text-dark);
+}
+.al-badge-danger {
+  background-color: var(--al-red);
+  color: white;
+}
+.al-badge-success {
+  background-color: var(--al-green);
+  color: var(--al-text-dark);
+}
+
+/* Spinners */
+.al-spinner {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  vertical-align: text-bottom;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: al-spin 0.75s linear infinite;
+  color: var(--al-cyan);
+}
+@keyframes al-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tables */
+.al-table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: var(--al-text);
+  border-collapse: collapse;
+}
+.al-table th,
+.al-table td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid rgba(0, 255, 255, 0.2);
+  text-align: left;
+}
+.al-table th {
+  vertical-align: bottom;
+  border-bottom: 2px solid rgba(0, 255, 255, 0.2);
+  font-family: "Orbitron", sans-serif;
+  color: var(--al-cyan);
+}
+.al-table tbody tr:hover {
+  background-color: rgba(0, 255, 255, 0.05);
+}
+
+/* Breadcrumbs */
+.al-breadcrumb {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: "Rajdhani", sans-serif;
+}
+.al-breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+.al-breadcrumb-item:not(:last-child)::after {
+  content: "/";
+  margin: 0 0.5rem;
+  color: var(--al-text);
+  opacity: 0.5;
+}
+.al-breadcrumb-link {
+  color: var(--al-cyan);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.al-breadcrumb-link:hover {
+  color: var(--al-text);
+}
+.al-breadcrumb-item.active {
+  color: var(--al-text);
+  opacity: 0.7;
+}
+
+/* Pagination */
+.al-pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 0.5rem;
+}
+.al-page-item {
+  display: block;
+}
+.al-page-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  color: var(--al-text);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  font-family: "Rajdhani", sans-serif;
+}
+.al-page-link:hover {
+  border-color: var(--al-cyan);
+  color: var(--al-cyan);
+  background-color: rgba(0, 255, 255, 0.05);
+}
+.al-page-item.active .al-page-link {
+  background-color: var(--al-cyan);
+  color: var(--al-text-dark);
+  border-color: var(--al-cyan);
+}
+.al-page-item.disabled .al-page-link {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Progress Bars */
+.al-progress {
+  width: 100%;
+  height: 1rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 255, 255, 0.1);
+}
+.al-progress-bar {
+  height: 100%;
+  background-color: var(--al-cyan);
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--al-text-dark);
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+.al-progress-bar-striped {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+}
+
+/* Avatars */
+.al-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  overflow: hidden;
+  background-color: var(--al-navy);
+  border: 2px solid var(--al-cyan);
+  border-radius: 50%;
+  color: var(--al-cyan);
+  font-family: "Orbitron", sans-serif;
+  font-weight: bold;
+}
+.al-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.al-avatar-sm {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.8rem;
+}
+.al-avatar-md {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.2rem;
+}
+.al-avatar-lg {
+  width: 4rem;
+  height: 4rem;
+  font-size: 1.5rem;
+}
+
+/*
+  --------------------------------
+  9. Responsive Design
+  --------------------------------
+  Use prefixes like 'md:' and 'lg:' to apply styles at different breakpoints.
+  - md: applies from 768px and up.
+  - lg: applies from 1024px and up.
+*/
+
+/* Medium screens (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .md\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .md\:flex {
+    display: flex;
+  }
+  .md\:block {
+    display: block;
+  }
+  .md\:hidden {
+    display: none;
+  }
+
+  .md\:text-left {
+    text-align: left;
+  }
+  .md\:text-center {
+    text-align: center;
+  }
+  .md\:col-span-1 {
+    grid-column: span 1 / span 1;
+  }
+  .md\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+  .md\:col-span-3 {
+    grid-column: span 3 / span 3;
+  }
+  .md\:col-span-4 {
+    grid-column: span 4 / span 4;
+  }
+  .md\:col-span-full {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Large screens (desktops, 1024px and up) */
+@media (min-width: 1024px) {
+  .lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .lg\:grid-cols-6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .lg\:flex {
+    display: flex;
+  }
+  .lg\:text-left {
+    text-align: left;
+  }
+}

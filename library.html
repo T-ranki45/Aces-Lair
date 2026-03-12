@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aces's Lair - Component Library</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/aces-lair.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Rajdhani", sans-serif;
+        background-color: var(--al-dark-surface);
+        color: var(--al-text);
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .lib-header {
+        background-color: rgba(10, 25, 47, 0.85);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+        z-index: 10;
+      }
+
+      .lib-header h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        color: var(--al-cyan);
+        text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+      }
+
+      .lib-header a {
+        color: var(--al-text);
+        text-decoration: none;
+        font-weight: 700;
+        transition: color 0.3s ease;
+      }
+
+      .lib-header a:hover {
+        color: var(--al-cyan);
+      }
+
+      .lib-main {
+        flex-grow: 1;
+        display: flex;
+        overflow: hidden;
+      }
+
+      .doc-sidebar {
+        width: 240px;
+        background-color: var(--al-navy);
+        padding: 1.5rem;
+        border-right: 1px solid rgba(0, 255, 255, 0.2);
+        overflow-y: auto;
+        flex-shrink: 0;
+      }
+
+      .doc-sidebar h4 {
+        font-family: "Orbitron", sans-serif;
+        color: var(--al-cyan);
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+      }
+
+      .doc-nav ul {
+        list-style: none;
+      }
+
+      .doc-nav a {
+        display: block;
+        color: var(--al-text);
+        text-decoration: none;
+        padding: 0.6rem 0.5rem;
+        border-radius: 4px;
+        transition:
+          color 0.3s ease,
+          background-color 0.3s ease;
+        font-weight: 600;
+      }
+
+      .doc-nav a:hover {
+        color: var(--al-cyan);
+        background-color: rgba(0, 255, 255, 0.05);
+      }
+
+      .doc-nav a.active {
+        color: var(--al-cyan);
+        background-color: rgba(0, 255, 255, 0.1);
+      }
+
+      .doc-content {
+        flex-grow: 1;
+        padding: 2.5rem;
+        overflow-y: auto;
+      }
+
+      .doc-section {
+        display: none;
+      }
+      .doc-section.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .doc-section h3 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 2.2rem;
+        color: var(--al-cyan);
+        border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .doc-section p {
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+        max-width: 80ch;
+      }
+
+      .code-snippet {
+        background-color: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(0, 255, 255, 0.1);
+        padding: 1em;
+        border-radius: 4px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+
+      .copy-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        color: var(--al-text);
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 600;
+        opacity: 0;
+        transition:
+          opacity 0.3s ease,
+          background-color 0.3s ease,
+          color 0.3s ease;
+      }
+
+      .code-snippet:hover .copy-btn {
+        opacity: 1;
+      }
+
+      .copy-btn:hover {
+        background-color: rgba(0, 255, 255, 0.1);
+        border-color: var(--al-cyan);
+      }
+
+      .copy-btn.copied {
+        background-color: var(--al-cyan);
+        color: var(--al-dark-surface);
+      }
+
+      .component-preview {
+        background: var(--al-dark-surface);
+        padding: 2rem;
+        border: 1px solid rgba(0, 255, 255, 0.1);
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      /* Scrollbar styling */
+      .doc-content::-webkit-scrollbar,
+      .doc-sidebar::-webkit-scrollbar {
+        width: 8px;
+      }
+      .doc-content::-webkit-scrollbar-track,
+      .doc-sidebar::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+      }
+      .doc-content::-webkit-scrollbar-thumb,
+      .doc-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(0, 255, 255, 0.4);
+        border-radius: 4px;
+      }
+      .doc-content::-webkit-scrollbar-thumb:hover,
+      .doc-sidebar::-webkit-scrollbar-thumb:hover {
+        background: var(--al-cyan);
+      }
+
+      /* Accordion Component */
+      .accordion {
+        width: 100%;
+      }
+      .accordion-item {
+        border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+      }
+      .accordion-item:last-child {
+        border-bottom: none;
+      }
+      .accordion-header {
+        background: transparent;
+        border: none;
+        color: var(--al-text);
+        cursor: pointer;
+        padding: 1rem;
+        width: 100%;
+        text-align: left;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        position: relative;
+        font-family: "Rajdhani", sans-serif;
+      }
+      .accordion-header:hover {
+        background-color: rgba(0, 255, 255, 0.05);
+      }
+      .accordion-header::after {
+        content: "\\002B"; /* Plus sign */
+        color: var(--al-cyan);
+        font-weight: bold;
+        float: right;
+        transition: transform 0.3s ease;
+      }
+      .accordion-header.active::after {
+        content: "\\2212"; /* Minus sign */
+      }
+      .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+      .accordion-content p {
+        padding: 1.5rem;
+        margin: 0;
+      }
+
+      /* Modal Component */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(2, 10, 26, 0.8);
+        backdrop-filter: blur(5px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      .modal-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .modal-content {
+        background-color: var(--al-navy);
+        border: 1px solid var(--al-cyan);
+        box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+        width: 90%;
+        max-width: 600px;
+        border-radius: 4px;
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+      }
+      .modal-overlay.active .modal-content {
+        transform: scale(1);
+      }
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+      }
+      .modal-header h4 {
+        font-family: "Orbitron", sans-serif;
+        color: var(--al-cyan);
+        margin: 0;
+      }
+      .modal-close {
+        background: none;
+        border: none;
+        color: var(--al-text);
+        font-size: 2rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        line-height: 1;
+      }
+      .modal-close:hover {
+        color: var(--al-cyan);
+      }
+      .modal-body {
+        padding: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="lib-header">
+      <h1>Component & Utility Library</h1>
+      <a href="/">&laquo; Back to Main Site</a>
+    </header>
+
+    <main class="lib-main">
+      <aside class="doc-sidebar">
+        <h4>Components</h4>
+        <nav class="doc-nav">
+          <ul>
+            <li><a href="#doc-buttons" class="active">Buttons</a></li>
+            <li><a href="#doc-cards">Cards</a></li>
+            <li><a href="#doc-accordion">Accordion</a></li>
+            <li><a href="#doc-modal">Modal</a></li>
+            <li><a href="#doc-forms">Forms</a></li>
+            <li><a href="#doc-nav">Navigation</a></li>
+            <li><a href="#doc-footer">Footer</a></li>
+            <li><a href="#doc-alerts">Alerts</a></li>
+            <li><a href="#doc-badges">Badges</a></li>
+            <li><a href="#doc-spinners">Spinners</a></li>
+            <li><a href="#doc-tables">Tables</a></li>
+            <li><a href="#doc-breadcrumbs">Breadcrumbs</a></li>
+            <li><a href="#doc-pagination">Pagination</a></li>
+            <li><a href="#doc-progress">Progress</a></li>
+            <li><a href="#doc-avatars">Avatars</a></li>
+          </ul>
+        </nav>
+        <h4 style="margin-top: 2rem">Core Concepts</h4>
+        <nav class="doc-nav">
+          <ul>
+            <li><a href="#doc-alcl">ALCL v1.0</a></li>
+            <li><a href="#doc-responsive">Responsive Design</a></li>
+          </ul>
+        </nav>
+        <h4 style="margin-top: 2rem">Utilities</h4>
+        <nav class="doc-nav">
+          <ul>
+            <li><a href="#doc-flexbox">Flexbox</a></li>
+            <li><a href="#doc-grid">Grid Layout</a></li>
+            <li><a href="#doc-spacing">Spacing</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main id="doc-content" class="doc-content">
+        <section id="doc-buttons" class="doc-section active">
+          <h3>Buttons</h3>
+          <p>
+            Buttons are created using the <code>.al-btn</code> component class,
+            combined with a color modifier like <code>.al-btn-primary</code>.
+          </p>
+          <h4>Examples</h4>
+          <div
+            class="component-preview"
+            style="gap: 1.5rem; align-items: center; justify-content: center"
+          >
+            <button class="al-btn al-btn-primary">Primary</button>
+            <button class="al-btn al-btn-danger">Danger</button>
+            <button class="al-btn al-btn-success">Success</button>
+            <button class="al-btn al-btn-gradient">Gradient</button>
+            <button class="al-btn al-btn-primary-outline">Outline</button>
+            <button class="al-btn al-btn-primary" disabled>Disabled</button>
+          </div>
+          <h4>HTML</h4>
+          <pre class="code-snippet"><code>&lt;!-- Solid Buttons --&gt;
+&lt;button class="al-btn al-btn-primary"&gt;Primary&lt;/button&gt;
+&lt;button class="al-btn al-btn-danger"&gt;Danger&lt;/button&gt;
+&lt;button class="al-btn al-btn-success"&gt;Success&lt;/button&gt;
+
+&lt;!-- Special Buttons --&gt;
+&lt;button class="al-btn al-btn-gradient"&gt;Gradient&lt;/button&gt;
+&lt;button class="al-btn al-btn-primary-outline"&gt;Outline&lt;/button&gt;
+
+&lt;!-- Disabled State --&gt;
+&lt;button class="al-btn al-btn-primary" disabled&gt;Disabled&lt;/button&gt;</code></pre>
+        </section>
+        <section id="doc-cards" class="doc-section">
+          <h3>Cards</h3>
+          <p>
+            Cards are built with the <code>.al-card</code> class. They are ideal
+            for showcasing distinct pieces of information and automatically
+            include hover effects.
+          </p>
+          <h4>Example</h4>
+          <div class="component-preview">
+            <div class="al-card" style="width: 300px; margin: 0">
+              <h3>Card Title</h3>
+              <p>
+                This is example content inside a feature card. It adapts to its
+                container.
+              </p>
+            </div>
+          </div>
+          <h4>HTML</h4>
+          <pre class="code-snippet"><code>&lt;div class="al-card"&gt;
+    &lt;h3&gt;Card Title&lt;/h3&gt;
+    &lt;p&gt;This is example content inside a feature card.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+        </section>
+        <section id="doc-flexbox" class="doc-section">
+          <h3>Flexbox</h3>
+          <p>A simple utility for creating flexbox containers.</p>
+          <h4>Classes</h4>
+          <pre class="code-snippet"><code>.d-flex { display: flex; }
+.justify-center { justify-content: center; }
+.align-center { align-items: center; }
+.flex-column { flex-direction: column; }</code></pre>
+        </section>
+
+        <section id="doc-grid" class="doc-section">
+          <h3>Grid Layout</h3>
+          <p>
+            Use our grid utilities to create responsive layouts easily. Combine
+            with responsive prefixes like <code>md:grid-cols-2</code> for
+            dynamic layouts.
+          </p>
+          <h4>Example (3 Columns)</h4>
+          <div class="component-preview">
+            <div class="grid grid-cols-3 gap-4" style="width: 100%">
+              <div class="bg-navy p-3 border border-cyan text-center">1</div>
+              <div class="bg-navy p-3 border border-cyan text-center">2</div>
+              <div class="bg-navy p-3 border border-cyan text-center">3</div>
+            </div>
+          </div>
+          <h4>HTML</h4>
+          <pre
+            class="code-snippet"
+          ><code>&lt;div class="grid grid-cols-3 gap-4"&gt;
+  &lt;div&gt;1&lt;/div&gt;
+  &lt;div&gt;2&lt;/div&gt;
+  &lt;div&gt;3&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </section>
+
+        <section id="doc-spacing" class="doc-section">
+          <h3>Spacing</h3>
+          <p>Margin and padding utilities based on a <code>rem</code> scale.</p>
+          <h4>Classes (Example)</h4>
+          <pre class="code-snippet"><code>/* Margin */
+.m-1 { margin: 0.25rem; }
+.m-2 { margin: 0.5rem; }
+.mt-1 { margin-top: 0.25rem; }
+
+/* Padding */
+.p-1 { padding: 0.25rem; }
+.p-2 { padding: 0.5rem; }
+.pt-1 { padding-top: 0.25rem; }</code></pre>
+        </section>
+
+        <section id="doc-alcl" class="doc-section">
+          <h3>Aces's Lair Custom Language (ALCL)</h3>
+          <p>
+            ALCL is a utility-first CSS framework, just like Tailwind, designed
+            for rapid prototyping with our high-tech aesthetic. Include the
+            script link in your HTML and start building.
+          </p>
+          <h4>Script Link</h4>
+          <pre
+            class="code-snippet"
+          ><code>&lt;link rel="stylesheet" href="http://localhost:5500/aces-lair.css"&gt;</code></pre>
+          <h4>Example: Building a Button with ALCL</h4>
+          <p>
+            Instead of using pre-defined components, you can construct elements
+            from low-level utility classes.
+          </p>
+          <div class="component-preview">
+            <button class="al-btn al-btn-primary font-orbitron">
+              ALCL Button
+            </button>
+          </div>
+          <h4>HTML</h4>
+          <pre
+            class="code-snippet"
+          ><code>&lt;button class="al-btn al-btn-primary font-orbitron"&gt;
+  ALCL Button
+&lt;/button&gt;</code></pre>
+        </section>
+
+        <section id="doc-responsive" class="doc-section">
+          <h3>Responsive Design</h3>
+          <p>
+            ALCL uses a mobile-first approach. Utilities apply to all screen
+            sizes by default. To apply a utility only on larger screens, prefix
+            it with a breakpoint name.
+          </p>
+          <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem">
+            <li><code>md:</code> (768px and up) - for tablets</li>
+            <li><code>lg:</code> (1024px and up) - for desktops</li>
+          </ul>
+          <h4>Example: Responsive Grid</h4>
+          <p>
+            This grid starts as a single column on mobile, becomes two columns
+            on medium screens, and four columns on large screens.
+          </p>
+          <div class="component-preview">
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+              style="width: 100%"
+            >
+              <div class="bg-navy p-3 border border-cyan text-center">1</div>
+              <div class="bg-navy p-3 border border-cyan text-center">2</div>
+              <div class="bg-navy p-3 border border-cyan text-center">3</div>
+              <div class="bg-navy p-3 border border-cyan text-center">4</div>
+            </div>
+          </div>
+          <h4>HTML</h4>
+          <pre
+            class="code-snippet"
+          ><code>&lt;div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"&gt;
+  &lt;div&gt;...&lt;/div&gt;
+  &lt;div&gt;...&lt;/div&gt;
+  &lt;div&gt;...&lt;/div&gt;
+  &lt;div&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </section>
+
+        <section id="doc-accordion" class="doc-section">
+          <h3>Accordion</h3>
+          <p>
+            A vertically stacked set of interactive headings that each contain a
+            title, content snippet, or thumbnail representing a section of
+            content.
+          </p>
+          <h4>Example</h4>
+          <div
+            class="component-preview"
+            style="flex-direction: column; align-items: stretch"
+          >
+            <div class="accordion">
+              <div class="accordion-item">
+                <button class="accordion-header">Section 1</button>
+                <div class="accordion-content">
+                  <p>
+                    This is the content for the first section. It can contain
+                    any HTML elements.
+                  </p>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-header">Section 2</button>
+                <div class="accordion-content">
+                  <p>
+                    This is the content for the second section. Accordions are
+                    useful for showing and hiding large amounts of content in a
+                    compact space.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h4>HTML</h4>
+          <pre class="code-snippet"><code>&lt;div class="accordion"&gt;
+  &lt;div class="accordion-item"&gt;
+    &lt;button class="accordion-header"&gt;Section 1&lt;/button&gt;
+    &lt;div class="accordion-content"&gt;
+      &lt;p&gt;Content for section 1...&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="accordion-item"&gt;
+    &lt;button class="accordion-header"&gt;Section 2&lt;/button&gt;
+    &lt;div class="accordion-content"&gt;
+      &lt;p&gt;Content for section 2...&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          <h4>JavaScript</h4>
+          <pre
+            class="code-snippet"
+          ><code>const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+accordionHeaders.forEach(header => {
+  header.addEventListener('click', () => {
+    header.classList.toggle('active');
+    const content = header.nextElementSibling;
+    if (content.style.maxHeight) {
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + 'px';
+    }
+  });
+});</code></pre>
+        </section>
+
+        <section id="doc-modal" class="doc-section">
+          <h3>Modal</h3>
+          <p>
+            A modal is a dialog box/popup window that is displayed on top of the
+            current page.
+          </p>
+          <h4>Example</h4>
+          <div class="component-preview">
+            <button
+              class="al-btn al-btn-primary"
+              data-modal-target="#example-modal"
+            >
+              Open Modal
+            </button>
+          </div>
+          <h4>HTML</h4>
+          <pre class="code-snippet"><code>&lt;!-- Trigger Button --&gt;
+&lt;button class="al-btn al-btn-primary" data-modal-target="#example-modal"&gt;Open Modal&lt;/button&gt;
+
+&lt;!-- Modal Structure --&gt;
+&lt;div class="modal-overlay" id="example-modal"&gt;
+  &lt;div class="modal-content"&gt;
+    &lt;div class="modal-header"&gt;
+      &lt;h4&gt;Modal Title&lt;/h4&gt;
+      &lt;button class="modal-close"&gt;&amp;times;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class="modal-body"&gt;
+      &lt;p&gt;This is the main content of the modal...&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          <h4>JavaScript</h4>
+          <pre
+            class="code-snippet"
+          ><code>// Add event listeners to open, close, and click the overlay to close the modal.
+// See full implementation in the page source.</code></pre>
+        </section>
+
+        <section id="doc-footer" class="doc-section">
+          <h3>Footer</h3>
+          <p>A standard footer component for the bottom of your pages.</p>
+          <h4>Example</h4>
+          <div
+            class="component-preview"
+            style="padding: 0; overflow: hidden; border: none; width: 100%"
+          >
+            <footer class="al-footer" style="width: 100%">
+              <div class="al-footer-links">
+                <a href="#" class="al-footer-link">Home</a>
+                <a href="#" class="al-footer-link">Terms of Service</a>
+                <a href="#" class="al-footer-link">Privacy Policy</a>
+              </div>
+              <p class="al-footer-copyright">
+                &copy; 2024 Your Company. All Rights Reserved.
+              </p>
+            </footer>
+          </div>
+          <h4>HTML</h4>
+          <pre class="code-snippet"><code>&lt;footer class="al-footer"&gt;
+  &lt;div class="al-footer-links"&gt;
+    &lt;a href="#" class="al-footer-link"&gt;Home&lt;/a&gt;
+    &lt;a href="#" class="al-footer-link"&gt;Terms of Service&lt;/a&gt;
+    &lt;a href="#" class="al-footer-link"&gt;Privacy Policy&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;p class="al-footer-copyright"&gt;&copy; 2024 Your Company. All Rights Reserved.&lt;/p&gt;
+&lt;/footer&gt;</code></pre>
+        </section>
+
+        <section id="doc-alerts" class="doc-section">
+          <h3>Alerts</h3>
+          <p>Provide contextual feedback messages for typical user actions.</p>
+          <h4>Examples</h4>
+          <div class="component-preview" style="display: block">
+            <div class="al-alert al-alert-info">System Update Available</div>
+            <div class="al-alert al-alert-success">
+              Operation Completed Successfully
+            </div>
+            <div class="al-alert al-alert-danger">
+              Critical Error: Connection Lost
+            </div>
+          </div>
+          <h4>HTML</h4>
+          <pre
+            class="code-snippet"
+          ><code>&lt;div class="al-alert al-alert-info"&gt;System Update Available&lt;/div&gt;
+&lt;div class="al-alert al-alert-success"&gt;Operation Completed Successfully&lt;/div&gt;
+&lt;div class="al-alert al-alert-danger"&gt;Critical Error: Connection Lost&lt;/div&gt;</code></pre>
+        </section>
+
+        <section id="doc-badges" class="doc-section">
+          <h3>Badges</h3>
+          <p>Small count and labeling component.</p>
+          <h4>Examples</h4>
+          <div class="component-preview">
+            <span class="al-badge al-badge-primary">New</span>
+            <span class="al-badge al-badge-success">Online</span>
+            <span class="al-badge al-badge-danger">Offline</span>
+            <button
+              class="al-btn al-btn-primary"
+              style="font-size: 0.9rem; padding: 0.5rem 1rem"
+            >
+              Notifications
+              <span class="al-badge al-badge-danger" style="margin-left: 5px"
+                >4</span
+              >
+            </button>
+          </div>
+          <h4>HTML</h4>
+          <pre
+            class="code-snippet"
+          ><code>&lt;span class="al-badge al-badge-primary"&gt;New&lt;/span&gt;
+&lt;span class="al-badge al-badge-success"&gt;Online&lt;/span&gt;
+&lt;span class="al-badge al-badge-danger"&gt;Offline&lt;/span&gt;</code></pre>
+        </section>
+
+        <section id="doc-spinners" class="doc-section">
+          <h3>Spinners</h3>
+          <p>Indicate the loading state of a component or page.</p>
+          <h4>Example</h4>
+          <div class="component-preview">
+            <div class="al-spinner"></div>
+            <div class="al-spinner" style="color: var(--al-red)"></div>
+            <div class="al-spinner" style="color: var(--al-green)"></div>
+          </div>
+          <h4>HTML</h4>
+          <pre
+            class="code-snippet"
+          ><code>&lt;div class="al-spinner"&gt;&lt;/div&gt;</code></pre>
+        </section>
+
+        <section id="doc-tables" class="doc-section">
+          <h3>Tables</h3>
+          <p>A high-tech styled table for displaying data sets.</p>
+          <h4>Example</h4>
+          <div class="component-preview" style="display: block">
+            <table class="al-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>User</th>
+                  <th>Status</th>
+                  <th>Access Level</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#1024</td>
+                  <td>Neo</td>
+                  <td><span class="al-badge al-badge-success">Active</span></td>
+                  <td>Admin</td>
+                </tr>
+                <tr>
+                  <td>#2048</td>
+                  <td>Trinity</td>
+                  <td><span class="al-badge al-badge-primary">Away</span></td>
+                  <td>User</td>
+                </tr>
+                <tr>
+                  <td>#4096</td>
+                  <td>Morpheus</td>
+                  <td><span class="al-badge al-badge-danger">Offline</span></td>
+                  <td>Moderator</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h4>HTML</h4>
+          <pre class="code-snippet"><code>&lt;table class="al-table"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;ID&lt;/th&gt;
+      &lt;th&gt;User&lt;/th&gt;
+      &lt;th&gt;Status&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;#1024&lt;/td&gt;
+      &lt;td&gt;Neo&lt;/td&gt;
+      &lt;td&gt;&lt;span class="al-badge al-badge-success"&gt;Active&lt;/span&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        </section>
+
+        <section id="doc-breadcrumbs" class="doc-section">
+          <h3>Breadcrumbs</h3>
+          <p>
+            Indicate the current page's location within a navigational
+            hierarchy.
+          </p>
+          <h4>Example</h4>
+          <div class="component-preview">
+            <nav aria-label="breadcrumb">
+              <ol class="al-breadcrumb">
+                <li class="al-breadcrumb-item">
+                  <a href="#" class="al-breadcrumb-link">Home</a>
+                </li>
+                <li class="al-breadcrumb-item">
+                  <a href="#" class="al-breadcrumb-link">Library</a>
+                </li>
+                <li class="al-breadcrumb-item active" aria-current="page">
+                  Data
+                </li>
+              </ol>
+            </nav>
+          </div>
+          <h4>HTML</h4>
+          <pre class="code-snippet"><code>&lt;nav aria-label="breadcrumb"&gt;
+  &lt;ol class="al-breadcrumb"&gt;
+    &lt;li class="al-breadcrumb-item"&gt;&lt;a href="#" class="al-breadcrumb-link"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="al-breadcrumb-item"&gt;&lt;a href="#" class="al-breadcrumb-link"&gt;Library&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="al-breadcrumb-item active" aria-current="page"&gt;Data&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code></pre>
+        </section>
+
+        <section id="doc-pagination" class="doc-section">
+          <h3>Pagination</h3>
+          <p>
+            Documentation and examples for showing pagination to indicate a
+            series of related content exists across multiple pages.
+          </p>
+          <h4>Example</h4>
+          <div class="component-preview">
+            <ul class="al-pagination">
+              <li class="al-page-item disabled">
+                <a class="al-page-link" href="#">Previous</a>
+              </li>
+              <li class="al-page-item">
+                <a class="al-page-link" href="#">1</a>
+              </li>
+              <li class="al-page-item active">
+                <a class="al-page-link" href="#">2</a>
+              </li>
+              <li class="al-page-item">
+                <a class="al-page-link" href="#">3</a>
+              </li>
+              <li class="al-page-item">
+                <a class="al-page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </div>
+          <h4>HTML</h4>
+          <pre class="code-snippet"><code>&lt;ul class="al-pagination"&gt;
+  &lt;li class="al-page-item disabled"&gt;&lt;a class="al-page-link" href="#"&gt;Previous&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="al-page-item"&gt;&lt;a class="al-page-link" href="#"&gt;1&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="al-page-item active"&gt;&lt;a class="al-page-link" href="#"&gt;2&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="al-page-item"&gt;&lt;a class="al-page-link" href="#"&gt;3&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="al-page-item"&gt;&lt;a class="al-page-link" href="#"&gt;Next&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+        </section>
+
+        <section id="doc-progress" class="doc-section">
+          <h3>Progress Bars</h3>
+          <p>
+            Documentation and examples for using custom progress bars featuring
+            support for stacked bars, animated backgrounds, and text labels.
+          </p>
+          <h4>Examples</h4>
+          <div class="component-preview" style="display: block">
+            <div class="al-progress mb-3">
+              <div class="al-progress-bar" style="width: 25%">25%</div>
+            </div>
+            <div class="al-progress mb-3">
+              <div
+                class="al-progress-bar al-progress-bar-striped"
+                style="width: 50%; background-color: var(--al-green)"
+              >
+                50%
+              </div>
+            </div>
+            <div class="al-progress">
+              <div
+                class="al-progress-bar"
+                style="width: 75%; background-color: var(--al-red)"
+              >
+                75%
+              </div>
+            </div>
+          </div>
+          <h4>HTML</h4>
+          <pre class="code-snippet"><code>&lt;div class="al-progress"&gt;
+  &lt;div class="al-progress-bar" style="width: 25%"&gt;25%&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="al-progress"&gt;
+  &lt;div class="al-progress-bar al-progress-bar-striped" style="width: 50%; background-color: var(--al-green);"&gt;50%&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </section>
+
+        <section id="doc-avatars" class="doc-section">
+          <h3>Avatars</h3>
+          <p>
+            Avatars can be used to represent people or objects. They support
+            images or text initials.
+          </p>
+          <h4>Examples</h4>
+          <div class="component-preview">
+            <div class="al-avatar al-avatar-sm">SM</div>
+            <div class="al-avatar al-avatar-md">MD</div>
+            <div class="al-avatar al-avatar-lg">LG</div>
+            <div
+              class="al-avatar al-avatar-md"
+              style="border-color: var(--al-red); color: var(--al-red)"
+            >
+              U
+            </div>
+          </div>
+          <h4>HTML</h4>
+          <pre
+            class="code-snippet"
+          ><code>&lt;div class="al-avatar al-avatar-sm"&gt;SM&lt;/div&gt;
+&lt;div class="al-avatar al-avatar-md"&gt;MD&lt;/div&gt;
+&lt;div class="al-avatar al-avatar-lg"&gt;LG&lt;/div&gt;
+
+&lt;!-- With Image --&gt;
+&lt;div class="al-avatar al-avatar-md"&gt;
+  &lt;img src="path/to/image.jpg" alt="User"&gt;
+&lt;/div&gt;</code></pre>
+        </section>
+
+        <section id="doc-forms" class="doc-section">
+          <h3>Forms</h3>
+          <p>Styled input fields ready for data entry.</p>
+          <h4>Example</h4>
+          <div class="component-preview">
+            <div style="width: 100%; max-width: 400px">
+              <label class="block mb-3 font-orbitron text-cyan">Username</label>
+              <input
+                type="text"
+                class="al-input"
+                placeholder="Enter username..."
+              />
+            </div>
+          </div>
+          <h4>HTML</h4>
+          <pre
+            class="code-snippet"
+          ><code>&lt;label class="block mb-3 font-orbitron text-cyan"&gt;Username&lt;/label&gt;
+&lt;input type="text" class="al-input" placeholder="Enter username..." /&gt;</code></pre>
+        </section>
+
+        <section id="doc-nav" class="doc-section">
+          <h3>Navigation Bar</h3>
+          <p>A responsive top navigation bar component.</p>
+          <h4>Example</h4>
+          <div
+            class="component-preview"
+            style="padding: 0; overflow: hidden; border: none"
+          >
+            <nav class="al-navbar" style="width: 100%">
+              <div
+                class="font-orbitron text-cyan"
+                style="font-size: 1.2rem; font-weight: bold"
+              >
+                BRAND
+              </div>
+              <div>
+                <a href="#" class="al-nav-link">Home</a>
+                <a href="#" class="al-nav-link">About</a>
+                <a href="#" class="al-nav-link">Contact</a>
+              </div>
+            </nav>
+          </div>
+          <h4>HTML</h4>
+          <pre class="code-snippet"><code>&lt;nav class="al-navbar"&gt;
+  &lt;div class="font-orbitron text-cyan" style="font-size: 1.2rem; font-weight: bold;"&gt;BRAND&lt;/div&gt;
+  &lt;div&gt;
+    &lt;a href="#" class="al-nav-link"&gt;Home&lt;/a&gt;
+    &lt;a href="#" class="al-nav-link"&gt;About&lt;/a&gt;
+    &lt;a href="#" class="al-nav-link"&gt;Contact&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+        </section>
+      </main>
+    </main>
+
+    <!-- Modal is placed here at the end of the body to ensure it's on top of other content -->
+    <div class="modal-overlay" id="example-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Modal Title</h4>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>
+            This is the main content of the modal. It can be used for forms,
+            information, or any other interactive content.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const docNavLinks = document.querySelectorAll(".doc-nav a");
+      const docSections = document.querySelectorAll(".doc-section");
+      const docContent = document.getElementById("doc-content");
+
+      function handleDocNav(e) {
+        e.preventDefault();
+        const targetId = e.currentTarget.getAttribute("href");
+
+        // Update nav links
+        docNavLinks.forEach((link) => link.classList.remove("active"));
+        e.currentTarget.classList.add("active");
+
+        // Update content sections
+        docSections.forEach((section) => {
+          if ("#" + section.id === targetId) {
+            section.classList.add("active");
+          } else {
+            section.classList.remove("active");
+          }
+        });
+
+        // Scroll content to top
+        docContent.scrollTop = 0;
+      }
+
+      docNavLinks.forEach((link) =>
+        link.addEventListener("click", handleDocNav),
+      );
+
+      // --- Accordion Logic ---
+      const accordionHeaders = document.querySelectorAll(".accordion-header");
+      accordionHeaders.forEach((header) => {
+        header.addEventListener("click", () => {
+          header.classList.toggle("active");
+          const content = header.nextElementSibling;
+          if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+          } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+          }
+        });
+      });
+
+      // --- Modal Logic ---
+      const openModalButtons = document.querySelectorAll("[data-modal-target]");
+      const closeModalButtons = document.querySelectorAll(".modal-close");
+      const overlays = document.querySelectorAll(".modal-overlay");
+
+      openModalButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const modal = document.querySelector(button.dataset.modalTarget);
+          openModal(modal);
+        });
+      });
+
+      overlays.forEach((overlay) => {
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) {
+            closeModal(overlay);
+          }
+        });
+      });
+
+      closeModalButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const modal = button.closest(".modal-overlay");
+          closeModal(modal);
+        });
+      });
+
+      function openModal(modal) {
+        if (modal == null) return;
+        modal.classList.add("active");
+      }
+
+      function closeModal(modal) {
+        if (modal == null) return;
+        modal.classList.remove("active");
+      }
+
+      // Close modal with escape key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          document
+            .querySelectorAll(".modal-overlay.active")
+            .forEach(closeModal);
+        }
+      });
+
+      // --- Copy to Clipboard Logic ---
+      function initializeCopyButtons() {
+        document.querySelectorAll(".code-snippet").forEach((snippet) => {
+          const button = document.createElement("button");
+          button.className = "copy-btn";
+          button.textContent = "Copy";
+          snippet.appendChild(button);
+
+          button.addEventListener("click", () => {
+            const code = snippet.querySelector("code").innerText;
+            navigator.clipboard
+              .writeText(code)
+              .then(() => {
+                button.textContent = "Copied!";
+                button.classList.add("copied");
+                setTimeout(() => {
+                  button.textContent = "Copy";
+                  button.classList.remove("copied");
+                }, 2000);
+              })
+              .catch((err) => {
+                console.error("Could not copy text: ", err);
+                button.textContent = "Error";
+                setTimeout(() => {
+                  button.textContent = "Copy";
+                }, 2000);
+              });
+          });
+        });
+      }
+      initializeCopyButtons();
+    </script>
+  </body>
+</html>
