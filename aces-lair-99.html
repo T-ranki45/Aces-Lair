@@ -1577,16 +1577,16 @@
       async function processCommand(command) {
         const parts = command.match(/(?:[^\s"]+|"[^"]*")+/g) || [];
         const baseCmd = parts[0];
+        const args = parts.slice(1);
 
         switch (baseCmd) {
-          case "Aces-admin-command":
-            const usernameWithQuotes = parts[1];
-            const flag = parts[2];
-            if (flag === "-banned" && usernameWithQuotes) {
-              const username = usernameWithQuotes.replace(/"/g, ""); // remove quotes
+          case "Aces-admin-command": {
+            const usernameWithQuotes = args[0];
+            const flag = args[1];
+            const username = cleanArg(usernameWithQuotes);
+            if (flag === "-banned" && username) {
               await banUser(username);
-            } else if (flag === "-unban" && usernameWithQuotes) {
-              const username = usernameWithQuotes.replace(/"/g, ""); // remove quotes
+            } else if (flag === "-unban" && username) {
               await unbanUser(username);
             } else {
               logToTerminal(
@@ -1595,6 +1595,50 @@
               );
             }
             break;
+          }
+          case "ban": {
+            const username = cleanArg(args[0]);
+            if (!username) {
+              logToTerminal('Usage: ban "username"', "error");
+              break;
+            }
+            await banUser(username);
+            break;
+          }
+          case "unban": {
+            const username = cleanArg(args[0]);
+            if (!username) {
+              logToTerminal('Usage: unban "username"', "error");
+              break;
+            }
+            await unbanUser(username);
+            break;
+          }
+          case "users":
+          case "list-users":
+            await listUsers();
+            break;
+          case "admins":
+          case "list-admins":
+            await listAdmins();
+            break;
+          case "online":
+          case "online-admins":
+            listOnlineAdmins();
+            break;
+          case "whoami":
+            showIdentity();
+            break;
+          case "status":
+            showStatus();
+            break;
+          case "echo":
+            echoMessage(args);
+            break;
+          case "reload-users":
+          case "sync-users":
+            await refreshUserMatrix();
+            break;
           case "clear":
             terminal.innerHTML = "";
             break;
@@ -1602,11 +1646,123 @@
             logToTerminal("Available commands:");
             logToTerminal('- Aces-admin-command "username" -banned');
             logToTerminal('- Aces-admin-command "username" -unban');
+            logToTerminal('- ban "username"');
+            logToTerminal('- unban "username"');
+            logToTerminal("- users | list-users");
+            logToTerminal("- admins | list-admins");
+            logToTerminal("- online | online-admins");
+            logToTerminal("- whoami");
+            logToTerminal("- status");
+            logToTerminal('- echo "message"');
+            logToTerminal("- reload-users | sync-users");
             logToTerminal("- clear");
             logToTerminal("- help");
             break;
           default:
             logToTerminal(`Command not found: ${baseCmd}`, "error");
+        }
+      }
+
+      function cleanArg(value) {
+        return value ? value.replace(/"/g, "").trim() : "";
+      }
+
+      async function listUsers() {
+        logToTerminal("Fetching user registry...");
+        try {
+          const res = await fetch("/api/admin/users");
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const users = await res.json();
+
+          if (!Array.isArray(users) || users.length === 0) {
+            logToTerminal("No registered users found.");
+            return;
+          }
+
+          logToTerminal(`USER REGISTRY (${users.length})`);
+          users.forEach((user, index) => {
+            const status = user.isBanned ? "BANNED" : "ACTIVE";
+            const line = `${String(index + 1).padStart(2, "0")}. [${status}] ${user.fullName} | ${user.role} | ${user.email}`;
+            logToTerminal(line, user.isBanned ? "error" : "default");
+          });
+        } catch (err) {
+          logToTerminal(
+            `ERROR: Unable to fetch users. ${err.message}`,
+            "error",
+          );
+        }
+      }
+
+      async function listAdmins() {
+        logToTerminal("Fetching console admin registry...");
+        try {
+          const res = await fetch("/api/console/admins");
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const admins = await res.json();
+
+          if (!Array.isArray(admins) || admins.length === 0) {
+            logToTerminal("No console admins registered.");
+            return;
+          }
+
+          logToTerminal(`CONSOLE ADMINS (${admins.length})`);
+          admins.forEach((admin, index) => {
+            logToTerminal(`${String(index + 1).padStart(2, "0")}. ${admin}`);
+          });
+        } catch (err) {
+          logToTerminal(
+            `ERROR: Unable to fetch console admins. ${err.message}`,
+            "error",
+          );
+        }
+      }
+
+      function listOnlineAdmins() {
+        if (!onlineConsoleAdmins.length) {
+          logToTerminal("No console admins online.");
+          return;
+        }
+        logToTerminal(
+          `ONLINE ADMINS (${onlineConsoleAdmins.length}): ${onlineConsoleAdmins.join(" // ")}`,
+        );
+      }
+
+      function showIdentity() {
+        if (currentUser) {
+          logToTerminal(`IDENTITY: ${currentUser}`);
+        } else {
+          logToTerminal("IDENTITY: UNIDENTIFIED", "error");
+        }
+      }
+
+      function showStatus() {
+        const now = new Date();
+        const networkState = navigator.onLine ? "ONLINE" : "OFFLINE";
+        const socketState = socket && socket.connected ? "CONNECTED" : "DISCONNECTED";
+        logToTerminal("SYSTEM STATUS REPORT");
+        logToTerminal(`TIME: ${now.toLocaleString()}`);
+        logToTerminal(`NETWORK: ${networkState}`);
+        logToTerminal(`SOCKET: ${socketState}`);
+        logToTerminal(`IDENTITY: ${currentUser || "UNIDENTIFIED"}`);
+        logToTerminal(`ONLINE ADMINS: ${onlineConsoleAdmins.length}`);
+      }
+
+      function echoMessage(args) {
+        const message = args.join(" ").replace(/"/g, "").trim();
+        if (!message) {
+          logToTerminal('Usage: echo "message"', "error");
+          return;
+        }
+        logToTerminal(message);
+      }
+
+      async function refreshUserMatrix() {
+        logToTerminal("Refreshing user matrix...");
+        try {
+          await loadUsers();
+          logToTerminal("User matrix updated.");
+        } catch (err) {
+          logToTerminal(`ERROR: ${err.message}`, "error");
         }
       }
 

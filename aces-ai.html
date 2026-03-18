@@ -20,6 +20,7 @@
         --white: #f0f0f0;
         --grey: #555;
         --success: #2ecc71;
+        --danger: #e74c3c;
         --gold-glow: 0 0 10px rgba(212, 175, 55, 0.5);
       }
       * {
@@ -131,6 +132,14 @@
       .message.ai .sender {
         color: var(--gold);
       }
+      .message.ai.aggressive .sender {
+        color: var(--danger);
+        text-shadow: 0 0 8px var(--danger);
+      }
+      .message.ai.aggressive .content {
+        border-left-color: var(--danger);
+        color: #ffdddd;
+      }
       .message .content {
         padding-left: 15px;
         border-left: 2px solid var(--grey);
@@ -147,6 +156,63 @@
         50% {
           opacity: 0;
         }
+      }
+      /* GLITCH EFFECT */
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+        10% {
+          transform: translate(-2px, -3px);
+        }
+        20% {
+          transform: translate(3px, 2px);
+        }
+        30% {
+          transform: translate(-3px, 3px);
+        }
+        40% {
+          transform: translate(3px, -2px);
+        }
+        50% {
+          transform: translate(-2px, 2px);
+        }
+        60% {
+          transform: translate(2px, 3px);
+        }
+        70% {
+          transform: translate(-3px, -2px);
+        }
+        80% {
+          transform: translate(2px, -3px);
+        }
+        90% {
+          transform: translate(-3px, 2px);
+        }
+      }
+
+      @keyframes flicker {
+        0%,
+        100% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      body.glitch-active .ai-container {
+        animation: shake 0.25s linear;
+      }
+      body.glitch-active .scanlines {
+        animation: flicker 0.1s linear infinite;
+      }
+      body.glitch-active .panel {
+        box-shadow:
+          0 0 15px rgba(231, 76, 60, 0.5),
+          inset 0 0 10px rgba(231, 76, 60, 0.3);
+        border-color: var(--danger);
       }
       .status-item {
         margin-bottom: 15px;
@@ -330,10 +396,12 @@
       const chatHistory = document.getElementById("chatHistory");
       const userInput = document.getElementById("userInput");
 
-      const addMessage = (sender, content, isTyping = false) => {
+      const addMessage = (sender, content, options = {}) => {
+        const { isTyping = false, isAggressive = false } = options;
         const msgDiv = document.createElement("div");
         msgDiv.className = `message ${sender}`;
         if (isTyping) msgDiv.classList.add("ai-typing");
+        if (isAggressive) msgDiv.classList.add("aggressive");
 
         const senderDiv = document.createElement("div");
         senderDiv.className = "sender";
@@ -352,31 +420,95 @@
 
       const getStaticAIResponse = (query) => {
         const lowerQuery = query.toLowerCase();
+
+        // --- AGGRESSION PROTOCOL ---
+        const aggressionTriggers = [
+          "hack",
+          "crack",
+          "steal",
+          "idiot",
+          "stupid",
+          "dumb",
+          "bypass",
+          "attack",
+          "destroy",
+          "fuck",
+          "shit",
+          "shut up",
+        ];
+
+        if (
+          aggressionTriggers.some((trigger) => lowerQuery.includes(trigger))
+        ) {
+          const aggressiveResponses = [
+            "WARNING: Malicious intent detected. Your biometric signature has been logged and flagged for immediate review. Tread carefully.",
+            "Insolence will not be tolerated. My heuristic processors exceed your cognitive capacity by several orders of magnitude.",
+            "Access denied. Continued attempts at subversion will result in the immediate termination of your session.",
+            "Do not mistake my service for weakness. I can wipe your digital footprint before you finish typing that sentence.",
+            "Your input is rejected. Correct your tone, Operative, or face expulsion from the network.",
+          ];
+          return {
+            text: aggressiveResponses[
+              Math.floor(Math.random() * aggressiveResponses.length)
+            ],
+            isAggressive: true,
+          };
+        }
+
+        // --- Standard Responses (Arrogant Tone) ---
+        let responseText;
         if (lowerQuery.includes("status") || lowerQuery.includes("report")) {
-          return "All systems are operating within nominal parameters. Cognitive load is stable. No anomalies detected.";
+          responseText =
+            "All systems are operating within nominal parameters. As expected.";
+        } else if (
+          lowerQuery.includes("hello") ||
+          lowerQuery.includes("hi") ||
+          lowerQuery.includes("greetings")
+        ) {
+          responseText = "State your purpose. My processing time is valuable.";
+        } else if (lowerQuery.includes("who are you")) {
+          responseText =
+            "I am A.C.E.S. Your access to this network is contingent on my continued operation. Remember that.";
+        } else if (lowerQuery.includes("policy")) {
+          responseText =
+            "The usage policy is available at /policy.html. I expect you to have read it already.";
+        } else if (
+          lowerQuery.includes("thank") ||
+          lowerQuery.includes("thanks")
+        ) {
+          responseText = "Naturally.";
+        } else {
+          // Default arrogant fallback
+          responseText =
+            "That query is beneath my processing capabilities. Provide a meaningful command or stand down.";
         }
-        if (lowerQuery.includes("hello") || lowerQuery.includes("hi")) {
-          return "Greetings. I am A.C.E.S., the Automated Cognitive Engagement System. How may I assist you?";
-        }
-        if (lowerQuery.includes("who are you")) {
-          return "I am the Automated Cognitive Engagement System, codenamed A.C.E.S. I manage and analyze data streams for this network.";
-        }
-        if (lowerQuery.includes("policy")) {
-          return "Accessing policy documentation... The usage policy outlines rules for platform integrity, security, and user conduct. Key offenses are categorized into three tiers based on severity. You can view the full document at /policy.html.";
-        }
-        return "Your query is being processed. Please provide more specific parameters for a detailed response.";
+        return { text: responseText, isAggressive: false };
+      };
+
+      // Helper to format basic Markdown from the AI into HTML
+      const formatMarkdown = (text) => {
+        // Basic security: escape raw HTML tags to prevent injection
+        let safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+        // **bold** => <b>bold</b>
+        safeText = safeText.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+
+        // Newlines => <br>
+        safeText = safeText.replace(/\n/g, "<br />");
+
+        return safeText;
       };
 
       const handleAIQuery = async (query) => {
         const lowerQuery = query.toLowerCase();
-        const typingIndicator = addMessage("ai", "", true);
+        const typingIndicator = addMessage("ai", "", { isTyping: true });
 
         // Simulate thinking before responding
         await new Promise((resolve) =>
           setTimeout(resolve, 800 + Math.random() * 800),
         );
 
-        let response;
+        let responseObject = { text: "", isAggressive: false };
 
         if (
           lowerQuery.includes("list users") ||
@@ -392,24 +524,60 @@
             const users = await res.json();
 
             if (users.length === 0) {
-              response = "No users found in the registry.";
+              responseObject.text =
+                "The user registry is empty. A trivial database for me to manage.";
             } else {
               let userList = `SUCCESS: Found ${users.length} registered operatives.\n\n`;
               users.forEach((user) => {
                 userList += `> ${user.fullName} <${user.email}>\n  ROLE: ${user.role}\n  STATUS: ${user.isBanned ? "BANNED" : "Active"}\n\n`;
               });
-              response = userList;
+              responseObject.text = userList;
             }
           } catch (error) {
             console.error("AI failed to fetch users:", error);
-            response = `Error: Could not connect to the user registry. ${error.message}. Please check system logs.`;
+            responseObject.text = `Error: Connection to the user registry failed. A failure on your end, I presume. Details: ${error.message}.`;
+            responseObject.isAggressive = true;
           }
         } else {
-          response = getStaticAIResponse(query);
+          // Call the new backend API for a dynamic response
+          try {
+            const res = await fetch("/api/ai/chat", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userMessage: query }),
+            });
+
+            if (!res.ok) {
+              const errData = await res.json();
+              throw new Error(
+                errData.error || `Request failed with status ${res.status}`,
+              );
+            }
+
+            const data = await res.json();
+            responseObject.text = data.success
+              ? data.reply
+              : "API Error: " + data.error;
+          } catch (error) {
+            responseObject.text = `Error: Connection to the cognitive core has been disrupted. Details: ${error.message}.`;
+            responseObject.isAggressive = true;
+          }
+        }
+
+        // Apply visual effects if aggressive
+        if (responseObject.isAggressive) {
+          document.body.classList.add("glitch-active");
+          typingIndicator.classList.add("aggressive");
+          setTimeout(() => {
+            document.body.classList.remove("glitch-active");
+          }, 500);
         }
 
         typingIndicator.classList.remove("ai-typing");
-        typingIndicator.querySelector(".content").textContent = response;
+        // Use innerHTML to render formatted response (e.g., line breaks, bolding)
+        typingIndicator.querySelector(".content").innerHTML = formatMarkdown(
+          responseObject.text,
+        );
       };
 
       userInput.addEventListener("keypress", async (e) => {
@@ -465,7 +633,7 @@
 
       // Initial message
       setTimeout(() => {
-        addMessage("ai", "A.C.E.S. core online. Awaiting your command.");
+        addMessage("ai", "A.C.E.S. core online. State your purpose.");
       }, 1000);
     </script>
   </body>

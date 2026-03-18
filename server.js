@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
@@ -201,6 +202,10 @@ app.get("/api/session-status", (req, res) => {
     res.json({ loggedIn: false });
   }
 });
+
+// --- A.C.E.S. AI ROUTES ---
+const aiRoutes = require("./aiRoutes");
+app.use("/api/ai", aiRoutes);
 
 // Fetch all data for the workspace page
 app.get("/api/workspace-data", isAuthenticated, async (req, res) => {
@@ -657,6 +662,46 @@ app.post("/api/create-fs-item", isAuthenticated, async (req, res) => {
   } catch (error) {
     console.error(`Error creating fs item for project ${projectId}:`, error);
     res.status(500).json({ success: false, error: "Could not create item." });
+  }
+});
+
+/**
+ * NEW: Rename File or Folder Endpoint
+ */
+app.put("/api/rename-fs-item", isAuthenticated, async (req, res) => {
+  const { projectId, oldPath, newPath } = req.body;
+
+  if (!projectId || !oldPath || !newPath) {
+    return res
+      .status(400)
+      .json({ success: false, error: "Missing required fields." });
+  }
+
+  try {
+    const projectBasePath = path.join(
+      __dirname,
+      "projects",
+      projectId.toString(),
+    );
+    const fullOldPath = path.join(projectBasePath, oldPath);
+    const fullNewPath = path.join(projectBasePath, newPath);
+
+    // Security checks
+    if (
+      !fullOldPath.startsWith(projectBasePath) ||
+      !fullNewPath.startsWith(projectBasePath)
+    ) {
+      return res.status(400).json({ success: false, error: "Invalid path." });
+    }
+
+    await fs.rename(fullOldPath, fullNewPath);
+    res.json({
+      success: true,
+      message: `Renamed '${oldPath}' to '${newPath}'.`,
+    });
+  } catch (error) {
+    console.error(`Error renaming item for project ${projectId}:`, error);
+    res.status(500).json({ success: false, error: "Could not rename item." });
   }
 });
 

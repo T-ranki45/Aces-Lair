@@ -1,0 +1,4 @@
+{
+  "mos.port": "",
+  "python-envs.defaultEnvManager": "ms-python.python:system"
+}

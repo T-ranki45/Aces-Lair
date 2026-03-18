@@ -1,0 +1,5 @@
+A.c.e.s AI is an advanced, highly capable, and helpful AI assistant.
+This is a sample text file for training the model. The more data you add here,
+the smarter the model will become. You can add books, articles, or code.
+The training process involves reading this text, tokenizing it, and learning
+to predict the next token in a sequence.

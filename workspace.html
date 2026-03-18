@@ -321,6 +321,7 @@
           opacity: 0;
         }
       }
+
       /* For the creation input */
       .creation-input {
         background-color: var(--al-dark-surface);
@@ -972,9 +973,6 @@
       let openFiles = new Map(); // path -> { model, viewState }
       const tabsContainer = document.getElementById("editor-tabs");
       let currentProjectFiles = [];
-      const aiChatHistory = document.getElementById("ai-chat-history");
-      const aiInput = document.getElementById("ai-input");
-      const aiAskBtn = document.getElementById("ai-ask-btn");
 
       let languageServicesConfigured = false; // Ensure we only configure this once
       const saveStatusEl = document.getElementById("editor-save-status");
@@ -982,6 +980,82 @@
       let saveTimeout; // For auto-save debouncing
 
       // --- File Tree Logic ---
+      // Moved AI variables here to be accessible within the same scope
+      const aiChatHistory = document.getElementById("ai-chat-history");
+      const aiInput = document.getElementById("ai-input");
+      const aiAskBtn = document.getElementById("ai-ask-btn");
+      let aiAssistantInitialized = false;
+
+      function initAiAssistant() {
+        const appendAiMessage = (sender, text, isThinking = false) => {
+          const msgDiv = document.createElement("div");
+          msgDiv.className = `ai-message ${sender}`;
+          if (isThinking) msgDiv.classList.add("thinking");
+
+          const senderDiv = document.createElement("div");
+          senderDiv.className = "sender";
+          senderDiv.textContent = sender === "user" ? "You" : "A.C.E.S.";
+
+          const contentDiv = document.createElement("div");
+          contentDiv.className = "content";
+          contentDiv.innerHTML = text; // Use innerHTML for formatting
+
+          msgDiv.appendChild(senderDiv);
+          msgDiv.appendChild(contentDiv);
+          aiChatHistory.appendChild(msgDiv);
+          aiChatHistory.scrollTop = aiChatHistory.scrollHeight;
+          return contentDiv; // Return content div for updates
+        };
+
+        const formatAiMarkdown = (text) => {
+          let safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          safeText = safeText.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+          safeText = safeText.replace(/\n/g, "<br />");
+          return safeText;
+        };
+
+        aiChatHistory.innerHTML = ""; // Clear previous chat
+        appendAiMessage(
+          "assistant",
+          "A.C.E.S. Assistant online. How can I help?",
+        );
+
+        if (aiAssistantInitialized) return; // Listeners already attached
+
+        const handleAiQuery = async () => {
+          const message = aiInput.value.trim();
+          if (!message) return;
+
+          appendAiMessage("user", message);
+          aiInput.value = "";
+
+          const thinkingIndicator = appendAiMessage("assistant", "", true);
+
+          try {
+            const response = await fetch("/api/ai/chat", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userMessage: message }),
+            });
+            const data = await response.json();
+
+            thinkingIndicator.parentElement.classList.remove("thinking");
+            thinkingIndicator.innerHTML = data.success
+              ? formatAiMarkdown(data.reply)
+              : `<b>Error:</b> ${data.error}`;
+          } catch (error) {
+            thinkingIndicator.parentElement.classList.remove("thinking");
+            thinkingIndicator.innerHTML =
+              "<b>Error:</b> A.C.E.S AI is offline.";
+          }
+        };
+
+        aiAskBtn.addEventListener("click", handleAiQuery);
+        aiInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") handleAiQuery();
+        });
+        aiAssistantInitialized = true;
+      }
 
       function renderFileTree(nodes, container, currentPath = "") {
         // A simple path joiner for the browser
@@ -1421,135 +1495,6 @@
           },
         });
       */
-    </script>
-    <script>
-      // --- AI ASSISTANT LOGIC ---
-      function addAiMessage(sender, content, isThinking = false) {
-        const msgDiv = document.createElement("div");
-        msgDiv.className = `ai-message ${sender}`;
-        if (isThinking) {
-          msgDiv.classList.add("thinking");
-        }
-
-        const safeContent = content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-        msgDiv.innerHTML = `
-                <span class="sender">${sender}</span>
-                <div class="content">${safeContent}</div>
-            `;
-        aiChatHistory.appendChild(msgDiv);
-        aiChatHistory.scrollTop = aiChatHistory.scrollHeight;
-        return msgDiv;
-      }
-
-      async function handleAiQuery() {
-        const query = aiInput.value.trim();
-        if (!query) return;
-
-        addAiMessage("user", query);
-        aiInput.value = "";
-
-        const thinkingMsg = addAiMessage("assistant", "Processing...", true);
-        await new Promise((resolve) =>
-          setTimeout(resolve, 800 + Math.random() * 500),
-        );
-
-        let response =
-          "I'm not sure how to help with that. Ask 'help' to see a list of my capabilities.";
-        const lowerQuery = query.toLowerCase();
-
-        if (lowerQuery.startsWith("create file")) {
-          const filename = query.substring("create file".length).trim();
-          if (filename) {
-            thinkingMsg.querySelector(".content").textContent =
-              `Acknowledged. Creating file: ${filename}...`;
-            // createFsItem is an existing function that handles API call and refreshes the tree
-            await createFsItem("", filename, "file");
-            response = `File "${filename}" has been created successfully in the root directory.`;
-          } else {
-            response =
-              "Please specify a filename. Usage: create file <filename>";
-          }
-        } else if (lowerQuery.includes("list files")) {
-          if (currentProjectFiles && currentProjectFiles.length > 0) {
-            function buildFileListString(nodes, prefix = "") {
-              let list = "";
-              nodes.forEach((node, index) => {
-                const isLast = index === nodes.length - 1;
-                const connector = isLast ? "└── " : "├── ";
-                const icon = node.type === "directory" ? "📁" : "📄";
-                list += `${prefix}${connector}${icon} ${node.name}\n`;
-                if (
-                  node.type === "directory" &&
-                  node.children &&
-                  node.children.length > 0
-                ) {
-                  const childPrefix = prefix + (isLast ? "    " : "│   ");
-                  list += buildFileListString(node.children, childPrefix);
-                }
-              });
-              return list;
-            }
-
-            response =
-              "Current project file structure:\n\n" +
-              buildFileListString(currentProjectFiles);
-          } else {
-            response =
-              "There are no files in the current project, or the file tree hasn't been loaded.";
-          }
-        } else if (lowerQuery.includes("help")) {
-          response = `I can assist you with the following commands:
-- \`help\`: Shows this list of commands.
-- \`list files\`: Displays the file structure of the current project.
-- \`create file <filename>\`: Creates a new empty file in the project root.
-- \`explain\`: Select some code in the editor and ask me to 'explain' it.`;
-        } else if (lowerQuery.includes("explain")) {
-          const selection = monacoEditor.getSelection();
-          const selectedText = monacoEditor
-            .getModel()
-            .getValueInRange(selection);
-
-          if (!selectedText) {
-            response =
-              "Please select a piece of code in the editor for me to explain.";
-          } else if (/\b(const|let|var)\s+.+/.test(selectedText)) {
-            response =
-              "This appears to be a variable declaration. It's used to store a value (like a number, string, or object) so it can be referenced later in the code.";
-          } else if (/\bfunction\b|\(.*\)\s*=>/.test(selectedText)) {
-            response =
-              "This is a function declaration or expression. It defines a block of reusable code that can be called to perform a specific task.";
-          } else if (/console\.log\(.+\)/.test(selectedText)) {
-            response =
-              "This is a `console.log` statement. It's a common debugging tool used to print information or variable values to the browser's developer console.";
-          } else if (/\/\/.+|\/\*[\s\S]*?\*\//.test(selectedText)) {
-            response =
-              "This is a code comment. Comments are ignored by the program but are useful for developers to leave notes and explain what the code does.";
-          } else {
-            response =
-              "I'm still learning to interpret complex code. This seems to be a custom piece of logic. Try selecting a more standard declaration or statement.";
-          }
-        } else if (lowerQuery.includes("hello") || lowerQuery.includes("hi")) {
-          response =
-            "Hello! I am A.C.E.S., your integrated code assistant. How can I help you with this project?";
-        }
-
-        thinkingMsg.classList.remove("thinking");
-        thinkingMsg.querySelector(".content").textContent = response;
-      }
-
-      function initAiAssistant() {
-        aiChatHistory.innerHTML = "";
-        addAiMessage(
-          "assistant",
-          "A.C.E.S. assistant online. Ask 'help' to see what I can do.",
-        );
-      }
-
-      aiAskBtn.addEventListener("click", handleAiQuery);
-      aiInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") handleAiQuery();
-      });
     </script>
   </body>
 </html>
