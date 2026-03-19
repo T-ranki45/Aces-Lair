@@ -18,6 +18,499 @@
         background-color: var(--al-dark-surface);
         color: var(--al-text);
         font-family: "Rajdhani", sans-serif;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        background:
+          radial-gradient(circle at top left, rgba(0, 255, 255, 0.12), transparent 32%),
+          radial-gradient(circle at 85% 10%, rgba(46, 204, 113, 0.08), transparent 24%),
+          linear-gradient(180deg, #030a17 0%, #04101f 48%, #020814 100%);
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 56px 56px;
+        mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.9), transparent 90%);
+        opacity: 0.16;
+      }
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 255, 255, 0.04),
+          transparent 22%,
+          transparent 78%,
+          rgba(0, 255, 255, 0.05)
+        );
+        opacity: 0.55;
+      }
+      .workspace-page {
+        position: relative;
+        z-index: 1;
+        padding-bottom: 2.5rem;
+      }
+      .workspace-shell {
+        align-items: start;
+      }
+      .workspace-sidebar,
+      .workspace-main {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .workspace-panel {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(0, 255, 255, 0.1);
+        background:
+          linear-gradient(180deg, rgba(10, 25, 47, 0.92), rgba(4, 14, 28, 0.9)),
+          rgba(10, 25, 47, 0.85);
+        box-shadow:
+          0 18px 45px rgba(0, 0, 0, 0.28),
+          inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      }
+      .workspace-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at top right, rgba(0, 255, 255, 0.12), transparent 30%),
+          linear-gradient(135deg, rgba(255, 255, 255, 0.025), transparent 40%);
+      }
+      .workspace-panel > * {
+        position: relative;
+        z-index: 1;
+      }
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.9rem;
+      }
+      .section-title-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+      .section-kicker {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(0, 255, 255, 0.72);
+      }
+      .section-heading {
+        margin: 0;
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.2rem;
+        color: #fff;
+      }
+      .section-subcopy {
+        margin: 0;
+        font-size: 0.88rem;
+        color: rgba(205, 214, 246, 0.72);
+      }
+      .workspace-hero {
+        padding: 1.4rem;
+        display: grid;
+        grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.95fr);
+        gap: 1rem;
+        align-items: stretch;
+      }
+      .workspace-hero-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 0.9rem;
+      }
+      .hero-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        width: fit-content;
+        padding: 0.35rem 0.7rem;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        background: rgba(0, 255, 255, 0.08);
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--al-cyan);
+      }
+      .hero-kicker::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--al-green);
+        box-shadow: 0 0 10px rgba(46, 204, 113, 0.8);
+      }
+      .hero-title {
+        margin: 0;
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(1.55rem, 2vw + 1rem, 2.35rem);
+        line-height: 1.08;
+        color: #f4fbff;
+      }
+      .hero-description {
+        margin: 0;
+        max-width: 60ch;
+        font-size: 1rem;
+        line-height: 1.65;
+        color: rgba(205, 214, 246, 0.85);
+      }
+      .hero-meta-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+      }
+      .hero-meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.45rem 0.8rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+        font-size: 0.82rem;
+        color: rgba(205, 214, 246, 0.82);
+      }
+      .hero-intel-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+      }
+      .hero-intel-card {
+        min-height: 116px;
+        padding: 0.9rem;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 255, 255, 0.12);
+        background:
+          linear-gradient(180deg, rgba(3, 12, 24, 0.94), rgba(7, 22, 39, 0.82));
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .hero-intel-label {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(0, 255, 255, 0.7);
+      }
+      .hero-intel-value {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.45rem;
+        color: #fff;
+      }
+      .hero-intel-note {
+        font-size: 0.78rem;
+        color: rgba(205, 214, 246, 0.66);
+      }
+      .profile-card {
+        padding: 1.35rem;
+      }
+      .profile-topline {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 1rem;
+        margin-bottom: 1.2rem;
+      }
+      .profile-kicker {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(0, 255, 255, 0.72);
+      }
+      .profile-presence {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.3rem 0.65rem;
+        border-radius: 999px;
+        background: rgba(46, 204, 113, 0.08);
+        border: 1px solid rgba(46, 204, 113, 0.2);
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #92f8be;
+      }
+      .profile-presence::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--al-green);
+        box-shadow: 0 0 10px rgba(46, 204, 113, 0.8);
+      }
+      .profile-avatar-shell {
+        width: 132px;
+        height: 132px;
+        padding: 5px;
+        border-radius: 28px;
+        margin: 0 auto 1rem;
+        background:
+          linear-gradient(135deg, rgba(0, 255, 255, 0.85), rgba(46, 204, 113, 0.55));
+        box-shadow: 0 18px 35px rgba(0, 255, 255, 0.16);
+      }
+      .profile-avatar-shell .al-avatar {
+        width: 100% !important;
+        height: 100% !important;
+        margin-bottom: 0 !important;
+        border-radius: 24px;
+        background:
+          radial-gradient(circle at 30% 30%, rgba(0, 255, 255, 0.18), transparent 35%),
+          linear-gradient(180deg, rgba(5, 16, 33, 0.98), rgba(10, 25, 47, 0.95));
+      }
+      .profile-role {
+        margin: 0 0 0.8rem;
+        font-size: 0.95rem;
+        color: rgba(205, 214, 246, 0.76);
+      }
+      .profile-stat-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.6rem;
+        margin: 1rem 0 1.15rem;
+      }
+      .profile-stat {
+        padding: 0.75rem 0.6rem;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 255, 255, 0.09);
+        background: rgba(255, 255, 255, 0.035);
+      }
+      .profile-stat strong {
+        display: block;
+        font-family: "Orbitron", sans-serif;
+        font-size: 1rem;
+        color: #fff;
+      }
+      .profile-stat span {
+        display: block;
+        margin-top: 0.25rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(205, 214, 246, 0.6);
+      }
+      .profile-detail-list {
+        display: grid;
+        gap: 0.7rem;
+      }
+      .profile-detail-row {
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        gap: 0.7rem;
+        align-items: start;
+        padding: 0.55rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .profile-detail-row:first-child {
+        border-top: none;
+      }
+      .profile-detail-row i {
+        color: var(--al-cyan);
+        margin-top: 0.15rem;
+      }
+      .workspace-section {
+        padding: 1.25rem;
+      }
+      .skills-header-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        padding: 0.18rem 0.5rem;
+        border-radius: 999px;
+        background: rgba(0, 255, 255, 0.1);
+        border: 1px solid rgba(0, 255, 255, 0.16);
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.72rem;
+        color: var(--al-cyan);
+      }
+      .skill-row {
+        padding: 0.85rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .skill-row:first-child {
+        border-top: none;
+        padding-top: 0;
+      }
+      .skill-row:last-child {
+        padding-bottom: 0;
+      }
+      .repo-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(0, 255, 255, 0.12);
+        background:
+          linear-gradient(180deg, rgba(11, 28, 50, 0.92), rgba(4, 13, 25, 0.92));
+        transition:
+          transform 0.28s ease,
+          border-color 0.28s ease,
+          box-shadow 0.28s ease;
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.2);
+      }
+      .repo-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(135deg, rgba(0, 255, 255, 0.08), transparent 35%),
+          radial-gradient(circle at top right, rgba(46, 204, 113, 0.1), transparent 30%);
+      }
+      .repo-card:hover {
+        border-color: rgba(0, 255, 255, 0.45);
+        transform: translateY(-5px);
+        box-shadow:
+          0 22px 40px rgba(0, 0, 0, 0.28),
+          0 0 0 1px rgba(0, 255, 255, 0.08);
+      }
+      .repo-card > * {
+        position: relative;
+        z-index: 1;
+      }
+      .repo-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 0.9rem;
+        margin-bottom: 1rem;
+      }
+      .repo-card-title {
+        margin: 0;
+        font-family: "Orbitron", sans-serif;
+        font-size: 1rem;
+        color: #f6fdff;
+      }
+      .repo-card-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+        margin-top: 0.45rem;
+      }
+      .repo-meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.25rem 0.55rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 0.72rem;
+        color: rgba(205, 214, 246, 0.72);
+      }
+      .repo-status-pill {
+        padding: 0.35rem 0.7rem;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 255, 255, 0.14);
+        background: rgba(0, 255, 255, 0.08);
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--al-cyan);
+      }
+      .repo-delete-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 10px;
+        color: var(--al-danger, #ef4444);
+        cursor: pointer;
+        width: 34px;
+        height: 34px;
+        transition:
+          background 0.25s ease,
+          border-color 0.25s ease,
+          transform 0.25s ease;
+      }
+      .repo-delete-btn:hover {
+        background: rgba(231, 76, 60, 0.08);
+        border-color: rgba(231, 76, 60, 0.22);
+        transform: translateY(-1px);
+      }
+      .repo-card-description {
+        margin: 0 0 1.1rem;
+        min-height: 3.8rem;
+        font-size: 0.94rem;
+        line-height: 1.6;
+        color: rgba(205, 214, 246, 0.8);
+      }
+      .repo-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+        padding-top: 0.95rem;
+        border-top: 1px solid rgba(0, 255, 255, 0.1);
+        flex-wrap: wrap;
+      }
+      .repo-card-signal {
+        font-size: 0.8rem;
+        color: rgba(205, 214, 246, 0.64);
+      }
+      .empty-state {
+        grid-column: 1 / -1;
+        padding: 2rem 1.25rem;
+        border-radius: 14px;
+        border: 1px dashed rgba(0, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.02);
+        text-align: center;
+        color: rgba(205, 214, 246, 0.7);
+      }
+      .activity-shell {
+        padding: 1.25rem;
+      }
+      .activity-panel {
+        padding: 1rem;
+        border-radius: 14px;
+        border: 1px solid rgba(0, 255, 255, 0.1);
+        background:
+          linear-gradient(180deg, rgba(3, 11, 20, 0.92), rgba(8, 21, 38, 0.82));
+      }
+      .activity-legend {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        flex-wrap: wrap;
+        font-size: 0.78rem;
+        color: rgba(205, 214, 246, 0.7);
+      }
+      .legend-chip {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+      }
+      .activity-graph {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(12px, 1fr));
+        gap: 6px;
+        margin-top: 1rem;
+      }
+      .activity-box {
+        width: 100%;
+        aspect-ratio: 1;
+        min-width: 12px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+      }
       }
       .repo-card {
         border: 1px solid rgba(0, 255, 255, 0.1);
@@ -521,6 +1014,21 @@
         justify-content: center;
       }
       @media (max-width: 1080px) {
+        .workspace-hero {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 720px) {
+        .profile-topline,
+        .section-header {
+          align-items: stretch;
+        }
+        .profile-stat-strip,
+        .hero-intel-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 1080px) {
         #editor-main-view {
           flex-direction: column;
         }
@@ -581,17 +1089,23 @@
       </div>
     </nav>
 
-    <div class="container mt-3">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <div class="container mt-3 workspace-page">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 workspace-shell">
         <!-- Sidebar -->
-        <div class="md:col-span-1">
-          <div class="al-card mb-4 text-center">
-            <div
-              class="al-avatar al-avatar-lg mb-3"
-              style="width: 120px; height: 120px; font-size: 3rem"
-              id="ws-avatar"
-            >
-              --
+        <div class="md:col-span-1 workspace-sidebar">
+          <div class="al-card text-center workspace-panel profile-card">
+            <div class="profile-topline">
+              <div class="profile-kicker">Operative Profile</div>
+              <div class="profile-presence">Signal Stable</div>
+            </div>
+            <div class="profile-avatar-shell">
+              <div
+                class="al-avatar al-avatar-lg mb-3"
+                style="width: 120px; height: 120px; font-size: 3rem"
+                id="ws-avatar"
+              >
+                --
+              </div>
             </div>
             <h2
               class="font-orbitron text-cyan"
@@ -600,7 +1114,21 @@
             >
               Loading...
             </h2>
-            <p class="text-light opacity-70" id="ws-role">...</p>
+            <p class="profile-role" id="ws-role">...</p>
+            <div class="profile-stat-strip">
+              <div class="profile-stat">
+                <strong id="ws-project-count">0</strong>
+                <span>Projects</span>
+              </div>
+              <div class="profile-stat">
+                <strong id="ws-skill-count">0</strong>
+                <span>Stacks</span>
+              </div>
+              <div class="profile-stat">
+                <strong id="ws-readiness-score">0%</strong>
+                <span>Readiness</span>
+              </div>
+            </div>
             <button
               class="al-btn al-btn-primary-outline w-full mt-3"
               style="width: 100%"
@@ -609,26 +1137,17 @@
               Edit Profile
             </button>
 
-            <div class="mt-3 text-left">
-              <div class="flex items-center mb-3">
-                <i
-                  class="fas fa-user-friends"
-                  style="width: 24px; color: var(--al-cyan)"
-                ></i>
-                <span><strong class="text-white">0</strong> followers</span>
+            <div class="mt-3 text-left profile-detail-list">
+              <div class="profile-detail-row">
+                <i class="fas fa-layer-group"></i>
+                <span><strong class="text-white" id="ws-live-projects">0</strong> live operations in queue</span>
               </div>
-              <div class="flex items-center mb-3">
-                <i
-                  class="fas fa-map-marker-alt"
-                  style="width: 24px; color: var(--al-cyan)"
-                ></i>
+              <div class="profile-detail-row">
+                <i class="fas fa-map-marker-alt"></i>
                 <span id="ws-location">...</span>
               </div>
-              <div class="flex items-center">
-                <i
-                  class="fas fa-link"
-                  style="width: 24px; color: var(--al-cyan)"
-                ></i>
+              <div class="profile-detail-row">
+                <i class="fas fa-link"></i>
                 <a
                   href="#"
                   class="text-cyan hover:underline"
@@ -640,57 +1159,112 @@
             </div>
           </div>
 
-          <h3 class="font-orbitron text-white mb-3" style="font-size: 1.2rem">
-            Top Languages
-          </h3>
-          <div class="al-card p-3 mb-4" id="ws-skills">
+          <div class="section-header" style="margin-bottom: 0;">
+            <div class="section-title-group">
+              <span class="section-kicker">Capability Matrix</span>
+              <h3 class="section-heading">Top Languages</h3>
+              <p class="section-subcopy">Core stacks shaping the current workspace.</p>
+            </div>
+            <span class="skills-header-badge" id="ws-skill-count-badge">0</span>
+          </div>
+          <div class="al-card p-3 workspace-panel" id="ws-skills">
             <!-- Skills loaded via JS -->
           </div>
         </div>
 
         <!-- Main Content -->
-        <div class="md:col-span-3">
+        <div class="md:col-span-3 workspace-main">
           <!-- Readme / Intro -->
-          <div class="al-card mb-3">
-            <div class="flex justify-between items-center mb-3">
-              <h3
-                class="font-orbitron text-cyan"
-                style="font-size: 1.2rem; margin: 0"
-                id="ws-readme-title"
-              >
-                User / README.md
-              </h3>
-              <span class="al-badge al-badge-primary">Public</span>
+          <div class="al-card workspace-panel workspace-hero">
+            <div class="workspace-hero-copy">
+              <div>
+                <div class="hero-kicker">Workspace Command Deck</div>
+                <h3 class="hero-title" id="ws-readme-title">User / README.md</h3>
+              </div>
+              <p class="hero-description" id="ws-bio">Loading bio...</p>
+              <div class="hero-meta-bar">
+                <span class="hero-meta-pill">
+                  <i class="fas fa-bolt"></i>
+                  <span id="ws-primary-stack">Unknown Stack</span>
+                </span>
+                <span class="hero-meta-pill">
+                  <i class="fas fa-satellite"></i>
+                  <span id="ws-workspace-signal">Syncing Signal</span>
+                </span>
+                <span class="hero-meta-pill">
+                  <i class="fas fa-shield-alt"></i>
+                  Public Surface
+                </span>
+              </div>
             </div>
-            <p class="mb-3" id="ws-bio">Loading bio...</p>
+            <div class="hero-intel-grid">
+              <div class="hero-intel-card">
+                <span class="hero-intel-label">Pinned Projects</span>
+                <strong class="hero-intel-value" id="ws-hero-project-count">0</strong>
+                <span class="hero-intel-note">Tracked build surfaces ready for code operations.</span>
+              </div>
+              <div class="hero-intel-card">
+                <span class="hero-intel-label">Prime Stack</span>
+                <strong class="hero-intel-value" id="ws-hero-primary-stack">--</strong>
+                <span class="hero-intel-note">Highest-confidence language in the current matrix.</span>
+              </div>
+              <div class="hero-intel-card">
+                <span class="hero-intel-label">Readiness</span>
+                <strong class="hero-intel-value" id="ws-hero-readiness">0%</strong>
+                <span class="hero-intel-note">Derived from your visible capability distribution.</span>
+              </div>
+              <div class="hero-intel-card">
+                <span class="hero-intel-label">Location Vector</span>
+                <strong class="hero-intel-value" id="ws-hero-location">...</strong>
+                <span class="hero-intel-note">Current profile beacon for collaborators and visitors.</span>
+              </div>
+            </div>
           </div>
 
           <!-- Pinned Repositories -->
-          <div class="flex justify-between items-center mb-3">
-            <h3 class="font-orbitron text-white m-0" style="font-size: 1.2rem">
-              Pinned Projects
-            </h3>
-            <button
-              class="al-btn al-btn-success"
-              style="padding: 0.5rem 1rem; font-size: 0.8rem"
-              id="new-project-btn"
+          <div class="al-card workspace-panel workspace-section">
+            <div class="section-header">
+              <div class="section-title-group">
+                <span class="section-kicker">Build Surfaces</span>
+                <h3 class="section-heading">Pinned Projects</h3>
+                <p class="section-subcopy">Launch coding sessions, review mission status, and keep your active work visible.</p>
+              </div>
+              <button
+                class="al-btn al-btn-success"
+                style="padding: 0.5rem 1rem; font-size: 0.8rem"
+                id="new-project-btn"
+              >
+                <i class="fas fa-plus"></i> New Project
+              </button>
+            </div>
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 gap-4"
+              id="ws-projects"
             >
-              <i class="fas fa-plus"></i> New Project
-            </button>
-          </div>
-          <div
-            class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3"
-            id="ws-projects"
-          >
-            <!-- Projects loaded via JS -->
+              <!-- Projects loaded via JS -->
+            </div>
           </div>
 
           <!-- Contribution Graph -->
-          <h3 class="font-orbitron text-white mb-3" style="font-size: 1.2rem">
-            Contribution Activity
-          </h3>
-          <div class="al-card p-4">
-            <div class="activity-graph" id="contributionGraph"></div>
+          <div class="al-card workspace-panel activity-shell">
+            <div class="section-header">
+              <div class="section-title-group">
+                <span class="section-kicker">Telemetry</span>
+                <h3 class="section-heading">Contribution Activity</h3>
+                <p class="section-subcopy">A visual pulse of your workspace motion and coding presence.</p>
+              </div>
+              <div class="activity-legend">
+                <span>Low</span>
+                <span class="legend-chip" style="background: rgba(0, 255, 255, 0.2);"></span>
+                <span class="legend-chip" style="background: rgba(0, 255, 255, 0.5);"></span>
+                <span class="legend-chip" style="background: rgba(0, 255, 255, 0.8);"></span>
+                <span class="legend-chip" style="background: var(--al-cyan); box-shadow: 0 0 8px rgba(0, 255, 255, 0.55);"></span>
+                <span>High</span>
+              </div>
+            </div>
+            <div class="activity-panel">
+              <div class="activity-graph" id="contributionGraph"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -1043,6 +1617,141 @@
     <script>
       // --- Fetch Live Data ---
       let currentData = {};
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function getWorkspaceSignal(readinessScore) {
+        if (readinessScore >= 85) return "Stable";
+        if (readinessScore >= 70) return "Rising";
+        if (readinessScore >= 50) return "Adaptive";
+        return "Forming";
+      }
+
+      function getPrimarySkill(skills) {
+        if (!skills.length) return "Unknown";
+        return [...skills].sort((a, b) => (b.level || 0) - (a.level || 0))[0].name;
+      }
+
+      function buildProjectCardMarkup(project) {
+        const name = escapeHtml(project.name || "Untitled Project");
+        const status = escapeHtml(project.status || "Draft");
+        const description = escapeHtml(
+          project.description || "No mission brief has been recorded yet.",
+        );
+        const signalLabel = /active|live|deploy|build/i.test(project.status || "")
+          ? "Hot lane"
+          : "Queued";
+
+        return `
+          <div class="al-card repo-card" id="project-card-${project.id}">
+            <div class="repo-card-header">
+              <div>
+                <h4 class="repo-card-title">${name}</h4>
+                <div class="repo-card-meta">
+                  <span class="repo-status-pill">${status}</span>
+                  <span class="repo-meta-pill">
+                    <i class="fas fa-satellite-dish"></i>
+                    ${signalLabel}
+                  </span>
+                </div>
+              </div>
+              <button
+                onclick="deleteProject('${project.id}')"
+                class="repo-delete-btn"
+                aria-label="Delete ${name}"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+            <p class="repo-card-description">${description}</p>
+            <div class="repo-card-footer">
+              <span class="repo-card-signal">Workspace editor ready for this surface.</span>
+              <button
+                class="al-btn al-btn-secondary-outline open-editor-btn"
+                style="font-size: 0.8rem; padding: 0.4rem 0.85rem;"
+                data-project-id="${project.id}"
+                data-project-name="${name}"
+              >
+                <i class="fas fa-code"></i> Code
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderProjects(projects) {
+        const projectsContainer = document.getElementById("ws-projects");
+        if (!projects.length) {
+          projectsContainer.innerHTML = `
+            <div class="empty-state">
+              <strong class="font-orbitron text-cyan" style="display:block; margin-bottom: 0.55rem;">No pinned projects yet</strong>
+              <span>Start a new build surface to populate the command deck.</span>
+            </div>
+          `;
+          return;
+        }
+
+        projectsContainer.innerHTML = projects.map(buildProjectCardMarkup).join("");
+      }
+
+      function renderSkills(skills) {
+        const skillsContainer = document.getElementById("ws-skills");
+        if (!skills.length) {
+          skillsContainer.innerHTML =
+            '<p class="text-light opacity-50">No skills recorded.</p>';
+          return;
+        }
+
+        skillsContainer.innerHTML = skills
+          .map(
+            (skill) => `
+              <div class="skill-row">
+                <div class="flex justify-between text-sm mb-3" style="font-size: 0.9rem;">
+                  <span>${escapeHtml(skill.name)}</span>
+                  <span>${skill.level}%</span>
+                </div>
+                <div class="al-progress" style="height: 6px;">
+                  <div class="al-progress-bar" style="width: ${skill.level}%; background-color: ${skill.color || "var(--al-cyan)"};"></div>
+                </div>
+              </div>
+            `,
+          )
+          .join("");
+      }
+
+      function updateWorkspaceOverview(data) {
+        const projectCount = data.projects.length;
+        const skillCount = data.skills.length;
+        const readinessScore = skillCount
+          ? Math.round(
+              data.skills.reduce((sum, skill) => sum + (skill.level || 0), 0) /
+                skillCount,
+            )
+          : 0;
+        const primarySkill = getPrimarySkill(data.skills);
+        const workspaceSignal = getWorkspaceSignal(readinessScore);
+        const location = data.profile.location || "Unknown";
+
+        document.getElementById("ws-project-count").textContent = String(projectCount);
+        document.getElementById("ws-live-projects").textContent = String(projectCount);
+        document.getElementById("ws-skill-count").textContent = String(skillCount);
+        document.getElementById("ws-skill-count-badge").textContent = String(skillCount);
+        document.getElementById("ws-readiness-score").textContent = `${readinessScore}%`;
+        document.getElementById("ws-primary-stack").textContent = primarySkill;
+        document.getElementById("ws-workspace-signal").textContent = workspaceSignal;
+        document.getElementById("ws-hero-project-count").textContent = String(projectCount);
+        document.getElementById("ws-hero-primary-stack").textContent = primarySkill;
+        document.getElementById("ws-hero-readiness").textContent = `${readinessScore}%`;
+        document.getElementById("ws-hero-location").textContent = location;
+      }
+
       document.addEventListener("DOMContentLoaded", async () => {
         try {
           const res = await fetch("/api/workspace-data");
@@ -1075,59 +1784,9 @@
             .toUpperCase();
           document.getElementById("ws-avatar").textContent = initials;
 
-          // Populate Projects
-          const projectsContainer = document.getElementById("ws-projects");
-          if (data.projects.length === 0) {
-            projectsContainer.innerHTML =
-              '<p class="text-light opacity-50 col-span-2">No projects pinned yet.</p>';
-          } else {
-            projectsContainer.innerHTML = data.projects
-              .map(
-                (proj) => `
-                        <div class="al-card repo-card" id="project-card-${proj.id}">
-                            <div class="flex justify-between items-start mb-3">
-                                <a href="#" class="text-cyan hover:underline" style="font-weight: bold; font-size: 1.1rem; text-decoration: none;">${proj.name}</a>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span class="al-badge al-badge-primary">${proj.status}</span>
-                                    <button onclick="deleteProject('${proj.id}')" style="background:none; border:none; cursor:pointer; color: var(--al-danger, #ef4444); transition: opacity 0.3s;" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <p class="text-sm opacity-80 mb-3" style="font-size: 0.9rem;">${proj.description}</p>
-                            <div class="mt-4 pt-3 border-t border-cyan/10 flex justify-end gap-2">
-                                <button class="al-btn al-btn-secondary-outline open-editor-btn" style="font-size: 0.8rem; padding: 0.3rem 0.6rem;" data-project-id="${proj.id}" data-project-name="${proj.name}">
-                                    <i class="fas fa-code"></i> Code
-                                </button>
-                            </div>
-                        </div>
-                    `,
-              )
-              .join("");
-          }
-
-          // Populate Skills
-          const skillsContainer = document.getElementById("ws-skills");
-          if (data.skills.length === 0) {
-            skillsContainer.innerHTML =
-              '<p class="text-light opacity-50">No skills recorded.</p>';
-          } else {
-            skillsContainer.innerHTML = data.skills
-              .map(
-                (skill) => `
-                        <div class="mb-3">
-                            <div class="flex justify-between text-sm mb-3" style="font-size: 0.9rem;">
-                                <span>${skill.name}</span>
-                                <span>${skill.level}%</span>
-                            </div>
-                            <div class="al-progress" style="height: 6px;">
-                                <div class="al-progress-bar" style="width: ${skill.level}%; background-color: ${skill.color || "var(--al-cyan)"};"></div>
-                            </div>
-                        </div>
-                    `,
-              )
-              .join("");
-          }
+          renderProjects(data.projects);
+          renderSkills(data.skills);
+          updateWorkspaceOverview(data);
         } catch (e) {
           console.error("Failed to load workspace data", e);
         }
@@ -1195,8 +1854,15 @@
 
           if (result.success) {
             // Update the page with the new data
+            currentData.user.fullName = updatedData.fullName;
+            currentData.profile.role = updatedData.role;
+            currentData.profile.location = updatedData.location;
+            currentData.profile.website = updatedData.website;
+            currentData.profile.bio = updatedData.bio;
             document.getElementById("ws-name").textContent =
               updatedData.fullName;
+            document.getElementById("ws-readme-title").textContent =
+              `${updatedData.fullName} / README.md`;
             document.getElementById("ws-role").textContent = updatedData.role;
             document.getElementById("ws-location").textContent =
               updatedData.location;
@@ -1205,6 +1871,15 @@
             document.getElementById("ws-website").href =
               updatedData.website || "#";
             document.getElementById("ws-bio").textContent = updatedData.bio;
+            document.getElementById("ws-hero-location").textContent =
+              updatedData.location || "Unknown";
+            document.getElementById("ws-avatar").textContent = updatedData.fullName
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .substring(0, 2)
+              .toUpperCase();
+            updateWorkspaceOverview(currentData);
             closeModal();
           }
         } catch (err) {
@@ -1249,34 +1924,14 @@
           const result = await res.json();
 
           if (result.success) {
-            // Add new project to the grid
-            const projectsContainer = document.getElementById("ws-projects");
-            // Remove "No projects" message if it exists
-            if (projectsContainer.querySelector("p.text-light")) {
-              projectsContainer.innerHTML = "";
-            }
-
-            const newCard = document.createElement("div");
-            newCard.className = "al-card repo-card";
-            newCard.id = `project-card-${result.id}`;
-            newCard.innerHTML = `
-                <div class="flex justify-between items-start mb-3">
-                    <a href="#" class="text-cyan hover:underline" style="font-weight: bold; font-size: 1.1rem; text-decoration: none;">${projectData.name}</a>
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span class="al-badge al-badge-primary">${projectData.status}</span>
-                        <button onclick="deleteProject('${result.id}')" style="background:none; border:none; cursor:pointer; color: var(--al-danger, #ef4444); transition: opacity 0.3s;" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                <p class="text-sm opacity-80 mb-3" style="font-size: 0.9rem;">${projectData.description}</p>
-                <div class="mt-4 pt-3 border-t border-cyan/10 flex justify-end gap-2">
-                    <button class="al-btn al-btn-secondary-outline open-editor-btn" style="font-size: 0.8rem; padding: 0.3rem 0.6rem;" data-project-id="${result.id}" data-project-name="${projectData.name}">
-                        <i class="fas fa-code"></i> Code
-                    </button>
-                </div>
-            `;
-            projectsContainer.prepend(newCard); // Add to top
+            currentData.projects.unshift({
+              id: result.id,
+              name: projectData.name,
+              status: projectData.status,
+              description: projectData.description,
+            });
+            renderProjects(currentData.projects);
+            updateWorkspaceOverview(currentData);
             closeProjModal();
           }
         } catch (err) {
@@ -1294,13 +1949,11 @@
           });
           const data = await res.json();
           if (data.success) {
-            const card = document.getElementById(`project-card-${id}`);
-            if (card) card.remove();
-            const container = document.getElementById("ws-projects");
-            if (container.children.length === 0) {
-              container.innerHTML =
-                '<p class="text-light opacity-50 col-span-2">No projects pinned yet.</p>';
-            }
+            currentData.projects = currentData.projects.filter(
+              (project) => project.id !== id,
+            );
+            renderProjects(currentData.projects);
+            updateWorkspaceOverview(currentData);
           } else {
             alert(
               "Failed to delete project: " + (data.error || "Unknown error"),
