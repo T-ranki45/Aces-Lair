@@ -1,5 +1,7 @@
-import torch
+import os
 import sys
+
+import torch
 
 from model import AcesGPT
 from tokenizer import BpeTokenizer
@@ -7,8 +9,17 @@ from tokenizer import BpeTokenizer
 # --- Configuration ---
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 CHECKPOINT_FILE = "aces_weights.pth"
+LATEST_CHECKPOINT_FILE = "aces_weights_latest.pth"
+BEST_CHECKPOINT_FILE = "aces_weights_best.pth"
 DATA_FILE = "data.txt"
 TOKENIZER_FILE = "aces_tokenizer.model"
+
+
+def find_inference_checkpoint():
+    for candidate in (BEST_CHECKPOINT_FILE, LATEST_CHECKPOINT_FILE, CHECKPOINT_FILE):
+        if os.path.exists(candidate):
+            return candidate
+    return None
 
 def main():
     # --- 1. Load Tokenizer ---
@@ -21,11 +32,20 @@ def main():
         sys.exit(1)
 
     # --- 2. Load Model from Checkpoint ---
+    checkpoint_path = find_inference_checkpoint()
     try:
-        checkpoint = torch.load(CHECKPOINT_FILE, map_location=DEVICE)
+        if checkpoint_path is None:
+            raise FileNotFoundError
+        checkpoint = torch.load(checkpoint_path, map_location=DEVICE)
     except FileNotFoundError:
-        print(f"ERROR: Model weights '{CHECKPOINT_FILE}' not found. Please run train.py first.", file=sys.stderr)
+        print(
+            f"ERROR: No model checkpoint found ({CHECKPOINT_FILE}, "
+            f"{LATEST_CHECKPOINT_FILE}, or {BEST_CHECKPOINT_FILE}). "
+            "Please run train.py first.",
+            file=sys.stderr,
+        )
         sys.exit(1)
+    print(f"[A.C.E.S] Using checkpoint: {checkpoint_path}", file=sys.stderr)
 
     # Get model config from checkpoint, with fallbacks for older checkpoints
     config = checkpoint.get('config', {

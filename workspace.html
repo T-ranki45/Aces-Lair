@@ -120,7 +120,8 @@
       }
       /* AI Assistant Panel */
       #editor-ai-panel {
-        width: 320px;
+        width: 360px;
+        min-width: 320px;
         flex-shrink: 0;
         background-color: #051021;
         border-left: 1px solid rgba(0, 255, 255, 0.2);
@@ -331,6 +332,229 @@
         width: 100%;
         padding: 0.25rem 0.5rem;
         margin-bottom: 2px;
+      }
+      #editor-top-bar {
+        gap: 0.75rem;
+      }
+      #editor-action-cluster {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      #editor-toolbar {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        background: linear-gradient(
+          180deg,
+          rgba(10, 25, 47, 0.95),
+          rgba(5, 16, 33, 0.92)
+        );
+        border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+        flex-wrap: wrap;
+      }
+      .editor-toolbar-group {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .editor-toolbar-label {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--al-cyan);
+      }
+      .editor-toolbar-select {
+        min-width: 160px;
+        background: rgba(2, 10, 26, 0.92);
+        color: var(--al-text);
+        border: 1px solid rgba(0, 255, 255, 0.25);
+        border-radius: 4px;
+        padding: 0.45rem 0.65rem;
+        font-family: "Rajdhani", sans-serif;
+      }
+      .editor-toolbar-select:focus,
+      .tool-textarea:focus {
+        outline: none;
+        border-color: var(--al-cyan);
+        box-shadow: 0 0 0 1px rgba(0, 255, 255, 0.15);
+      }
+      .editor-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.7rem;
+        border-radius: 999px;
+        background: rgba(0, 255, 255, 0.08);
+        border: 1px solid rgba(0, 255, 255, 0.15);
+        color: var(--al-text);
+        font-size: 0.78rem;
+        white-space: nowrap;
+      }
+      #editor-toolkit {
+        padding: 0.75rem;
+        overflow-y: auto;
+        border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(0, 255, 255, 0.08),
+            transparent 40%
+          ),
+          linear-gradient(180deg, rgba(2, 10, 26, 0.85), rgba(5, 16, 33, 0.95));
+      }
+      .tool-section {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(0, 255, 255, 0.12);
+        border-radius: 8px;
+        padding: 0.85rem;
+        margin-bottom: 0.75rem;
+      }
+      .tool-section:last-child {
+        margin-bottom: 0;
+      }
+      .tool-section-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--al-cyan);
+        margin-bottom: 0.45rem;
+      }
+      .tool-note {
+        margin: 0 0 0.75rem;
+        font-size: 0.82rem;
+        line-height: 1.45;
+        color: rgba(205, 214, 246, 0.82);
+      }
+      .tool-chip-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+      }
+      .tool-chip {
+        background: rgba(2, 10, 26, 0.9);
+        border: 1px solid rgba(0, 255, 255, 0.12);
+        color: rgba(205, 214, 246, 0.85);
+        border-radius: 999px;
+        padding: 0.35rem 0.7rem;
+        font-size: 0.74rem;
+        cursor: pointer;
+        transition:
+          border-color 0.2s ease,
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+      .tool-chip:hover,
+      .tool-chip.active {
+        border-color: var(--al-cyan);
+        background: rgba(0, 255, 255, 0.14);
+        color: #fff;
+      }
+      .tool-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+      }
+      .tool-textarea {
+        width: 100%;
+        min-height: 86px;
+        resize: vertical;
+        background: rgba(2, 10, 26, 0.94);
+        color: var(--al-text);
+        border: 1px solid rgba(0, 255, 255, 0.18);
+        border-radius: 6px;
+        padding: 0.7rem;
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 0.8rem;
+        line-height: 1.45;
+        margin-bottom: 0.65rem;
+      }
+      #ai-chat-shell {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        background: rgba(2, 10, 26, 0.78);
+      }
+      .ai-chat-title {
+        padding: 0.75rem 0.75rem 0;
+      }
+      .tool-meta {
+        display: block;
+        font-size: 0.75rem;
+        color: rgba(205, 214, 246, 0.65);
+        margin-top: 0.35rem;
+      }
+      .tool-metric-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+      }
+      .tool-metric-card {
+        background: rgba(2, 10, 26, 0.9);
+        border: 1px solid rgba(0, 255, 255, 0.12);
+        border-radius: 6px;
+        padding: 0.65rem 0.7rem;
+      }
+      .tool-metric-label {
+        display: block;
+        font-size: 0.68rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: rgba(205, 214, 246, 0.58);
+        margin-bottom: 0.3rem;
+      }
+      .tool-metric-value {
+        display: block;
+        color: #fff;
+        font-size: 1rem;
+        font-family: "Orbitron", sans-serif;
+      }
+      .tool-quick-action {
+        width: 100%;
+        justify-content: center;
+      }
+      @media (max-width: 1080px) {
+        #editor-main-view {
+          flex-direction: column;
+        }
+        #editor-file-tree {
+          width: 100%;
+          max-height: 170px;
+          border-right: none;
+          border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        #editor-ai-panel {
+          width: 100%;
+          min-width: 0;
+          min-height: 420px;
+          border-left: none;
+          border-top: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        #monaco-editor-wrapper {
+          min-height: 45vh;
+        }
+      }
+      @media (max-width: 720px) {
+        #editor-toolbar {
+          align-items: stretch;
+        }
+        .editor-toolbar-group {
+          width: 100%;
+        }
+        .editor-toolbar-select {
+          flex: 1;
+          min-width: 0;
+        }
+        .tool-actions {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -639,21 +863,25 @@
       "
     >
       <div
+        id="editor-top-bar"
         style="
           display: flex;
           justify-content: space-between;
           align-items: center;
+          flex-wrap: wrap;
           padding: 0.5rem 1rem;
           background-color: var(--al-navy);
           border-bottom: 1px solid var(--al-cyan);
           flex-shrink: 0;
         "
       >
-        <div style="display: flex; align-items: center; gap: 1rem">
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap">
           <h3 id="editor-project-name" class="font-orbitron text-cyan m-0"></h3>
           <span id="editor-save-status" class="text-sm opacity-70"></span>
+          <span id="active-file-chip" class="editor-chip">No file open</span>
+          <span id="active-language-chip" class="editor-chip">Plain Text</span>
         </div>
-        <div style="display: flex; gap: 0.5rem">
+        <div id="editor-action-cluster">
           <button id="save-file-btn" class="al-btn al-btn-primary">
             <i class="fas fa-save"></i> Save
           </button>
@@ -665,24 +893,147 @@
       <div id="editor-main-view">
         <div id="editor-file-tree"></div>
         <div id="monaco-editor-wrapper">
+          <div id="editor-toolbar">
+            <div class="editor-toolbar-group">
+              <label class="editor-toolbar-label" for="language-selector"
+                >Language</label
+              >
+              <select id="language-selector" class="editor-toolbar-select"></select>
+              <button id="apply-language-btn" class="al-btn al-btn-secondary-outline">
+                Apply Mode
+              </button>
+            </div>
+            <div class="editor-toolbar-group">
+              <label class="editor-toolbar-label" for="starter-template-selector"
+                >Starter Kit</label
+              >
+              <select
+                id="starter-template-selector"
+                class="editor-toolbar-select"
+              ></select>
+              <button id="insert-template-btn" class="al-btn al-btn-primary">
+                Insert Template
+              </button>
+              <button id="create-starter-file-btn" class="al-btn al-btn-success">
+                New Starter File
+              </button>
+            </div>
+          </div>
           <div id="editor-tabs"></div>
           <div id="monaco-editor"></div>
         </div>
         <div id="editor-ai-panel">
           <div id="ai-panel-header">
-            <i class="fas fa-brain"></i> A.C.E.S. Assistant
+            <i class="fas fa-satellite-dish"></i> A.C.E.S. Command Center
           </div>
-          <div id="ai-chat-history"></div>
-          <div id="ai-chat-input-area">
-            <input
-              type="text"
-              id="ai-input"
-              placeholder="Ask about code..."
-              autocomplete="off"
-            />
-            <button id="ai-ask-btn" title="Ask">
-              <i class="fas fa-paper-plane"></i>
-            </button>
+          <div id="editor-toolkit">
+            <section class="tool-section">
+              <div class="tool-section-title">Language Matrix</div>
+              <p class="tool-note">
+                Switch the workspace between C++, binary notes, Python,
+                JavaScript, web stacks, and more.
+              </p>
+              <div id="supported-language-chips" class="tool-chip-grid"></div>
+            </section>
+            <section class="tool-section">
+              <div class="tool-section-title">Starter Brief</div>
+              <p id="template-description" class="tool-note">
+                Pick a starter template to generate structured code quickly.
+              </p>
+              <span class="tool-meta"
+                >Templates load directly into the active file or can spawn a new
+                starter file in the project.</span
+              >
+            </section>
+            <section class="tool-section">
+              <div class="tool-section-title">Workspace Intel</div>
+              <div class="tool-metric-grid">
+                <div class="tool-metric-card">
+                  <span class="tool-metric-label">Lines</span>
+                  <strong id="metric-lines" class="tool-metric-value">0</strong>
+                </div>
+                <div class="tool-metric-card">
+                  <span class="tool-metric-label">Characters</span>
+                  <strong id="metric-characters" class="tool-metric-value">0</strong>
+                </div>
+                <div class="tool-metric-card">
+                  <span class="tool-metric-label">Selection</span>
+                  <strong id="metric-selection" class="tool-metric-value">0</strong>
+                </div>
+                <div class="tool-metric-card">
+                  <span class="tool-metric-label">Mode</span>
+                  <strong id="metric-mode" class="tool-metric-value">None</strong>
+                </div>
+              </div>
+              <div class="tool-actions">
+                <button
+                  class="al-btn al-btn-secondary-outline tool-quick-action"
+                  data-ai-prompt="Explain the selected code or active file and summarize the important logic."
+                >
+                  Explain Code
+                </button>
+                <button
+                  class="al-btn al-btn-secondary-outline tool-quick-action"
+                  data-ai-prompt="Review the selected code or active file for bugs, weak assumptions, and missing validation."
+                >
+                  Find Bugs
+                </button>
+                <button
+                  class="al-btn al-btn-secondary-outline tool-quick-action"
+                  data-ai-prompt="Suggest a cleaner or faster implementation for the selected code or active file."
+                >
+                  Optimize
+                </button>
+                <button
+                  class="al-btn al-btn-secondary-outline tool-quick-action"
+                  data-ai-prompt="Write focused tests for the selected code or active file."
+                >
+                  Write Tests
+                </button>
+              </div>
+            </section>
+            <section class="tool-section">
+              <div class="tool-section-title">Binary Forge</div>
+              <textarea
+                id="binary-input"
+                class="tool-textarea"
+                placeholder="Type text here to encode, or paste binary bytes here to decode."
+              ></textarea>
+              <div class="tool-actions">
+                <button id="load-editor-selection-btn" class="al-btn al-btn-secondary-outline">
+                  From Editor
+                </button>
+                <button id="encode-binary-btn" class="al-btn al-btn-primary">
+                  Text to Binary
+                </button>
+                <button id="decode-binary-btn" class="al-btn al-btn-secondary-outline">
+                  Binary to Text
+                </button>
+                <button id="send-binary-to-editor-btn" class="al-btn al-btn-success">
+                  Send to Editor
+                </button>
+              </div>
+              <textarea
+                id="binary-output"
+                class="tool-textarea"
+                placeholder="Binary output or decoded text will appear here."
+              ></textarea>
+            </section>
+          </div>
+          <div id="ai-chat-shell">
+            <div class="tool-section-title ai-chat-title">A.C.E.S. Assistant</div>
+            <div id="ai-chat-history"></div>
+            <div id="ai-chat-input-area">
+              <input
+                type="text"
+                id="ai-input"
+                placeholder="Ask about code..."
+                autocomplete="off"
+              />
+              <button id="ai-ask-btn" title="Ask">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -1495,6 +1846,1994 @@
           },
         });
       */
+      // --- Advanced Workspace Editor Layer ---
+      const activeFileChipEl = document.getElementById("active-file-chip");
+      const activeLanguageChipEl = document.getElementById(
+        "active-language-chip",
+      );
+      const languageSelectorEl = document.getElementById("language-selector");
+      const applyLanguageBtnEl = document.getElementById("apply-language-btn");
+      const starterTemplateSelectorEl = document.getElementById(
+        "starter-template-selector",
+      );
+      const insertTemplateBtnEl = document.getElementById("insert-template-btn");
+      const createStarterFileBtnEl = document.getElementById(
+        "create-starter-file-btn",
+      );
+      const supportedLanguageChipsEl = document.getElementById(
+        "supported-language-chips",
+      );
+      const templateDescriptionEl = document.getElementById(
+        "template-description",
+      );
+      const binaryInputEl = document.getElementById("binary-input");
+      const binaryOutputEl = document.getElementById("binary-output");
+      const loadEditorSelectionBtnEl = document.getElementById(
+        "load-editor-selection-btn",
+      );
+      const encodeBinaryBtnEl = document.getElementById("encode-binary-btn");
+      const decodeBinaryBtnEl = document.getElementById("decode-binary-btn");
+      const sendBinaryToEditorBtnEl = document.getElementById(
+        "send-binary-to-editor-btn",
+      );
+      const metricLinesEl = document.getElementById("metric-lines");
+      const metricCharactersEl = document.getElementById("metric-characters");
+      const metricSelectionEl = document.getElementById("metric-selection");
+      const metricModeEl = document.getElementById("metric-mode");
+      const quickActionButtonsEls = document.querySelectorAll("[data-ai-prompt]");
+      const saveFileBtnEl = document.getElementById("save-file-btn");
+
+      let monacoReadyPromise = null;
+      let currentProjectName = "";
+      let sendAiPrompt = null;
+
+      const ADVANCED_PLACEHOLDER_MESSAGE =
+        "// Select a file from the tree or create a starter file to begin.";
+
+      const LANGUAGE_CATALOG = Object.freeze([
+        {
+          key: "binary",
+          label: "Binary Notes",
+          monacoLanguage: "plaintext",
+          extensions: ["bin", "bits"],
+          defaultFileName: "binary-notes.txt",
+          summary: "Bit strings, byte maps, and conversion notes.",
+        },
+        {
+          key: "cpp",
+          label: "C++",
+          monacoLanguage: "cpp",
+          extensions: ["cpp", "cc", "cxx", "hpp", "hh", "hxx"],
+          defaultFileName: "main.cpp",
+          summary: "Compile-ready C++ code, classes, and algorithms.",
+        },
+        {
+          key: "c",
+          label: "C",
+          monacoLanguage: "c",
+          extensions: ["c", "h"],
+          defaultFileName: "main.c",
+          summary: "Procedural C code and systems-level helpers.",
+        },
+        {
+          key: "csharp",
+          label: "C#",
+          monacoLanguage: "csharp",
+          extensions: ["cs"],
+          defaultFileName: "Program.cs",
+          summary: ".NET console apps, services, and utilities.",
+        },
+        {
+          key: "java",
+          label: "Java",
+          monacoLanguage: "java",
+          extensions: ["java"],
+          defaultFileName: "Main.java",
+          summary: "Java entry points, classes, and typed logic.",
+        },
+        {
+          key: "javascript",
+          label: "JavaScript",
+          monacoLanguage: "javascript",
+          extensions: ["js", "mjs"],
+          defaultFileName: "index.js",
+          summary: "Browser code, Node.js, and scripting.",
+        },
+        {
+          key: "typescript",
+          label: "TypeScript",
+          monacoLanguage: "typescript",
+          extensions: ["ts", "tsx"],
+          defaultFileName: "index.ts",
+          summary: "Typed application code and utilities.",
+        },
+        {
+          key: "python",
+          label: "Python",
+          monacoLanguage: "python",
+          extensions: ["py"],
+          defaultFileName: "main.py",
+          summary: "CLI tools, scripts, and backend routines.",
+        },
+        {
+          key: "html",
+          label: "HTML",
+          monacoLanguage: "html",
+          extensions: ["html", "htm"],
+          defaultFileName: "index.html",
+          summary: "Semantic markup and page shells.",
+        },
+        {
+          key: "css",
+          label: "CSS",
+          monacoLanguage: "css",
+          extensions: ["css", "scss"],
+          defaultFileName: "styles.css",
+          summary: "Styling systems and responsive layouts.",
+        },
+        {
+          key: "json",
+          label: "JSON",
+          monacoLanguage: "json",
+          extensions: ["json"],
+          defaultFileName: "config.json",
+          summary: "Structured data and config files.",
+        },
+        {
+          key: "markdown",
+          label: "Markdown",
+          monacoLanguage: "markdown",
+          extensions: ["md"],
+          defaultFileName: "README.md",
+          summary: "Docs, notes, and README files.",
+        },
+        {
+          key: "php",
+          label: "PHP",
+          monacoLanguage: "php",
+          extensions: ["php"],
+          defaultFileName: "index.php",
+          summary: "Server-rendered routes and utility scripts.",
+        },
+        {
+          key: "go",
+          label: "Go",
+          monacoLanguage: "go",
+          extensions: ["go"],
+          defaultFileName: "main.go",
+          summary: "Go services, handlers, and tooling.",
+        },
+        {
+          key: "rust",
+          label: "Rust",
+          monacoLanguage: "rust",
+          extensions: ["rs"],
+          defaultFileName: "main.rs",
+          summary: "Rust CLIs and memory-safe core logic.",
+        },
+        {
+          key: "sql",
+          label: "SQL",
+          monacoLanguage: "sql",
+          extensions: ["sql"],
+          defaultFileName: "schema.sql",
+          summary: "Schemas, queries, and migrations.",
+        },
+        {
+          key: "shell",
+          label: "Shell",
+          monacoLanguage: "shell",
+          extensions: ["sh", "bash"],
+          defaultFileName: "script.sh",
+          summary: "Shell automation and setup tasks.",
+        },
+        {
+          key: "yaml",
+          label: "YAML",
+          monacoLanguage: "yaml",
+          extensions: ["yaml", "yml"],
+          defaultFileName: "config.yaml",
+          summary: "Pipelines, configs, and metadata files.",
+        },
+        {
+          key: "xml",
+          label: "XML",
+          monacoLanguage: "xml",
+          extensions: ["xml"],
+          defaultFileName: "layout.xml",
+          summary: "Structured markup and config documents.",
+        },
+        {
+          key: "plaintext",
+          label: "Plain Text",
+          monacoLanguage: "plaintext",
+          extensions: ["txt", "log"],
+          defaultFileName: "notes.txt",
+          summary: "Notes, drafts, and scratch buffers.",
+        },
+      ]);
+
+      const STARTER_TEMPLATES = Object.freeze([
+        {
+          key: "cpp-console",
+          label: "C++ Console App",
+          languageKey: "cpp",
+          fileName: "main.cpp",
+          description:
+            "A clean C++ entry point with a helper function and vector loop.",
+          build: ({ projectName }) => `#include <iostream>
+#include <string>
+#include <vector>
+
+std::string build_message(const std::string& name) {
+  return "Hello from " + name + "!";
+}
+
+int main() {
+  std::vector<std::string> messages = {
+    build_message("${projectName || "Aces Lair"}")
+  };
+
+  for (const auto& message : messages) {
+    std::cout << message << std::endl;
+  }
+
+  return 0;
+}
+`,
+        },
+        {
+          key: "c-main",
+          label: "C Program",
+          languageKey: "c",
+          fileName: "main.c",
+          description:
+            "A small C program with standard IO and a reusable function.",
+          build: ({ projectName }) => `#include <stdio.h>
+
+void print_status(const char *name) {
+  printf("System online: %s\\n", name);
+}
+
+int main(void) {
+  print_status("${projectName || "Aces Lair"}");
+  return 0;
+}
+`,
+        },
+        {
+          key: "csharp-console",
+          label: "C# Console App",
+          languageKey: "csharp",
+          fileName: "Program.cs",
+          description:
+            "A .NET console starter with a record and typed entry point.",
+          build: ({ projectName }) => `using System;
+
+public record WorkspaceTask(string Name, DateTime CreatedAt);
+
+internal static class Program
+{
+    private static void Main()
+    {
+        var task = new WorkspaceTask("${projectName || "Aces Lair"}", DateTime.UtcNow);
+        Console.WriteLine($"Workspace ready: {task.Name} at {task.CreatedAt:O}");
+    }
+}
+`,
+        },
+        {
+          key: "java-main",
+          label: "Java Main Class",
+          languageKey: "java",
+          fileName: "Main.java",
+          description:
+            "A Java starter class with a helper method and list iteration.",
+          build: ({ projectName }) => `import java.util.List;
+
+public class Main {
+  private static String buildMessage(String name) {
+    return "Workspace ready: " + name;
+  }
+
+  public static void main(String[] args) {
+    List<String> messages = List.of(buildMessage("${projectName || "Aces Lair"}"));
+    messages.forEach(System.out::println);
+  }
+}
+`,
+        },
+        {
+          key: "python-cli",
+          label: "Python CLI Script",
+          languageKey: "python",
+          fileName: "main.py",
+          description:
+            "A Python command-line starter with argparse and clean flow.",
+          build: ({ projectName }) => `from argparse import ArgumentParser
+
+
+def build_parser() -> ArgumentParser:
+    parser = ArgumentParser(description="Run the ${projectName || "Aces Lair"} workflow.")
+    parser.add_argument("--name", default="${projectName || "Aces Lair"}")
+    return parser
+
+
+def main() -> None:
+    args = build_parser().parse_args()
+    print(f"Workspace ready: {args.name}")
+
+
+if __name__ == "__main__":
+    main()
+`,
+        },
+        {
+          key: "js-server",
+          label: "JavaScript Express Route",
+          languageKey: "javascript",
+          fileName: "index.js",
+          description:
+            "A small Express service starter for APIs and local testing.",
+          build: ({ projectName }) => `const express = require("express");
+
+const app = express();
+const port = process.env.PORT || 3001;
+
+app.get("/", (_req, res) => {
+  res.json({
+    project: "${projectName || "Aces Lair"}",
+    status: "online",
+  });
+});
+
+app.listen(port, () => {
+  console.log("Server ready on port", port);
+});
+`,
+        },
+        {
+          key: "ts-utility",
+          label: "TypeScript Utility",
+          languageKey: "typescript",
+          fileName: "index.ts",
+          description:
+            "A typed TypeScript utility module with interfaces and safe helpers.",
+          build: ({ projectName }) => `interface WorkspaceTask {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+export function summarizeTask(task: WorkspaceTask): string {
+  const state = task.completed ? "done" : "pending";
+  return \`\${task.title} [\${state}]\`;
+}
+
+const task: WorkspaceTask = {
+  id: "task-1",
+  title: "${projectName || "Aces Lair"}",
+  completed: false,
+};
+
+console.log(summarizeTask(task));
+`,
+        },
+        {
+          key: "html-landing",
+          label: "HTML Landing Page",
+          languageKey: "html",
+          fileName: "index.html",
+          description:
+            "A semantic HTML shell ready for a landing page or dashboard surface.",
+          build: ({ projectName }) => `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${projectName || "Aces Lair"}</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">Workspace</p>
+        <h1>${projectName || "Aces Lair"}</h1>
+        <p class="summary">Ship a focused interface with structure, hierarchy, and room to grow.</p>
+      </section>
+    </main>
+  </body>
+</html>
+`,
+        },
+        {
+          key: "css-panel",
+          label: "CSS Panel Styles",
+          languageKey: "css",
+          fileName: "styles.css",
+          description:
+            "A responsive CSS starter with variables, layout rules, and a hero surface.",
+          build: () => `:root {
+  --bg: #07111f;
+  --panel: rgba(10, 25, 47, 0.92);
+  --text: #d8e7ff;
+  --accent: #00d2ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top right, rgba(0, 210, 255, 0.2), transparent 35%),
+    linear-gradient(180deg, #020814, var(--bg));
+  color: var(--text);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.shell {
+  width: min(960px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 4rem 0;
+}
+
+.hero {
+  padding: 2rem;
+  border-radius: 18px;
+  background: var(--panel);
+  border: 1px solid rgba(0, 210, 255, 0.18);
+}
+`,
+        },
+        {
+          key: "php-router",
+          label: "PHP Route Handler",
+          languageKey: "php",
+          fileName: "index.php",
+          description:
+            "A simple PHP front controller with JSON responses and route dispatch.",
+          build: ({ projectName }) => `<?php
+
+declare(strict_types=1);
+
+$path = parse_url($_SERVER["REQUEST_URI"] ?? "/", PHP_URL_PATH);
+
+if ($path === "/health") {
+    header("Content-Type: application/json");
+    echo json_encode([
+        "project" => "${projectName || "Aces Lair"}",
+        "status" => "ok",
+    ]);
+    exit;
+}
+
+http_response_code(200);
+echo "<h1>${projectName || "Aces Lair"}</h1>";
+`,
+        },
+        {
+          key: "go-http",
+          label: "Go HTTP Server",
+          languageKey: "go",
+          fileName: "main.go",
+          description:
+            "A Go starter with an HTTP handler and structured JSON response.",
+          build: ({ projectName }) => `package main
+
+import (
+  "encoding/json"
+  "log"
+  "net/http"
+)
+
+func main() {
+  http.HandleFunc("/", func(w http.ResponseWriter, _ *http.Request) {
+    w.Header().Set("Content-Type", "application/json")
+    _ = json.NewEncoder(w).Encode(map[string]string{
+      "project": "${projectName || "Aces Lair"}",
+      "status": "online",
+    })
+  })
+
+  log.Println("Listening on :8080")
+  log.Fatal(http.ListenAndServe(":8080", nil))
+}
+`,
+        },
+        {
+          key: "rust-cli",
+          label: "Rust CLI Starter",
+          languageKey: "rust",
+          fileName: "main.rs",
+          description:
+            "A Rust entry point with a helper function and owned string flow.",
+          build: ({ projectName }) => `fn build_message(name: &str) -> String {
+    format!("Workspace ready: {}", name)
+}
+
+fn main() {
+    let message = build_message("${projectName || "Aces Lair"}");
+    println!("{}", message);
+}
+`,
+        },
+        {
+          key: "sql-schema",
+          label: "SQL Schema",
+          languageKey: "sql",
+          fileName: "schema.sql",
+          description:
+            "A practical SQL schema starter with timestamps and indexes.",
+          build: ({ projectName }) => `CREATE TABLE IF NOT EXISTS projects (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  status TEXT NOT NULL DEFAULT 'draft',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO projects (name, slug, status)
+VALUES ('${projectName || "Aces Lair"}', '${toProjectSlug(projectName)}', 'active');
+`,
+        },
+        {
+          key: "shell-script",
+          label: "Shell Automation",
+          languageKey: "shell",
+          fileName: "script.sh",
+          description:
+            "A safe shell starter with strict mode and reusable logging helpers.",
+          build: ({ projectName }) => `#!/usr/bin/env bash
+set -euo pipefail
+
+log() {
+  printf '[workspace] %s\n' "$1"
+}
+
+main() {
+  log "Starting ${projectName || "Aces Lair"}"
+}
+
+main "$@"
+`,
+        },
+        {
+          key: "json-config",
+          label: "JSON Config",
+          languageKey: "json",
+          fileName: "config.json",
+          description:
+            "A structured JSON configuration starter for app settings.",
+          build: ({ projectName }) => `{
+  "name": "${toProjectSlug(projectName)}",
+  "displayName": "${projectName || "Aces Lair"}",
+  "version": "1.0.0",
+  "features": {
+    "binaryMode": true,
+    "templates": true,
+    "assistantContext": true
+  }
+}
+`,
+        },
+        {
+          key: "yaml-pipeline",
+          label: "YAML Pipeline",
+          languageKey: "yaml",
+          fileName: "pipeline.yaml",
+          description:
+            "A YAML workflow starter for CI steps, setup, and test execution.",
+          build: ({ projectName }) => `name: ${toProjectSlug(projectName)}
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install
+        run: npm install
+      - name: Test
+        run: npm test
+`,
+        },
+        {
+          key: "xml-layout",
+          label: "XML Layout",
+          languageKey: "xml",
+          fileName: "layout.xml",
+          description:
+            "A clean XML shell for structured layout or configuration markup.",
+          build: ({ projectName }) => `<?xml version="1.0" encoding="UTF-8"?>
+<workspace name="${projectName || "Aces Lair"}">
+  <section id="overview">
+    <title>Main Surface</title>
+    <description>Update this XML file with your structured content.</description>
+  </section>
+</workspace>
+`,
+        },
+        {
+          key: "markdown-readme",
+          label: "Markdown README",
+          languageKey: "markdown",
+          fileName: "README.md",
+          description:
+            "A structured README with setup, usage, and next-step sections.",
+          build: ({ projectName }) => `# ${projectName || "Aces Lair"}
+
+## Overview
+Describe the project goal, its audience, and the main workflow.
+
+## Setup
+1. Install dependencies.
+2. Configure environment variables.
+3. Start the application.
+
+## Usage
+- Document the core commands or UI flows here.
+
+## Next Steps
+- Add features
+- Write tests
+- Refine documentation
+`,
+        },
+        {
+          key: "binary-sheet",
+          label: "Binary Conversion Sheet",
+          languageKey: "binary",
+          fileName: "binary-notes.txt",
+          description:
+            "A quick binary reference with sample bytes, ASCII hints, and note space.",
+          build: () => `Binary reference
+================
+
+A  = 01000001
+B  = 01000010
+a  = 01100001
+0  = 00110000
+space = 00100000
+
+Notes:
+- Use 8-bit groups for byte-aligned text.
+- Keep separators as spaces or line breaks.
+- Paste output from Binary Forge here when needed.
+`,
+        },
+        {
+          key: "text-notes",
+          label: "Plain Text Notes",
+          languageKey: "plaintext",
+          fileName: "notes.txt",
+          description:
+            "A simple scratchpad for planning, checklists, or technical notes.",
+          build: ({ projectName }) => `Project: ${projectName || "Aces Lair"}
+
+Objectives
+- 
+
+Tasks
+- 
+
+Open Questions
+- 
+`,
+        },
+      ]);
+
+      const LANGUAGE_BY_KEY = new Map(
+        LANGUAGE_CATALOG.map((language) => [language.key, language]),
+      );
+      const TEMPLATE_BY_KEY = new Map(
+        STARTER_TEMPLATES.map((template) => [template.key, template]),
+      );
+      const FILE_NAME_LANGUAGE_OVERRIDES = Object.freeze({
+        "package.json": "json",
+        "package-lock.json": "json",
+        "tsconfig.json": "json",
+        "readme.md": "markdown",
+      });
+
+      function toProjectSlug(value) {
+        return (
+          String(value || "aces-project")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "") || "aces-project"
+        );
+      }
+
+      function getBaseName(filePath) {
+        return String(filePath || "").split("/").pop() || "";
+      }
+
+      function normalizeRelativeFilePath(filePath) {
+        const normalized = String(filePath || "")
+          .trim()
+          .replace(/\\/g, "/")
+          .replace(/^\/+/, "")
+          .replace(/\/{2,}/g, "/");
+
+        if (!normalized) {
+          throw new Error("Provide a project-relative file path.");
+        }
+
+        const segments = normalized.split("/");
+        if (segments.some((segment) => !segment || segment === "." || segment === "..")) {
+          throw new Error("Use a valid project-relative file path.");
+        }
+
+        return normalized;
+      }
+
+      function getLanguageConfigByKey(languageKey) {
+        return LANGUAGE_BY_KEY.get(languageKey) || LANGUAGE_BY_KEY.get("plaintext");
+      }
+
+      function getLanguageLabel(languageKey) {
+        return getLanguageConfigByKey(languageKey).label;
+      }
+
+      function getLanguageConfigForFile(filePath) {
+        const fileName = getBaseName(filePath).toLowerCase();
+        const overrideLanguage = FILE_NAME_LANGUAGE_OVERRIDES[fileName];
+
+        if (overrideLanguage) {
+          return getLanguageConfigByKey(overrideLanguage);
+        }
+
+        const extension = fileName.includes(".") ? fileName.split(".").pop() : "";
+        const matchedLanguage = LANGUAGE_CATALOG.find((language) =>
+          language.extensions.includes(extension),
+        );
+
+        return matchedLanguage || getLanguageConfigByKey("plaintext");
+      }
+
+      function getSupportedMonacoLanguage(languageKey) {
+        const desiredLanguage = getLanguageConfigByKey(languageKey).monacoLanguage;
+
+        if (!window.monaco || !monaco.languages) {
+          return desiredLanguage;
+        }
+
+        const isSupported = monaco
+          .languages
+          .getLanguages()
+          .some((language) => language.id === desiredLanguage);
+
+        return isSupported ? desiredLanguage : "plaintext";
+      }
+
+      function getLanguageForFile(fileName) {
+        return getSupportedMonacoLanguage(getLanguageConfigForFile(fileName).key);
+      }
+
+      function getFileIconClass(filePath) {
+        const languageKey = getLanguageConfigForFile(filePath).key;
+
+        if (languageKey === "binary") return "fa-microchip";
+        if (languageKey === "markdown" || languageKey === "plaintext") {
+          return "fa-file-alt";
+        }
+
+        return "fa-file-code";
+      }
+
+      function setSaveStatusText(message = "", tone = "default") {
+        saveStatusEl.textContent = message;
+
+        if (tone === "success") {
+          saveStatusEl.style.color = "var(--al-green, #4ade80)";
+        } else if (tone === "error") {
+          saveStatusEl.style.color = "var(--al-danger, #ef4444)";
+        } else {
+          saveStatusEl.style.color = "var(--al-text)";
+        }
+      }
+
+      function getActiveFileMeta(filePath = activeFile) {
+        return filePath ? openFiles.get(filePath) || null : null;
+      }
+
+      function isFileDirty(fileMeta) {
+        return Boolean(
+          fileMeta &&
+            fileMeta.model &&
+            fileMeta.model.getValue() !== fileMeta.lastSavedValue,
+        );
+      }
+
+      function getEditorSelectionText() {
+        if (!monacoEditor) return "";
+
+        const model = monacoEditor.getModel();
+        if (!model || model.isPlaceholder) return "";
+
+        const selection = monacoEditor.getSelection();
+        if (!selection || selection.isEmpty()) return "";
+
+        return model.getValueInRange(selection);
+      }
+
+      function updateWorkspaceMetrics() {
+        const activeMeta = getActiveFileMeta();
+        const model = monacoEditor ? monacoEditor.getModel() : null;
+
+        if (!model || model.isPlaceholder || !activeMeta) {
+          metricLinesEl.textContent = "0";
+          metricCharactersEl.textContent = "0";
+          metricSelectionEl.textContent = "0";
+          metricModeEl.textContent = getLanguageLabel(
+            languageSelectorEl.value || "cpp",
+          );
+          return;
+        }
+
+        metricLinesEl.textContent = String(model.getLineCount());
+        metricCharactersEl.textContent = String(model.getValue().length);
+        metricSelectionEl.textContent = String(getEditorSelectionText().length);
+        metricModeEl.textContent = getLanguageLabel(activeMeta.languageKey);
+      }
+
+      function populateLanguageSelector() {
+        const currentValue = languageSelectorEl.value || "cpp";
+        languageSelectorEl.innerHTML = LANGUAGE_CATALOG.map(
+          (language) =>
+            `<option value="${language.key}">${language.label}</option>`,
+        ).join("");
+        languageSelectorEl.value = LANGUAGE_BY_KEY.has(currentValue)
+          ? currentValue
+          : "cpp";
+      }
+
+      function getTemplatesForLanguage(languageKey) {
+        const matchingTemplates = STARTER_TEMPLATES.filter(
+          (template) => template.languageKey === languageKey,
+        );
+
+        return matchingTemplates.length ? matchingTemplates : STARTER_TEMPLATES;
+      }
+
+      function updateTemplateDescription() {
+        const template = TEMPLATE_BY_KEY.get(starterTemplateSelectorEl.value);
+        templateDescriptionEl.textContent = template
+          ? template.description
+          : "Pick a starter template to generate structured code quickly.";
+      }
+
+      function populateTemplateSelector(languageKey = languageSelectorEl.value) {
+        const currentValue = starterTemplateSelectorEl.value;
+        const templates = getTemplatesForLanguage(languageKey);
+
+        starterTemplateSelectorEl.innerHTML = templates
+          .map(
+            (template) =>
+              `<option value="${template.key}">${template.label}</option>`,
+          )
+          .join("");
+
+        starterTemplateSelectorEl.value = templates.some(
+          (template) => template.key === currentValue,
+        )
+          ? currentValue
+          : templates[0].key;
+
+        updateTemplateDescription();
+      }
+
+      function renderSupportedLanguageChips() {
+        const selectedLanguage = languageSelectorEl.value || "cpp";
+        supportedLanguageChipsEl.innerHTML = "";
+
+        LANGUAGE_CATALOG.forEach((language) => {
+          const chip = document.createElement("button");
+          chip.type = "button";
+          chip.className =
+            "tool-chip" + (language.key === selectedLanguage ? " active" : "");
+          chip.textContent = language.label;
+          chip.title = language.summary;
+
+          chip.addEventListener("click", () => {
+            languageSelectorEl.value = language.key;
+            populateTemplateSelector(language.key);
+            renderSupportedLanguageChips();
+
+            if (activeFile) {
+              applyLanguageToFile(activeFile, language.key);
+            } else {
+              updateEditorChrome();
+            }
+          });
+
+          supportedLanguageChipsEl.appendChild(chip);
+        });
+      }
+
+      function updateEditorChrome() {
+        const activeMeta = getActiveFileMeta();
+
+        activeFileChipEl.textContent = activeFile || "No file open";
+        activeLanguageChipEl.textContent = activeMeta
+          ? getLanguageLabel(activeMeta.languageKey)
+          : `${getLanguageLabel(languageSelectorEl.value || "cpp")} mode`;
+
+        applyLanguageBtnEl.disabled = !activeFile;
+        insertTemplateBtnEl.disabled = !activeFile;
+        createStarterFileBtnEl.disabled = !currentProjectId;
+
+        renderSupportedLanguageChips();
+        updateWorkspaceMetrics();
+      }
+
+      function appendAiMessageToHistory(sender, text, isThinking = false) {
+        const messageWrapper = document.createElement("div");
+        messageWrapper.className = `ai-message ${sender}`;
+        if (isThinking) {
+          messageWrapper.classList.add("thinking");
+        }
+
+        const senderEl = document.createElement("div");
+        senderEl.className = "sender";
+        senderEl.textContent = sender === "user" ? "You" : "A.C.E.S.";
+
+        const contentEl = document.createElement("div");
+        contentEl.className = "content";
+        contentEl.innerHTML = text;
+
+        messageWrapper.appendChild(senderEl);
+        messageWrapper.appendChild(contentEl);
+        aiChatHistory.appendChild(messageWrapper);
+        aiChatHistory.scrollTop = aiChatHistory.scrollHeight;
+        return contentEl;
+      }
+
+      function formatAiMarkdown(text) {
+        let safeText = String(text || "")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+        safeText = safeText.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+        safeText = safeText.replace(/\n/g, "<br />");
+        return safeText;
+      }
+
+      function buildAiPrompt(userMessage) {
+        const context = [];
+        const activeMeta = getActiveFileMeta();
+        const model = monacoEditor ? monacoEditor.getModel() : null;
+
+        if (currentProjectName) {
+          context.push(`Project: ${currentProjectName}`);
+        }
+        if (activeFile) {
+          context.push(`Active file: ${activeFile}`);
+        }
+        if (activeMeta) {
+          context.push(`Language: ${getLanguageLabel(activeMeta.languageKey)}`);
+        }
+
+        if (model && !model.isPlaceholder) {
+          const selection = getEditorSelectionText();
+          const snippet = selection || model.getValue().slice(0, 2400);
+          if (snippet) {
+            context.push(`Code context:\n${snippet}`);
+          }
+        }
+
+        return context.length
+          ? `${userMessage}\n\nWorkspace context:\n${context.join("\n\n")}`
+          : userMessage;
+      }
+
+      function initAiAssistant() {
+        aiChatHistory.innerHTML = "";
+        aiInput.value = "";
+        appendAiMessageToHistory(
+          "assistant",
+          "A.C.E.S. Assistant online. Ask about the active file, selected code, or starter templates.",
+        );
+
+        if (aiAssistantInitialized) return;
+
+        sendAiPrompt = async (messageOverride = "") => {
+          const message = String(messageOverride || aiInput.value).trim();
+          if (!message) return;
+
+          appendAiMessageToHistory("user", message);
+          aiInput.value = "";
+
+          const thinkingIndicator = appendAiMessageToHistory(
+            "assistant",
+            "",
+            true,
+          );
+
+          try {
+            const response = await fetch("/api/ai/chat", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                userMessage: buildAiPrompt(message),
+              }),
+            });
+            const data = await response.json();
+
+            thinkingIndicator.parentElement.classList.remove("thinking");
+            thinkingIndicator.innerHTML = data.success
+              ? formatAiMarkdown(data.reply)
+              : `<b>Error:</b> ${data.error || "AI request failed."}`;
+          } catch (error) {
+            thinkingIndicator.parentElement.classList.remove("thinking");
+            thinkingIndicator.innerHTML =
+              "<b>Error:</b> A.C.E.S AI is offline.";
+          }
+        };
+
+        aiAskBtn.addEventListener("click", () => {
+          void sendAiPrompt();
+        });
+
+        aiInput.addEventListener("keypress", (event) => {
+          if (event.key === "Enter") {
+            void sendAiPrompt();
+          }
+        });
+
+        quickActionButtonsEls.forEach((button) => {
+          button.addEventListener("click", () => {
+            void sendAiPrompt(button.dataset.aiPrompt || "");
+          });
+        });
+
+        aiAssistantInitialized = true;
+      }
+
+      function renderFileTree(nodes, container, currentPath = "") {
+        const joinPath = (...segments) => segments.filter(Boolean).join("/");
+
+        nodes.forEach((node) => {
+          const nodePath = joinPath(currentPath, node.name);
+
+          if (node.type === "directory") {
+            const folderEl = document.createElement("div");
+            folderEl.className = "file-tree-item folder collapsed";
+            folderEl.dataset.path = nodePath;
+
+            const chevronIcon = document.createElement("i");
+            chevronIcon.className = "fas fa-chevron-right folder-toggle";
+
+            const folderIcon = document.createElement("i");
+            folderIcon.className = "fas fa-folder";
+            folderIcon.style.marginRight = "8px";
+            folderIcon.style.color = "var(--al-cyan)";
+
+            const label = document.createElement("span");
+            label.textContent = node.name;
+
+            folderEl.appendChild(chevronIcon);
+            folderEl.appendChild(folderIcon);
+            folderEl.appendChild(label);
+
+            const childrenContainer = document.createElement("div");
+            childrenContainer.className = "folder-children collapsed";
+
+            folderEl.addEventListener("click", (event) => {
+              event.stopPropagation();
+              folderEl.classList.toggle("collapsed");
+              childrenContainer.classList.toggle("collapsed");
+            });
+
+            container.appendChild(folderEl);
+            container.appendChild(childrenContainer);
+
+            if (node.children) {
+              renderFileTree(node.children, childrenContainer, nodePath);
+            }
+            return;
+          }
+
+          const fileEl = document.createElement("div");
+          fileEl.className = "file-tree-item";
+          fileEl.dataset.path = nodePath;
+
+          const fileIcon = document.createElement("i");
+          fileIcon.className = `fas ${getFileIconClass(nodePath)}`;
+          fileIcon.style.marginRight = "8px";
+          fileIcon.style.color = "var(--al-cyan)";
+
+          const label = document.createElement("span");
+          label.textContent = node.name;
+
+          fileEl.appendChild(fileIcon);
+          fileEl.appendChild(label);
+          container.appendChild(fileEl);
+        });
+      }
+
+      function setupFileTree(files) {
+        fileTreeContainer.innerHTML = "";
+
+        const header = document.createElement("div");
+        header.id = "file-tree-header";
+        header.innerHTML = `
+            <span class="text-sm font-bold opacity-80">EXPLORER</span>
+            <div class="file-tree-actions">
+                <button id="new-file-btn" title="New File"><i class="fas fa-file-plus"></i></button>
+                <button id="new-folder-btn" title="New Folder"><i class="fas fa-folder-plus"></i></button>
+            </div>
+        `;
+        fileTreeContainer.appendChild(header);
+
+        const treeRoot = document.createElement("div");
+        fileTreeContainer.appendChild(treeRoot);
+
+        if (!files || files.length === 0) {
+          treeRoot.innerHTML =
+            '<div class="p-2 text-sm opacity-50">No files found.</div>';
+        } else {
+          renderFileTree(files, treeRoot);
+        }
+
+        document
+          .getElementById("new-file-btn")
+          .addEventListener("click", () => promptForNewItem("file"));
+        document
+          .getElementById("new-folder-btn")
+          .addEventListener("click", () => promptForNewItem("directory"));
+      }
+
+      async function createFsItem(relativePath, name, type) {
+        try {
+          const response = await fetch("/api/create-fs-item", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              projectId: currentProjectId,
+              relativePath,
+              name,
+              type,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Request failed: ${response.status}`);
+          }
+
+          const result = await response.json();
+          if (!result.success) {
+            throw new Error(result.error || "Could not create item.");
+          }
+
+          await refreshFileTree();
+        } catch (error) {
+          console.error(`Error creating ${type}:`, error);
+          alert(`Failed to create ${type}: ${error.message}`);
+        }
+      }
+
+      function buildModelUri(filePath) {
+        const encodedPath = normalizeRelativeFilePath(filePath)
+          .split("/")
+          .map((segment) => encodeURIComponent(segment))
+          .join("/");
+
+        return monaco.Uri.parse(
+          `inmemory://project/${encodeURIComponent(String(currentProjectId))}/${encodedPath}`,
+        );
+      }
+
+      function configureAdvancedLanguageServices() {
+        if (languageServicesConfigured) return;
+
+        const tsDefaults = monaco.languages.typescript.typescriptDefaults;
+        const jsDefaults = monaco.languages.typescript.javascriptDefaults;
+        const compilerOptions = {
+          target: monaco.languages.typescript.ScriptTarget.ES2020,
+          module: monaco.languages.typescript.ModuleKind.CommonJS,
+          allowNonTsExtensions: true,
+          allowJs: true,
+          moduleResolution:
+            monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+        };
+
+        jsDefaults.setCompilerOptions(compilerOptions);
+        tsDefaults.setCompilerOptions(compilerOptions);
+        jsDefaults.setEagerModelSync(true);
+        tsDefaults.setEagerModelSync(true);
+
+        if (monaco.languages.json && monaco.languages.json.jsonDefaults) {
+          monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+            validate: true,
+            allowComments: true,
+          });
+        }
+
+        const addLibrary = async (url, libraryPath) => {
+          try {
+            const response = await fetch(url);
+            if (!response.ok) {
+              throw new Error(`Failed to load ${url}`);
+            }
+
+            const content = await response.text();
+            jsDefaults.addExtraLib(content, libraryPath);
+            tsDefaults.addExtraLib(content, libraryPath);
+          } catch (error) {
+            console.error(`[Editor] Failed to fetch library: ${url}`, error);
+          }
+        };
+
+        addLibrary(
+          "https://cdn.jsdelivr.net/npm/@types/node@20/index.d.ts",
+          "file:///node.d.ts",
+        );
+        addLibrary(
+          "https://cdn.jsdelivr.net/npm/@types/express@4/index.d.ts",
+          "file:///express.d.ts",
+        );
+
+        languageServicesConfigured = true;
+      }
+
+      function defineAdvancedEditorTheme() {
+        monaco.editor.defineTheme("aces-lair", {
+          base: "vs-dark",
+          inherit: true,
+          rules: [
+            { token: "", background: "020a1a" },
+            { token: "comment", foreground: "6272a4", fontStyle: "italic" },
+            { token: "keyword", foreground: "ff79c6" },
+            { token: "string", foreground: "f1fa8c" },
+            { token: "number", foreground: "bd93f9" },
+            { token: "regexp", foreground: "ffb86c" },
+            { token: "type", foreground: "8be9fd" },
+            { token: "class", foreground: "8be9fd" },
+            { token: "function", foreground: "50fa7b" },
+            { token: "variable", foreground: "f8f8f2" },
+            { token: "operator", foreground: "ff79c6" },
+          ],
+          colors: {
+            "editor.background": "#020a1a",
+            "editor.foreground": "#cdd6f6",
+            "editorCursor.foreground": "#00ffff",
+            "editor.lineHighlightBackground": "#0a192f",
+            "editorLineNumber.foreground": "#4f5b66",
+            "editor.selectionBackground": "#00ffff22",
+            "editor.inactiveSelectionBackground": "#00ffff11",
+            "editorIndentGuide.background": "#ffffff10",
+            "editorIndentGuide.activeBackground": "#00ffff40",
+          },
+        });
+      }
+
+      async function ensureMonacoEditorReady() {
+        if (monacoReadyPromise) {
+          return monacoReadyPromise;
+        }
+
+        monacoReadyPromise = new Promise((resolve, reject) => {
+          if (typeof require === "undefined") {
+            reject(new Error("Monaco loader is not available."));
+            return;
+          }
+
+          require.config({
+            paths: {
+              vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs",
+            },
+          });
+
+          require(
+            ["vs/editor/editor.main"],
+            () => {
+              try {
+                configureAdvancedLanguageServices();
+                defineAdvancedEditorTheme();
+
+                if (!monacoEditor) {
+                  monacoEditor = monaco.editor.create(
+                    document.getElementById("monaco-editor"),
+                    {
+                      theme: "aces-lair",
+                      automaticLayout: true,
+                      fontFamily:
+                        "'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace",
+                      fontSize: 14,
+                      lineHeight: 24,
+                      fontLigatures: true,
+                      minimap: {
+                        enabled: true,
+                        renderCharacters: false,
+                      },
+                      cursorBlinking: "smooth",
+                      cursorSmoothCaretAnimation: "on",
+                      smoothScrolling: true,
+                      guides: {
+                        indentation: true,
+                        bracketPairs: true,
+                      },
+                      bracketPairColorization: {
+                        enabled: true,
+                      },
+                    },
+                  );
+
+                  monacoEditor.onDidChangeModelContent(() => {
+                    const fileMeta = getActiveFileMeta();
+                    const model = monacoEditor.getModel();
+
+                    if (!fileMeta || !model || model.isPlaceholder) {
+                      return;
+                    }
+
+                    setSaveStatusText("Unsaved changes...");
+                    clearTimeout(saveTimeout);
+                    renderOpenTabs();
+                    updateWorkspaceMetrics();
+
+                    saveTimeout = setTimeout(() => {
+                      void saveCurrentFile();
+                    }, 1500);
+                  });
+
+                  monacoEditor.onDidChangeCursorSelection(() => {
+                    updateWorkspaceMetrics();
+                  });
+
+                  monacoEditor.onDidChangeModel(() => {
+                    renderOpenTabs();
+                    updateWorkspaceMetrics();
+                  });
+                }
+
+                monaco.editor.setTheme("aces-lair");
+                resolve(monacoEditor);
+              } catch (error) {
+                reject(error);
+              }
+            },
+            (error) => reject(error),
+          );
+        });
+
+        return monacoReadyPromise;
+      }
+
+      function renderOpenTabs() {
+        tabsContainer.innerHTML = "";
+
+        openFiles.forEach((fileMeta, filePath) => {
+          const tab = document.createElement("button");
+          tab.type = "button";
+          tab.className = "editor-tab" + (filePath === activeFile ? " active" : "");
+          tab.dataset.path = filePath;
+
+          const icon = document.createElement("i");
+          icon.className = `fas ${getFileIconClass(filePath)}`;
+
+          const label = document.createElement("span");
+          label.textContent = `${getBaseName(filePath)}${isFileDirty(fileMeta) ? " *" : ""}`;
+
+          const closeBtn = document.createElement("button");
+          closeBtn.type = "button";
+          closeBtn.className = "tab-close-btn";
+          closeBtn.setAttribute("aria-label", `Close ${getBaseName(filePath)}`);
+          closeBtn.innerHTML = "&times;";
+
+          tab.appendChild(icon);
+          tab.appendChild(label);
+          tab.appendChild(closeBtn);
+          tabsContainer.appendChild(tab);
+        });
+      }
+
+      function createPlaceholderModel() {
+        if (!monacoEditor || !window.monaco) return;
+
+        const currentModel = monacoEditor.getModel();
+        if (currentModel && currentModel.isPlaceholder) {
+          currentModel.dispose();
+        }
+
+        const placeholderModel = monaco.editor.createModel(
+          ADVANCED_PLACEHOLDER_MESSAGE,
+          "plaintext",
+        );
+        placeholderModel.isPlaceholder = true;
+        monacoEditor.setModel(placeholderModel);
+        monacoEditor.updateOptions({ readOnly: true });
+        activeFile = null;
+        renderOpenTabs();
+        updateEditorChrome();
+      }
+
+      function resetEditorSession() {
+        clearTimeout(saveTimeout);
+        openFiles.forEach((fileMeta) => {
+          fileMeta.model.dispose();
+        });
+        openFiles.clear();
+        activeFile = null;
+        setSaveStatusText("");
+
+        if (monacoEditor) {
+          const currentModel = monacoEditor.getModel();
+          if (currentModel && currentModel.isPlaceholder) {
+            currentModel.dispose();
+          }
+          monacoEditor.setModel(null);
+          monacoEditor.updateOptions({ readOnly: true });
+        }
+
+        renderOpenTabs();
+        updateEditorChrome();
+      }
+
+      function syncActiveViewState() {
+        if (!monacoEditor || !activeFile || !openFiles.has(activeFile)) {
+          return;
+        }
+
+        openFiles.get(activeFile).viewState = monacoEditor.saveViewState();
+      }
+
+      function applyLanguageToFile(filePath, languageKey) {
+        const fileMeta = openFiles.get(filePath);
+        if (!fileMeta || !window.monaco) return;
+
+        const resolvedLanguage = getLanguageConfigByKey(languageKey);
+        fileMeta.languageKey = resolvedLanguage.key;
+        monaco.editor.setModelLanguage(
+          fileMeta.model,
+          getSupportedMonacoLanguage(resolvedLanguage.key),
+        );
+
+        if (filePath === activeFile) {
+          languageSelectorEl.value = resolvedLanguage.key;
+          populateTemplateSelector(resolvedLanguage.key);
+        }
+
+        renderOpenTabs();
+        updateEditorChrome();
+      }
+
+      function setActiveModel(filePath) {
+        const fileMeta = openFiles.get(filePath);
+        if (!fileMeta || !monacoEditor) return;
+
+        syncActiveViewState();
+
+        const currentModel = monacoEditor.getModel();
+        if (currentModel && currentModel.isPlaceholder) {
+          currentModel.dispose();
+        }
+
+        activeFile = filePath;
+        monacoEditor.setModel(fileMeta.model);
+        monacoEditor.updateOptions({ readOnly: false });
+
+        if (fileMeta.viewState) {
+          monacoEditor.restoreViewState(fileMeta.viewState);
+        }
+
+        languageSelectorEl.value = fileMeta.languageKey;
+        populateTemplateSelector(fileMeta.languageKey);
+        renderOpenTabs();
+        updateEditorChrome();
+        monacoEditor.focus();
+      }
+
+      async function openOrSwitchToFile(filePath) {
+        if (!currentProjectId) return;
+
+        const normalizedPath = normalizeRelativeFilePath(filePath);
+        await ensureMonacoEditorReady();
+
+        if (openFiles.has(normalizedPath)) {
+          setActiveModel(normalizedPath);
+          return;
+        }
+
+        setSaveStatusText("Loading file...");
+
+        try {
+          const response = await fetch(
+            `/api/projects/${currentProjectId}/file-content?path=${encodeURIComponent(normalizedPath)}`,
+          );
+          const result = await response.json();
+
+          if (!response.ok || !result.success) {
+            throw new Error(result.error || "Could not read file.");
+          }
+
+          const languageConfig = getLanguageConfigForFile(normalizedPath);
+          const model = monaco.editor.createModel(
+            result.content,
+            getSupportedMonacoLanguage(languageConfig.key),
+            buildModelUri(normalizedPath),
+          );
+
+          openFiles.set(normalizedPath, {
+            model,
+            viewState: null,
+            lastSavedValue: result.content,
+            languageKey: languageConfig.key,
+          });
+
+          setActiveModel(normalizedPath);
+          setSaveStatusText("");
+        } catch (error) {
+          console.error(`Error opening file ${normalizedPath}:`, error);
+          setSaveStatusText(`Error: ${error.message}`, "error");
+          alert(`Failed to open file: ${error.message}`);
+        }
+      }
+
+      async function saveFileByPath(filePath, contentOverride) {
+        const normalizedPath = normalizeRelativeFilePath(filePath);
+        const fileMeta = openFiles.get(normalizedPath);
+        const content =
+          contentOverride !== undefined
+            ? contentOverride
+            : fileMeta
+              ? fileMeta.model.getValue()
+              : "";
+
+        if (normalizedPath === activeFile) {
+          setSaveStatusText("Saving...");
+        }
+
+        const response = await fetch("/api/save-file", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            projectId: currentProjectId,
+            fileName: normalizedPath,
+            content,
+          }),
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || "Failed to save file.");
+        }
+
+        if (fileMeta) {
+          fileMeta.lastSavedValue = content;
+        }
+
+        renderOpenTabs();
+
+        if (normalizedPath === activeFile) {
+          setSaveStatusText("Saved", "success");
+          setTimeout(() => {
+            if (saveStatusEl.textContent === "Saved") {
+              setSaveStatusText("");
+            }
+          }, 1800);
+        }
+
+        return result;
+      }
+
+      async function saveCurrentFile(showAlert = false) {
+        const fileMeta = getActiveFileMeta();
+        if (!monacoEditor || !currentProjectId || !activeFile || !fileMeta) {
+          return;
+        }
+
+        try {
+          await saveFileByPath(activeFile);
+        } catch (error) {
+          console.error("Error saving file:", error);
+          setSaveStatusText(`Error: ${error.message}`, "error");
+          if (showAlert) {
+            alert(`Failed to save file: ${error.message}`);
+          }
+        }
+      }
+
+      async function saveDirtyFilesIfConfirmed(message) {
+        const dirtyFiles = Array.from(openFiles.entries()).filter(([, fileMeta]) =>
+          isFileDirty(fileMeta),
+        );
+
+        if (!dirtyFiles.length) {
+          return true;
+        }
+
+        const shouldSave = confirm(message);
+        if (!shouldSave) {
+          return false;
+        }
+
+        try {
+          for (const [filePath] of dirtyFiles) {
+            await saveFileByPath(filePath);
+          }
+          return true;
+        } catch (error) {
+          alert(`Failed to save unsaved files: ${error.message}`);
+          return false;
+        }
+      }
+
+      async function refreshFileTree() {
+        try {
+          const response = await fetch(`/api/projects/${currentProjectId}/files`);
+          if (!response.ok) {
+            throw new Error("Could not fetch project files.");
+          }
+
+          currentProjectFiles = await response.json();
+          setupFileTree(currentProjectFiles);
+        } catch (error) {
+          console.error(error);
+          setupFileTree([]);
+        }
+      }
+
+      async function openEditor(projectId, projectName) {
+        if (currentProjectId && currentProjectId !== projectId) {
+          const canSwitchProjects = await saveDirtyFilesIfConfirmed(
+            "Save unsaved files before switching projects? Press OK to save, or Cancel to keep the current project open.",
+          );
+
+          if (!canSwitchProjects) {
+            return;
+          }
+
+          resetEditorSession();
+        }
+
+        currentProjectId = projectId;
+        currentProjectName = projectName;
+        editorProjectName.textContent = `Project: ${projectName}`;
+        editorContainer.style.display = "flex";
+
+        await refreshFileTree();
+        initAiAssistant();
+
+        try {
+          await ensureMonacoEditorReady();
+          createPlaceholderModel();
+          populateTemplateSelector(languageSelectorEl.value || "cpp");
+          updateEditorChrome();
+        } catch (error) {
+          console.error("Failed to initialize Monaco:", error);
+          alert("Editor components could not be loaded.");
+        }
+      }
+
+      async function closeEditor() {
+        const canClose = await saveDirtyFilesIfConfirmed(
+          "Save unsaved files before closing the editor? Press OK to save, or Cancel to keep the editor open.",
+        );
+
+        if (!canClose) {
+          return;
+        }
+
+        currentProjectId = null;
+        currentProjectName = "";
+        currentProjectFiles = [];
+        editorContainer.style.display = "none";
+        aiChatHistory.innerHTML = "";
+        aiInput.value = "";
+        resetEditorSession();
+      }
+
+      function replaceEntireActiveFile(text) {
+        const model = monacoEditor ? monacoEditor.getModel() : null;
+        if (!model || model.isPlaceholder) return;
+
+        monacoEditor.executeEdits("aces-replace-all", [
+          {
+            range: model.getFullModelRange(),
+            text,
+          },
+        ]);
+      }
+
+      function appendToActiveFile(text) {
+        const model = monacoEditor ? monacoEditor.getModel() : null;
+        if (!model || model.isPlaceholder) return;
+
+        const lastLine = model.getLineCount();
+        const lastColumn = model.getLineMaxColumn(lastLine);
+        const prefix =
+          model.getValue() && !model.getValue().endsWith("\n") ? "\n" : "";
+
+        monacoEditor.executeEdits("aces-append", [
+          {
+            range: new monaco.Range(lastLine, lastColumn, lastLine, lastColumn),
+            text: `${prefix}${text}`,
+          },
+        ]);
+      }
+
+      function insertIntoActiveFile(text) {
+        const model = monacoEditor ? monacoEditor.getModel() : null;
+        if (!model || model.isPlaceholder) {
+          return false;
+        }
+
+        const selection = monacoEditor.getSelection();
+        if (selection && !selection.isEmpty()) {
+          monacoEditor.executeEdits("aces-insert", [
+            {
+              range: selection,
+              text,
+            },
+          ]);
+          return true;
+        }
+
+        if (!model.getValue().trim()) {
+          replaceEntireActiveFile(text);
+          return true;
+        }
+
+        appendToActiveFile(text);
+        return true;
+      }
+
+      function getSelectedTemplate() {
+        return TEMPLATE_BY_KEY.get(starterTemplateSelectorEl.value) || null;
+      }
+
+      function buildSelectedTemplateContent() {
+        const template = getSelectedTemplate();
+        if (!template) return "";
+
+        return template.build({
+          projectName: currentProjectName,
+          activeFileName: getBaseName(activeFile),
+          projectSlug: toProjectSlug(currentProjectName),
+        });
+      }
+
+      function insertTemplateIntoCurrentFile() {
+        const template = getSelectedTemplate();
+        if (!template) return;
+
+        const model = monacoEditor ? monacoEditor.getModel() : null;
+        if (!activeFile || !model || model.isPlaceholder) {
+          alert("Open a file first, or use New Starter File.");
+          return;
+        }
+
+        const templateContent = buildSelectedTemplateContent();
+        const selection = monacoEditor.getSelection();
+
+        if (selection && !selection.isEmpty()) {
+          monacoEditor.executeEdits("starter-template", [
+            {
+              range: selection,
+              text: templateContent,
+            },
+          ]);
+        } else if (!model.getValue().trim()) {
+          replaceEntireActiveFile(templateContent);
+        } else if (
+          confirm(
+            "Replace the current file with the starter template? Press Cancel to append it instead.",
+          )
+        ) {
+          replaceEntireActiveFile(templateContent);
+        } else {
+          appendToActiveFile(templateContent);
+        }
+
+        applyLanguageToFile(activeFile, template.languageKey);
+        monacoEditor.focus();
+      }
+
+      async function createStarterFileFromTemplate() {
+        if (!currentProjectId) {
+          alert("Open a project before creating a starter file.");
+          return;
+        }
+
+        const template = getSelectedTemplate();
+        if (!template) return;
+
+        const requestedPath = prompt(
+          "Create starter file inside this project:",
+          template.fileName,
+        );
+
+        if (requestedPath === null) {
+          return;
+        }
+
+        let normalizedPath;
+        try {
+          normalizedPath = normalizeRelativeFilePath(requestedPath);
+        } catch (error) {
+          alert(error.message);
+          return;
+        }
+
+        try {
+          await saveFileByPath(normalizedPath, buildSelectedTemplateContent());
+          await refreshFileTree();
+          await openOrSwitchToFile(normalizedPath);
+          applyLanguageToFile(normalizedPath, template.languageKey);
+        } catch (error) {
+          alert(`Failed to create starter file: ${error.message}`);
+        }
+      }
+
+      function encodeTextToBinary(text) {
+        return Array.from(new TextEncoder().encode(text))
+          .map((byte) => byte.toString(2).padStart(8, "0"))
+          .join(" ");
+      }
+
+      function decodeBinaryToText(binaryText) {
+        const compactBinary = String(binaryText || "").replace(/[^01]/g, "");
+
+        if (!compactBinary) return "";
+        if (compactBinary.length % 8 !== 0) {
+          throw new Error("Binary input must contain full 8-bit bytes.");
+        }
+
+        const bytePairs = compactBinary.match(/.{8}/g) || [];
+        const bytes = bytePairs.map((pair) => parseInt(pair, 2));
+        return new TextDecoder().decode(new Uint8Array(bytes));
+      }
+
+      function loadEditorContentIntoBinaryTool() {
+        const model = monacoEditor ? monacoEditor.getModel() : null;
+        if (!model || model.isPlaceholder) {
+          alert("Open a file first.");
+          return;
+        }
+
+        const sourceText = getEditorSelectionText() || model.getValue();
+        if (!sourceText) {
+          alert("The active file is empty.");
+          return;
+        }
+
+        binaryInputEl.value = sourceText;
+        binaryOutputEl.value = "";
+      }
+
+      function sendBinaryOutputToEditor() {
+        const output = binaryOutputEl.value;
+        if (!output.trim()) {
+          alert("There is no binary result to send.");
+          return;
+        }
+
+        if (!insertIntoActiveFile(output)) {
+          alert("Open a file first.");
+          return;
+        }
+
+        monacoEditor.focus();
+      }
+
+      async function closeFile(filePath) {
+        const normalizedPath = normalizeRelativeFilePath(filePath);
+        const fileMeta = openFiles.get(normalizedPath);
+        if (!fileMeta) return;
+
+        if (isFileDirty(fileMeta)) {
+          const shouldSave = confirm(
+            `Save changes to ${getBaseName(normalizedPath)} before closing? Press OK to save, or Cancel to keep the file open.`,
+          );
+
+          if (!shouldSave) {
+            return;
+          }
+
+          try {
+            await saveFileByPath(normalizedPath);
+          } catch (error) {
+            alert(`Failed to save file: ${error.message}`);
+            return;
+          }
+        }
+
+        const wasActive = normalizedPath === activeFile;
+        if (wasActive && monacoEditor) {
+          fileMeta.viewState = monacoEditor.saveViewState();
+        }
+
+        if (monacoEditor && monacoEditor.getModel() === fileMeta.model) {
+          monacoEditor.setModel(null);
+        }
+
+        fileMeta.model.dispose();
+        openFiles.delete(normalizedPath);
+
+        if (!openFiles.size) {
+          createPlaceholderModel();
+          return;
+        }
+
+        if (wasActive) {
+          const fallbackFile = Array.from(openFiles.keys()).pop();
+          setActiveModel(fallbackFile);
+          return;
+        }
+
+        renderOpenTabs();
+        updateEditorChrome();
+      }
+
+      closeEditorBtn.addEventListener(
+        "click",
+        (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          void closeEditor();
+        },
+        true,
+      );
+
+      saveFileBtnEl.addEventListener(
+        "click",
+        (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          void saveCurrentFile(true);
+        },
+        true,
+      );
+
+      languageSelectorEl.addEventListener("change", () => {
+        populateTemplateSelector(languageSelectorEl.value);
+        renderSupportedLanguageChips();
+        updateEditorChrome();
+      });
+
+      applyLanguageBtnEl.addEventListener("click", () => {
+        if (!activeFile) return;
+        applyLanguageToFile(activeFile, languageSelectorEl.value);
+      });
+
+      starterTemplateSelectorEl.addEventListener("change", updateTemplateDescription);
+      insertTemplateBtnEl.addEventListener("click", insertTemplateIntoCurrentFile);
+      createStarterFileBtnEl.addEventListener("click", () => {
+        void createStarterFileFromTemplate();
+      });
+      loadEditorSelectionBtnEl.addEventListener(
+        "click",
+        loadEditorContentIntoBinaryTool,
+      );
+      encodeBinaryBtnEl.addEventListener("click", () => {
+        if (!binaryInputEl.value) return;
+        binaryOutputEl.value = encodeTextToBinary(binaryInputEl.value);
+      });
+      decodeBinaryBtnEl.addEventListener("click", () => {
+        try {
+          binaryOutputEl.value = decodeBinaryToText(binaryInputEl.value);
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+      sendBinaryToEditorBtnEl.addEventListener("click", sendBinaryOutputToEditor);
+
+      populateLanguageSelector();
+      languageSelectorEl.value = "cpp";
+      populateTemplateSelector("cpp");
+      renderSupportedLanguageChips();
+      updateEditorChrome();
     </script>
   </body>
 </html>
