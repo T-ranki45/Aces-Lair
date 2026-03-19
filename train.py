@@ -76,12 +76,18 @@ def atomic_torch_save(payload, destination):
     os.replace(temp_path, destination)
 
 
+def to_python_float(value):
+    if torch.is_tensor(value):
+        return float(value.detach().cpu().item())
+    return float(value)
+
+
 def build_checkpoint(iter_num, best_val_loss):
     return {
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
         'iter_num': iter_num,
-        'best_val_loss': best_val_loss,
+        'best_val_loss': to_python_float(best_val_loss),
         'config': config,
     }
 
@@ -94,11 +100,12 @@ def save_checkpoint_files(iter_num, best_val_loss, save_best=False):
 
 
 def write_training_state(iter_num, best_val_loss, status, checkpoint_path=None):
+    numeric_best_val_loss = to_python_float(best_val_loss)
     payload = {
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "status": status,
         "iter_num": iter_num,
-        "best_val_loss": None if best_val_loss == float("inf") else best_val_loss,
+        "best_val_loss": None if math.isinf(numeric_best_val_loss) else numeric_best_val_loss,
         "device": DEVICE,
         "checkpoint_path": checkpoint_path,
         "max_iters": MAX_ITERS,
@@ -219,7 +226,9 @@ if checkpoint is not None:
     model.load_state_dict(checkpoint['model_state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
     start_iter = checkpoint['iter_num'] + 1
-    best_val_loss = checkpoint.get('best_val_loss', float('inf'))  # Backward compatibility
+    best_val_loss = to_python_float(
+        checkpoint.get('best_val_loss', float('inf'))
+    )  # Backward compatibility
     print(f"Resumed from iteration {start_iter} with best validation loss {best_val_loss:.4f}")
     write_training_state(start_iter - 1, best_val_loss, "resumed", resume_checkpoint)
 else:
@@ -241,7 +250,7 @@ def estimate_loss():
             B, T, C = logits.shape
             loss = loss_fn(logits.view(B*T, C), Y.view(B*T))
             losses[k] = loss.item()
-        out[split] = losses.mean()
+        out[split] = losses.mean().item()
     model.train() # Set model back to training mode
     return out
 
