@@ -23,7 +23,20 @@
         box-sizing: border-box;
         margin: 0;
         padding: 0;
+      }
+
+      html,
+      body {
+        width: 100%;
+        max-width: 100%;
         overflow-x: hidden;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      html::-webkit-scrollbar,
+      body::-webkit-scrollbar {
+        display: none;
       }
 
       body {
@@ -31,7 +44,6 @@
         background-color: var(--background-color);
         color: var(--text-color);
         line-height: 1.6;
-        overflow-x: hidden;
       }
 
       #tech-canvas {
@@ -62,6 +74,7 @@
         position: sticky;
         top: 0;
         z-index: 100;
+        overflow-y: hidden;
       }
 
       .main-header .container {
@@ -69,6 +82,8 @@
         justify-content: space-between;
         align-items: center;
         padding: 0 20px;
+        gap: 0.75rem;
+        flex-wrap: wrap;
       }
 
       .logo {
@@ -83,7 +98,17 @@
       .main-nav ul {
         list-style: none;
         display: flex;
-        gap: 2.5rem;
+        gap: 1rem 1.25rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        margin-left: auto;
+        overflow-y: hidden;
+      }
+
+      .main-nav li {
+        display: flex;
+        align-items: center;
       }
 
       .main-nav a {
@@ -91,9 +116,42 @@
         color: var(--text-color);
         font-weight: 700;
         font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        overflow: hidden;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
         transition:
           color 0.3s ease,
           text-shadow 0.3s ease;
+      }
+
+      .main-nav a::-webkit-scrollbar {
+        display: none;
+      }
+
+      .main-nav .nav-cta {
+        padding: 0.35rem 0.8rem;
+        border-width: 1px;
+        white-space: nowrap;
+      }
+
+      @media (max-width: 768px) {
+        .main-header .container {
+          justify-content: center;
+        }
+
+        .main-nav ul {
+          justify-content: center;
+          margin-left: 0;
+          gap: 0.75rem 1rem;
+        }
+
+        .main-nav a {
+          font-size: 1rem;
+        }
       }
 
       .main-nav a:hover {
@@ -476,13 +534,13 @@
             // User is logged in
             navList.innerHTML += `
               <li><a href="/workspace.html">Workspace</a></li>
-              <li><a href="/logout" class="cta-button" style="padding: 0.5rem 1rem; border-width: 1px;">Logout</a></li>
+              <li><a href="/logout" class="cta-button nav-cta">Logout</a></li>
             `;
           } else {
             // User is logged out
             navList.innerHTML += `
               <li><a href="/login.html">Login</a></li>
-              <li><a href="/signup.html" class="cta-button" style="padding: 0.5rem 1rem; border-width: 1px;">Sign Up</a></li>
+              <li><a href="/signup.html" class="cta-button nav-cta">Sign Up</a></li>
             `;
           }
         } catch (error) {
@@ -490,7 +548,7 @@
           // Fallback for when server is down
           navList.innerHTML += `
             <li><a href="/login.html">Login</a></li>
-            <li><a href="/signup.html" class="cta-button" style="padding: 0.5rem 1rem; border-width: 1px;">Sign Up</a></li>
+            <li><a href="/signup.html" class="cta-button nav-cta">Sign Up</a></li>
           `;
         }
       });
