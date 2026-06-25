@@ -75,6 +75,67 @@ const Project = mongoose.model("Project", ProjectSchema);
 const ConsoleAdmin = mongoose.model("ConsoleAdmin", ConsoleAdminSchema);
 const ConsoleMessage = mongoose.model("ConsoleMessage", ConsoleMessageSchema);
 
+const FALLBACK_STORE_PATH = path.join(__dirname, "auth-store.json");
+let fallbackStore = { users: [], profiles: [], projects: [] };
+
+async function loadFallbackStore() {
+  try {
+    const raw = await fs.readFile(FALLBACK_STORE_PATH, "utf8");
+    const parsed = JSON.parse(raw);
+    fallbackStore = {
+      users: Array.isArray(parsed.users) ? parsed.users : [],
+      profiles: Array.isArray(parsed.profiles) ? parsed.profiles : [],
+      projects: Array.isArray(parsed.projects) ? parsed.projects : [],
+    };
+  } catch (error) {
+    if (error && error.code !== "ENOENT") {
+      console.error("Failed to load fallback auth store:", error);
+    }
+    fallbackStore = { users: [], profiles: [], projects: [] };
+  }
+}
+
+async function saveFallbackStore() {
+  try {
+    await fs.writeFile(FALLBACK_STORE_PATH, JSON.stringify(fallbackStore, null, 2));
+  } catch (error) {
+    console.error("Failed to save fallback auth store:", error);
+  }
+}
+
+function isDatabaseAvailable() {
+  return mongoose.connection.readyState === 1;
+}
+
+async function createFallbackUser({ fullName, email, password }) {
+  const user = {
+    _id: `fallback-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    fullName,
+    email,
+    password,
+    isBanned: false,
+  };
+  fallbackStore.users.push(user);
+  await saveFallbackStore();
+  return user;
+}
+
+async function createFallbackProfile({ userId, role, location, website, bio }) {
+  const profile = {
+    _id: `profile-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    userId,
+    role,
+    location,
+    website,
+    bio,
+  };
+  fallbackStore.profiles.push(profile);
+  await saveFallbackStore();
+  return profile;
+}
+
+loadFallbackStore();
+
 // --- SOCKET.IO SETUP ---
 const server = http.createServer(app);
 const io = new Server(server);
@@ -128,24 +189,121 @@ function isAuthenticated(req, res, next) {
   res.status(401).json({ error: "Unauthorized" });
 }
 
-// --- AUTHENTICATION ROUTES ---
-
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+async function handleFallbackLogin(req, res, respondWithJson = false) {
+  const { email, password } = req.body || {};
 
   if (!email || !password) {
+    if (respondWithJson) {
+      return res.status(400).json({
+        success: false,
+        error: "Email and password are required.",
+      });
+    }
+
+    return res.redirect("/login.html?error=Invalid%20credentials");
+  }
+
+  const normalizedEmail = String(email).trim().toLowerCase();
+  const user = fallbackStore.users.find((entry) => entry.email === normalizedEmail);
+
+  if (!user) {
+    if (respondWithJson) {
+      return res.status(401).json({
+        success: false,
+        error: "No account registered with this email.",
+      });
+    }
+
+    return res.redirect(
+      "/login.html?error=No%20account%20registered%20with%20this%20email",
+    );
+  }
+
+  if (user.isBanned) {
+    if (respondWithJson) {
+      return res.status(403).json({
+        success: false,
+        error: "This account has been banned.",
+      });
+    }
+
+    return res.redirect("/login.html?error=This%20account%20has%20been%20banned");
+  }
+
+  const match = await bcrypt.compare(password, user.password);
+  if (match) {
+    req.session.userId = user._id;
+    await new Promise((resolve, reject) => {
+      req.session.save((err) => {
+        if (err) return reject(err);
+        resolve();
+      });
+    });
+
+    if (respondWithJson) {
+      return res.status(200).json({
+        success: true,
+        message: "Login successful.",
+        userId: user._id.toString(),
+      });
+    }
+
+    return res.redirect("/workspace.html");
+  }
+
+  if (respondWithJson) {
+    return res.status(401).json({
+      success: false,
+      error: "Invalid credentials.",
+    });
+  }
+
+  return res.redirect("/login.html?error=Invalid%20credentials");
+}
+
+async function handleLogin(req, res, respondWithJson = false) {
+  if (!isDatabaseAvailable()) {
+    return handleFallbackLogin(req, res, respondWithJson);
+  }
+
+  const { email, password } = req.body || {};
+
+  if (!email || !password) {
+    if (respondWithJson) {
+      return res.status(400).json({
+        success: false,
+        error: "Email and password are required.",
+      });
+    }
+
     return res.redirect("/login.html?error=Invalid%20credentials");
   }
 
   try {
-    const user = await User.findOne({ email: email.toLowerCase() });
+    const normalizedEmail = String(email).trim().toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail });
+
     if (!user) {
+      if (respondWithJson) {
+        return res.status(401).json({
+          success: false,
+          error: "No account registered with this email.",
+        });
+      }
+
       return res.redirect(
         "/login.html?error=No%20account%20registered%20with%20this%20email",
       );
     }
 
     if (user.isBanned) {
+      if (respondWithJson) {
+        return res.status(403).json({
+          success: false,
+          error: "This account has been banned.",
+        });
+      }
+
       return res.redirect(
         "/login.html?error=This%20account%20has%20been%20banned",
       );
@@ -154,40 +312,132 @@ app.post("/login", async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (match) {
       req.session.userId = user._id;
-      // Regenerate session to prevent session fixation attacks
-      req.session.save(() => {
-        res.redirect("/workspace.html");
+      await new Promise((resolve, reject) => {
+        req.session.save((err) => {
+          if (err) return reject(err);
+          resolve();
+        });
       });
-    } else {
-      res.redirect("/login.html?error=Invalid%20credentials");
+
+      if (respondWithJson) {
+        return res.status(200).json({
+          success: true,
+          message: "Login successful.",
+          userId: user._id.toString(),
+        });
+      }
+
+      return res.redirect("/workspace.html");
     }
+
+    if (respondWithJson) {
+      return res.status(401).json({
+        success: false,
+        error: "Invalid credentials.",
+      });
+    }
+
+    return res.redirect("/login.html?error=Invalid%20credentials");
   } catch (error) {
     console.error("Database error during login:", error);
+
+    if (!isDatabaseAvailable()) {
+      return handleFallbackLogin(req, res, respondWithJson);
+    }
+
+    if (respondWithJson) {
+      return res.status(500).json({
+        success: false,
+        error: "Server error during login.",
+      });
+    }
+
     return res.redirect("/login.html?error=Server%20error");
   }
-});
+}
 
-app.get("/logout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.redirect("/workspace.html"); // Or some error page
-    }
-    res.clearCookie("connect.sid"); // The default session cookie name
-    res.redirect("/login.html");
-  });
-});
-
-// --- SIGNUP ROUTE ---
-app.post("/signup", async (req, res) => {
-  const { fullName, email, password } = req.body;
+async function handleFallbackSignup(req, res, respondWithJson = false) {
+  const { fullName, email, password } = req.body || {};
 
   if (!fullName || !email || !password) {
+    if (respondWithJson) {
+      return res.status(400).json({
+        success: false,
+        error: "All fields are required.",
+      });
+    }
+
+    return res.redirect("/signup.html?error=All%20fields%20are%20required");
+  }
+
+  const normalizedEmail = String(email).trim().toLowerCase();
+  const existingUser = fallbackStore.users.find((entry) => entry.email === normalizedEmail);
+  if (existingUser) {
+    if (respondWithJson) {
+      return res.status(409).json({
+        success: false,
+        error: "Email already in use.",
+      });
+    }
+
+    return res.redirect("/signup.html?error=Email%20already%20in%20use");
+  }
+
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  const newUser = await createFallbackUser({
+    fullName,
+    email: normalizedEmail,
+    password: hashedPassword,
+  });
+  await createFallbackProfile({
+    userId: newUser._id,
+    role: "New Operative",
+    location: "Undisclosed",
+    website: "",
+    bio: "No bio yet.",
+  });
+
+  if (respondWithJson) {
+    return res.status(201).json({
+      success: true,
+      message: "Account created successfully.",
+      userId: newUser._id.toString(),
+    });
+  }
+
+  return res.redirect("/login.html?success=Account%20created!%20Please%20log%20in.");
+}
+
+async function handleSignup(req, res, respondWithJson = false) {
+  if (!isDatabaseAvailable()) {
+    return handleFallbackSignup(req, res, respondWithJson);
+  }
+
+  const { fullName, email, password } = req.body || {};
+
+  if (!fullName || !email || !password) {
+    if (respondWithJson) {
+      return res.status(400).json({
+        success: false,
+        error: "All fields are required.",
+      });
+    }
+
     return res.redirect("/signup.html?error=All%20fields%20are%20required");
   }
 
   try {
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    const normalizedEmail = String(email).trim().toLowerCase();
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
+      if (respondWithJson) {
+        return res.status(409).json({
+          success: false,
+          error: "Email already in use.",
+        });
+      }
+
       return res.redirect("/signup.html?error=Email%20already%20in%20use");
     }
 
@@ -196,12 +446,11 @@ app.post("/signup", async (req, res) => {
 
     const newUser = new User({
       fullName,
-      email: email.toLowerCase(),
+      email: normalizedEmail,
       password: hashedPassword,
     });
     await newUser.save();
 
-    // Also create a default profile for the new user
     const newProfile = new Profile({
       userId: newUser._id,
       role: "New Operative",
@@ -211,11 +460,85 @@ app.post("/signup", async (req, res) => {
     });
     await newProfile.save();
 
-    res.redirect("/login.html?success=Account%20created!%20Please%20log%20in.");
+    if (respondWithJson) {
+      return res.status(201).json({
+        success: true,
+        message: "Account created successfully.",
+        userId: newUser._id.toString(),
+      });
+    }
+
+    return res.redirect("/login.html?success=Account%20created!%20Please%20log%20in.");
   } catch (error) {
     console.error("Error during signup process:", error);
-    res.redirect("/signup.html?error=An%20unexpected%20error%20occurred");
+
+    if (!isDatabaseAvailable()) {
+      return handleFallbackSignup(req, res, respondWithJson);
+    }
+
+    if (respondWithJson) {
+      return res.status(500).json({
+        success: false,
+        error: "An unexpected error occurred while creating the account.",
+      });
+    }
+
+    return res.redirect("/signup.html?error=An%20unexpected%20error%20occurred");
   }
+}
+
+// --- AUTHENTICATION ROUTES ---
+
+app.post("/login", async (req, res) => {
+  return handleLogin(req, res, false);
+});
+
+app.all("/api/login", async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).json({
+      success: false,
+      error: "Use POST to authenticate.",
+    });
+  }
+
+  return handleLogin(req, res, true);
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.redirect("/workspace.html");
+    }
+    res.clearCookie("connect.sid");
+    res.redirect("/login.html");
+  });
+});
+
+// --- SIGNUP ROUTE ---
+app.post("/signup", async (req, res) => {
+  return handleSignup(req, res, false);
+});
+
+app.all("/api/signup", async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).json({
+      success: false,
+      error: "Use POST to create an account.",
+    });
+  }
+
+  return handleSignup(req, res, true);
+});
+
+app.all("/api/register", async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).json({
+      success: false,
+      error: "Use POST to create an account.",
+    });
+  }
+
+  return handleSignup(req, res, true);
 });
 
 // --- DATA API ROUTES ---
@@ -236,23 +559,59 @@ app.use("/api/ai", aiRoutes);
 // Fetch all data for the workspace page
 app.get("/api/workspace-data", isAuthenticated, async (req, res) => {
   const userId = req.session.userId;
+
+  if (!isDatabaseAvailable()) {
+    const fallbackUser = fallbackStore.users.find((entry) => entry._id === userId);
+    if (!fallbackUser) {
+      req.session.destroy();
+      return res.status(401).json({ error: "User not found, session terminated." });
+    }
+
+    const fallbackProfile = fallbackStore.profiles.find(
+      (entry) => entry.userId === userId,
+    );
+    const fallbackProjects = fallbackStore.projects.filter(
+      (entry) => entry.userId === userId,
+    );
+
+    const skills = [
+      { name: "JavaScript", level: 90, color: "var(--al-cyan)" },
+      { name: "Node.js", level: 85, color: "var(--al-green)" },
+      { name: "HTML/CSS", level: 95, color: "var(--al-red)" },
+    ];
+
+    return res.json({
+      user: {
+        _id: fallbackUser._id,
+        fullName: fallbackUser.fullName,
+        email: fallbackUser.email,
+        isBanned: fallbackUser.isBanned,
+      },
+      profile: fallbackProfile || {
+        role: "Operative",
+        location: "CLASSIFIED",
+        website: "",
+        bio: "No bio available.",
+      },
+      projects: fallbackProjects || [],
+      skills,
+    });
+  }
+
   try {
-    // Using Promise.all to fetch data in parallel
     const [user, profile, projects] = await Promise.all([
-      User.findById(userId).select("-password").lean(), // .lean() for plain JS object
+      User.findById(userId).select("-password").lean(),
       Profile.findOne({ userId: userId }).lean(),
       Project.find({ userId: userId }).sort({ _id: -1 }).lean(),
     ]);
 
     if (!user) {
-      // This can happen if the user was deleted but the session remains.
       req.session.destroy();
       return res
         .status(401)
         .json({ error: "User not found, session terminated." });
     }
 
-    // Skills are hardcoded for now as there's no UI to manage them yet.
     const skills = [
       { name: "JavaScript", level: 90, color: "var(--al-cyan)" },
       { name: "Node.js", level: 85, color: "var(--al-green)" },
@@ -266,7 +625,7 @@ app.get("/api/workspace-data", isAuthenticated, async (req, res) => {
         location: "CLASSIFIED",
         website: "",
         bio: "No bio available.",
-      }, // Send default profile
+      },
       projects: projects || [],
       skills: skills,
     });
