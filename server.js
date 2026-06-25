@@ -9,7 +9,8 @@ const http = require("http");
 const { Server } = require("socket.io");
 
 const app = express();
-const port = 3000; // Or your preferred port
+const port = process.env.PORT || 3000;
+const host = "0.0.0.0";
 
 // --- MONGODB DATABASE SETUP ---
 const MONGO_URI =
@@ -81,6 +82,31 @@ const io = new Server(server);
 // --- MIDDLEWARE ---
 app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
+
+const pageRoutes = {
+  "/": "public-view.html",
+  "/login": "login.html",
+  "/signup": "signup.html",
+  "/workspace": "workspace.html",
+  "/public-view": "public-view.html",
+  "/library": "library.html",
+  "/policy": "policy.html",
+  "/aces-ai": "aces-ai.html",
+  "/aces-lair-99": "aces-lair-99.html",
+  "/forgot-password": "forgot-password.html",
+  "/reset-password": "reset-password.html",
+};
+
+Object.entries(pageRoutes).forEach(([route, fileName]) => {
+  app.get(route, (req, res) => {
+    res.sendFile(path.join(__dirname, fileName));
+  });
+});
+
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", service: "aces-lair" });
+});
+
 app.use(express.static(path.join(__dirname))); // Serve static files like CSS and HTML
 
 // Example session middleware (configure as needed)
@@ -801,21 +827,22 @@ app.get(
 );
 
 // --- SERVER START ---
-server.listen(port, () => {
+server.listen(port, host, () => {
   const border = "=====================================================";
   const localUrl = `http://localhost:${port}`;
+  const publicUrl = process.env.RENDER_EXTERNAL_URL || localUrl;
 
   console.log("\n" + border);
   console.log(`  🚀 Aces's Lair Server is LIVE!`);
   console.log(border);
   console.log(`\n  Key Access Points:`);
-  console.log(`  - Public Hub:    ${localUrl}/public-view.html`);
-  console.log(`  - Workspace:     ${localUrl}/workspace.html`);
-  console.log(`  - Login Portal:  ${localUrl}/login.html`);
+  console.log(`  - Public Hub:    ${publicUrl}/public-view.html`);
+  console.log(`  - Workspace:     ${publicUrl}/workspace.html`);
+  console.log(`  - Login Portal:  ${publicUrl}/login.html`);
   console.log(`\n  Other Links:`);
-  console.log(`  - Component Lib: ${localUrl}/library.html`);
-  console.log(`  - Dev Console:   ${localUrl}/aces-lair-99.html`);
-  console.log(`  - Aces AI:       ${localUrl}/aces-ai.html`);
-  console.log(`  - Usage Policy:  ${localUrl}/policy.html`);
+  console.log(`  - Component Lib: ${publicUrl}/library.html`);
+  console.log(`  - Dev Console:   ${publicUrl}/aces-lair-99.html`);
+  console.log(`  - Aces AI:       ${publicUrl}/aces-ai.html`);
+  console.log(`  - Usage Policy:  ${publicUrl}/policy.html`);
   console.log(`\n` + border + "\n");
 });
