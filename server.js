@@ -76,7 +76,13 @@ const ConsoleAdmin = mongoose.model("ConsoleAdmin", ConsoleAdminSchema);
 const ConsoleMessage = mongoose.model("ConsoleMessage", ConsoleMessageSchema);
 
 const FALLBACK_STORE_PATH = path.join(__dirname, "auth-store.json");
-let fallbackStore = { users: [], profiles: [], projects: [] };
+let fallbackStore = {
+  users: [],
+  profiles: [],
+  projects: [],
+  consoleAdmins: [],
+  consoleMessages: [],
+};
 
 async function loadFallbackStore() {
   try {
@@ -86,12 +92,24 @@ async function loadFallbackStore() {
       users: Array.isArray(parsed.users) ? parsed.users : [],
       profiles: Array.isArray(parsed.profiles) ? parsed.profiles : [],
       projects: Array.isArray(parsed.projects) ? parsed.projects : [],
+      consoleAdmins: Array.isArray(parsed.consoleAdmins)
+        ? parsed.consoleAdmins
+        : [],
+      consoleMessages: Array.isArray(parsed.consoleMessages)
+        ? parsed.consoleMessages
+        : [],
     };
   } catch (error) {
     if (error && error.code !== "ENOENT") {
       console.error("Failed to load fallback auth store:", error);
     }
-    fallbackStore = { users: [], profiles: [], projects: [] };
+    fallbackStore = {
+      users: [],
+      profiles: [],
+      projects: [],
+      consoleAdmins: [],
+      consoleMessages: [],
+    };
   }
 }
 
@@ -132,6 +150,40 @@ async function createFallbackProfile({ userId, role, location, website, bio }) {
   fallbackStore.profiles.push(profile);
   await saveFallbackStore();
   return profile;
+}
+
+async function createFallbackConsoleAdmin({ username, pin }) {
+  const admin = {
+    _id: `console-admin-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    username,
+    pin,
+    lastLogin: null,
+  };
+  fallbackStore.consoleAdmins.push(admin);
+  await saveFallbackStore();
+  return admin;
+}
+
+function getFallbackConsoleAdmin(username) {
+  return fallbackStore.consoleAdmins.find((entry) => entry.username === username);
+}
+
+function getFallbackConsoleMessages(username) {
+  return fallbackStore.consoleMessages
+    .filter((entry) => entry.sender === username || entry.recipient === username)
+    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+}
+
+async function createFallbackConsoleMessage(messagePayload) {
+  const message = {
+    ...messagePayload,
+    _id: `console-message-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    timestamp: messagePayload.timestamp || new Date().toISOString(),
+    read: Boolean(messagePayload.read),
+  };
+  fallbackStore.consoleMessages.push(message);
+  await saveFallbackStore();
+  return message;
 }
 
 loadFallbackStore();
@@ -727,6 +779,10 @@ app.post("/api/admin/users/unban", async (req, res) => {
 
 // Get all console admins
 app.get("/api/console/admins", async (req, res) => {
+  if (!isDatabaseAvailable()) {
+    return res.json(fallbackStore.consoleAdmins.map((admin) => admin.username));
+  }
+
   try {
     const admins = await ConsoleAdmin.find({}, "username").lean();
     res.json(admins.map((a) => a.username));
@@ -737,7 +793,23 @@ app.get("/api/console/admins", async (req, res) => {
 
 // Register a new console admin (Internal use)
 app.post("/api/console/register", async (req, res) => {
-  const { username, pin } = req.body;
+  const { username, pin } = req.body || {};
+
+  if (!username || !pin) {
+    return res.json({ success: false, error: "Enter Codename & Pin" });
+  }
+
+  if (!isDatabaseAvailable()) {
+    const existing = getFallbackConsoleAdmin(username);
+    if (existing) {
+      return res.json({ success: false, error: "Username taken" });
+    }
+
+    const hashedPin = await bcrypt.hash(pin, 10);
+    await createFallbackConsoleAdmin({ username, pin: hashedPin });
+    return res.json({ success: true, message: "Console Identity Created" });
+  }
+
   try {
     const existing = await ConsoleAdmin.findOne({ username });
     if (existing) return res.json({ success: false, error: "Username taken" });
@@ -747,24 +819,43 @@ app.post("/api/console/register", async (req, res) => {
     await newAdmin.save();
     res.json({ success: true, message: "Console Identity Created" });
   } catch (err) {
+    console.error("Console registration failed:", err);
     res.json({ success: false, error: "Creation failed" });
   }
 });
 
 // Login to console identity
 app.post("/api/console/login", async (req, res) => {
-  const { username, pin } = req.body;
+  const { username, pin } = req.body || {};
+
+  if (!isDatabaseAvailable()) {
+    const admin = getFallbackConsoleAdmin(username);
+    if (!admin) {
+      return res.json({ success: false, error: "Identity not found" });
+    }
+
+    const match = await bcrypt.compare(pin, admin.pin);
+    if (match) {
+      admin.lastLogin = new Date();
+      await saveFallbackStore();
+      const messages = getFallbackConsoleMessages(username);
+      return res.json({ success: true, username: admin.username, messages });
+    }
+
+    return res.json({ success: false, error: "Invalid PIN" });
+  }
+
   try {
     const admin = await ConsoleAdmin.findOne({ username });
-    if (!admin)
+    if (!admin) {
       return res.json({ success: false, error: "Identity not found" });
+    }
 
     const match = await bcrypt.compare(pin, admin.pin);
     if (match) {
       admin.lastLogin = new Date();
       await admin.save();
 
-      // Fetch all messages where this admin is either the sender or recipient
       const messages = await ConsoleMessage.find({
         $or: [{ recipient: username }, { sender: username }],
       }).sort({ timestamp: 1 });
@@ -773,6 +864,7 @@ app.post("/api/console/login", async (req, res) => {
       res.json({ success: false, error: "Invalid PIN" });
     }
   } catch (err) {
+    console.error("Console login failed:", err);
     res.json({ success: false, error: "Auth Error" });
   }
 });

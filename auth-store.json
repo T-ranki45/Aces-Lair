@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "_id": "fallback-1782430575585-ub6896ld9lf",
+      "fullName": "^_^_ranki45",
+      "email": "paulleslie180@gmail.com",
+      "password": "$2b$10$kYU.2fdJT8pEzoEwZt1R4..7NhhYPr1ahSwp9MPfsX6m3rBLom8vW",
+      "isBanned": false
+    }
+  ],
+  "profiles": [
+    {
+      "_id": "profile-1782430575601-9ouua4gnbd",
+      "userId": "fallback-1782430575585-ub6896ld9lf",
+      "role": "New Operative",
+      "location": "Undisclosed",
+      "website": "",
+      "bio": "No bio yet."
+    }
+  ],
+  "projects": []
+}
